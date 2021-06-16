@@ -119,14 +119,9 @@ export default {
   computed: {
     ...mapState({
       accountName: state => state.account.accountName,
-      // category: state => state.user.NftInfo.NftData
       category: state => state.user.NftList,
       count: state => state.user.count
-    }),
-    orderProducts () {
-      // return this.state.user.NftList
-      return this.$store.state.NftList
-    }
+    })
   },
   methods: {
     ...mapActions('user', ['ChangeNftUserAction']),

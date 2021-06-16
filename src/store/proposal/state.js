@@ -1,5 +1,3 @@
-export default () => ({
-  userPreviousBalance: '',
-  userAfterBalance: '',
-  isClaimed: false
-})
+export default {
+  //
+}
