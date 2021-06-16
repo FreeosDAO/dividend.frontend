@@ -12,7 +12,12 @@
         >
           <div class="text-h6 text-center q-ma-lg">Dividend Analytics</div>
             <q-btn class="q-ma-lg" color="secondary" no-caps @click="submit()" label="Perform Dry Run"/>
-            {{category1}}{{category2}}{{category3}}
+            <pure-vue-chart
+              :points="[Number(category1).toLocaleString(),Number(category2).toLocaleString(),Number(category3).toLocaleString()]"
+              :width="400"
+              :height="200"
+              :show-values="true"
+            />
         </q-card-section>
       </q-card>
     </div>
@@ -22,8 +27,12 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import PureVueChart from 'pure-vue-chart'
 export default {
   name: 'Analytics',
+  components: {
+    PureVueChart
+  },
   data () {
     return {
       tab: 'send',
@@ -49,6 +58,11 @@ export default {
       // .then(response => {
       // this.isDryRunfresh = true
       // })
+    }
+  },
+  filters: {
+    toUSD (value) {
+      return `$${value.toLocaleString()}`
     }
   }
 }

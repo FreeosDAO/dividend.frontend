@@ -1,10 +1,10 @@
-# Freeos App (freeos)
+# Freeos Dividend App (dividends)
 
-Application to claim your Freeos tokens
+Application to distribute dividends
 
 # Clone the repository
 ```bash
-git clone https://github.com/FreeosDAO/freeos_wallet_frontend.git
+git clone https://github.com/FreeosDAO/dividend.frontend.git
 ```
 
 ## Install the dependencies
@@ -14,7 +14,9 @@ npm install
 
 ### Start the app in development mode (hot-code reloading, error reporting, etc.)
 ```bash
-npm start
+quasar dev
+or 
+quasar build
 ```
 
 # Browser will be triggered with Local URL and Port 

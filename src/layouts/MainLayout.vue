@@ -41,9 +41,8 @@
       <div class="text-center q-ma-md row">
         <div class="col-md-5"></div>
         <div class="col-xs-12 col-md-2 q-mb-md">
-          <img width="110" src="~assets/freeos_icon.png">
+          <img width="110" src="~assets/tfreeos.png">
         </div>
-        <balance v-if="isAuthenticated" class="col-xs-12 col-md-5 row text-left" />
       </div>
       <router-view />
     </q-page-container>
@@ -62,6 +61,7 @@
 <script>
 // import WalletLoginDialog from 'components/accountManagement/WalletLoginDialog'
 import { mapState, mapActions, mapGetters } from 'vuex'
+// import { getActionProposal } from 'src/store/account/actions'
 const menuList = [
   {
     icon: 'monetization_on',
@@ -77,9 +77,9 @@ const menuList = [
   },
   {
     icon: 'get_app',
-    label: 'User',
+    label: 'Customer',
     separator: true,
-    route: '/user'
+    route: '/customer'
   },
   {
     icon: 'get_app',
@@ -115,14 +115,15 @@ export default {
       (this.$route.path !== menuItem.route) && this.$router.push(menuItem.route)
       this.selectedItemLabel = menuItem.label
     },
-    ...mapActions('account', ['checkIfLoggedIn', 'connectWallet', 'logout', 'getAccountInfo'])
+    ...mapActions('account', ['checkIfLoggedIn', 'connectWallet', 'logout', 'getActionProposal'])
   },
   watch: {
     isAuthenticated: {
       immediate: true,
       handler: function (val) {
         if (val && this.accountName) {
-          this.getAccountInfo()
+          // this.getAccountInfo()
+          this.getActionProposal()
         }
         if (val && this.$route.query.returnUrl) {
           this.$router.push({ path: this.$route.query.returnUrl })
@@ -136,5 +137,95 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style>
+
+#site-container {
+  margin: 0px auto;
+  text-align: left;
+  width: 700px;
+  zoom: 1;
+  position: relative;
+}
+
+@font-face {
+  font-family: 'MyWebFont';
+  src: url('Franklin Gothic Medium Regular/Franklin Gothic Medium Regular.ttf')  format('truetype');
+}
+.my-font {
+  font-family:'MyWebFont'
+}
+
+.pex1{
+  padding-right: 2em;
+}
+
+.bottom-three {
+  margin-bottom: 1cm;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #4080b8;
+}
+
+li {
+
+  float: left;
+}
+
+div.a {
+  font-size: 12px;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  float: right;
+}
+
+li a:hover {
+  background-color: #3ab2c9;
+}
+
+li a:hover:not(.active) {
+  background-color: #3ab2c0;
+}
+
+.div-with-bg {
+  background-image: url("../assets/SkyColor.jpg");
+  background-size: cover;
+  height: 100%;
+  width: 100%;
+}
+
+.text-area {
+  font-size: 1.3em;
+  margin: 25px;
+}
+
+.myDiv{
+  width: 190px;
+  padding: 10px;
+  background: #f99f53;
+  text-align: center;
+  margin: 0 auto;
+  border: 1px solid #f97200;
+  color: #fff;
+}
+
+body{
+  background-image: url("../assets/BetweenNightandDay.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
 </style>
