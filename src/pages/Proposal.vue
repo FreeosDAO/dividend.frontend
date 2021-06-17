@@ -19,7 +19,7 @@
       style="background: radial-gradient(circle, #35a2ff 0%, #014a88 80%)"
     >
       <q-card-section>
-            <div class="text-h6 text-center q-ma-lg">Create NFT Proposal {{eosname}}</div>
+            <div class="text-h6 text-center q-ma-lg">Create NFT Proposal {{eosaccount}}</div>
             <div style="max-width: 500px; margin: 0 auto;">
               <!-- Select corect roi cap -->
               <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs"> -->

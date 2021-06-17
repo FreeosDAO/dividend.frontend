@@ -11,15 +11,15 @@
           narrow-indicator
         >
         </q-tabs>
-
         <q-separator />
-
         <q-card
       class="my-card text-white"
       style="background: radial-gradient(circle, #35a2ff 0%, #014a88 80%)"
     >
+      <!-- This part is displayed conditionally -->
+      <div class="flex justify-center" v-if="active">
       <q-card-section>
-            <div class="text-h6 text-center q-ma-lg">Vote NFT Proposal</div>
+            <div class="text-h6 text-center q-ma-lg">Vote this NFT Proposal</div>
             <div style="max-width: 500px; margin: 0 auto;">
               <!-- Select corect roi cap -->
               <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
@@ -103,16 +103,19 @@
               </div>
             </div>
             <div class="flex justify-center">
-            <q-toggle size="xl"
-              v-model="voteresult"
-              checked-icon="check"
-              color="green"
-              unchecked-icon="clear"
-            ></q-toggle>
-              {{voteresult}}
-              <q-btn class="q-ma-lg" color="blue" no-caps @click="submit()" label="Submit" />
+                 <q-toggle size="xl"
+                   v-model="voteresult"
+                   checked-icon="check"
+                   color="green"
+                   unchecked-icon="clear"
+                 ></q-toggle>
+                  <div v-if="voteresult" style="color :white;">ACCEPT</div>
+                  <div v-else style="color :red;"><b>REJECT</b></div>
+                 <q-btn class="q-ma-lg" color="blue" no-caps @click="submit()" label="Submit" />
             </div>
       </q-card-section>
+      </div>
+      <div v-else>NOTHING TO VOTE <br> NO ACTIVE PROPOSAL</div>
     </q-card>
       </q-card>
     </div>
@@ -129,6 +132,7 @@ export default {
     return {
       value: 1,
       tab: 'send',
+      active: false,
       submitData: {
         fromVoterName: '',
         toVote: 0
@@ -137,6 +141,16 @@ export default {
       isShowApprovedDialog: false,
       isShowFailedDialog: false
     }
+  },
+  created () {
+    this.getActionProposal()
+    this.setIntervalId = setInterval(() => {
+      this.getActionProposal()
+    }, 300000) // call each 30 seconds then TODO remove one zero
+    this.isProposalActive()
+  },
+  beforeDestroy () {
+    clearInterval(this.setIntervalId)
   },
   computed: {
     ...mapState({
@@ -149,6 +163,7 @@ export default {
       threshold: state => state.account.proposalInfo.proposalInfo.threshold,
       rates_left: state => state.account.proposalInfo.proposalInfo.rates_left,
       accrued: state => state.account.proposalInfo.proposalInfo.accrued
+      // active: state => state.account.active
     })
   },
   // watch: { // TODO - remove
@@ -161,6 +176,7 @@ export default {
   // },
   methods: {
     ...mapActions('proposal', ['actionProposalVote']),
+    ...mapActions('account', ['getActionProposal']),
     submit () { // only use to send vote cast
       // const self = this
       this.submitData.fromVoterName = this.accountName
@@ -168,6 +184,10 @@ export default {
       else this.submitData.toVote = 1
       console.log(this.submitData.fromVoterName, this.submitData.toVote, this.voteresult)
       this.actionProposalVote(this.submitData)
+    },
+    isProposalActive () {
+      this.active = false
+      console.log(this.expires_at) // http://jsfiddle.net/JamesFM/bxEJd/
     }
   }
 }

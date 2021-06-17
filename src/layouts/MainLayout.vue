@@ -121,10 +121,10 @@ export default {
     isAuthenticated: {
       immediate: true,
       handler: function (val) {
-        if (val && this.accountName) {
-          // this.getAccountInfo()
-          this.getActionProposal()
-        }
+        // if (val && this.accountName) {
+        // this.getAccountInfo()
+        // this.getActionProposal()
+        // }
         if (val && this.$route.query.returnUrl) {
           this.$router.push({ path: this.$route.query.returnUrl })
         }

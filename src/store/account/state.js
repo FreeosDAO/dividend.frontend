@@ -2,6 +2,7 @@ export default () => ({
   accountName: null,
   connecting: false,
   path: '/',
+  active: true,
   proposalInfo: {
     proposalInfo: {
       key: '',
