@@ -131,10 +131,12 @@ export default {
   data () {
     return {
       value: 1,
+      timestamp: '',
+      expires: '',
       tab: 'send',
       active: false,
       submitData: {
-        fromVoterName: '',
+        currentAccountName: '',
         toVote: 0
       },
       voteresult: false,
@@ -166,28 +168,30 @@ export default {
       // active: state => state.account.active
     })
   },
-  // watch: { // TODO - remove
-  // isAuthenticated: {
-  // immediate: true,
-  // handler: function (val) {
-  // this.getActionProposal(state)
-  // }
-  // }
-  // },
   methods: {
     ...mapActions('proposal', ['actionProposalVote']),
     ...mapActions('account', ['getActionProposal']),
     submit () { // only use to send vote cast
       // const self = this
-      this.submitData.fromVoterName = this.accountName
       if (this.voteresult === true) this.submitData.toVote = 2
       else this.submitData.toVote = 1
-      console.log(this.submitData.fromVoterName, this.submitData.toVote, this.voteresult)
+      this.submitData.currentAccountName = this.accountName
+      console.log(this.submitData.currentAccountName, this.toVote, this.voteresult)
       this.actionProposalVote(this.submitData)
     },
+    getTimestamp: function () {
+      return Date.now()
+    },
     isProposalActive () {
-      this.active = false
-      console.log(this.expires_at) // http://jsfiddle.net/JamesFM/bxEJd/
+      this.active = true// false
+      // blockchain already added one hour to expires_at
+      this.expires = (this.expires_at * 1000) + 43200000 // +12h
+      this.timestamp = this.getTimestamp()
+      console.log(this.expires) // http://jsfiddle.net/JamesFM/bxEJd/
+      console.log(this.timestamp)
+      if (this.expires > this.timestamp) {
+        this.active = true
+      }
     }
   }
 }

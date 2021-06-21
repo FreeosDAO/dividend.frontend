@@ -20,6 +20,21 @@
     >
       <q-card-section>
             <div class="text-h6 text-center q-ma-lg">Create NFT Proposal {{eosaccount}}</div>
+<!-- Dialog -->
+        <div class="q-pa-md">
+          <q-btn flat justify-center label="(Remove Active)" color="white" @click="dialog = true"></q-btn>
+
+          <q-dialog v-model="dialog">
+            <q-card>
+              <q-card-section class="row items-center q-gutter-sm"> <!-- TODO -->
+                Remove Active Blockchain Proposal
+                <q-btn class="q-ma-lg" color="orange" no-caps @click="breset()" label="DO IT!"/>
+                <q-btn no-caps label="Close dialog" color="primary" v-close-popup></q-btn>
+              </q-card-section>
+            </q-card>
+          </q-dialog>
+        </div>
+<!-- end of DIALOG -->
             <div style="max-width: 500px; margin: 0 auto;">
               <!-- Select corect roi cap -->
               <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs"> -->
@@ -133,12 +148,13 @@ export default {
   data () {
     return {
       tab: 'send',
+      dialog: false,
       submitData: {
         currentAccountName: '',
         eosaccount: null,
         cap: 1,
         percentage: 0.0,
-        threshold: '1000.0000 OPTION',
+        threshold: '0.0000 OPTION',
         ratesleft: 0,
         locked: false
       },
@@ -159,7 +175,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('proposal', ['proposalNew']),
+    ...mapActions('proposal', ['proposalNew', 'proposalRemove']),
     ...mapActions('account', ['getActionProposal']),
     submit () {
       const self = this
@@ -168,6 +184,14 @@ export default {
         .then(response => {
           // self.getAccountInfo()
           self.resetForm()
+        })
+    },
+
+    breset () {
+      this.submitData.currentAccountName = this.accountName
+      this.proposalRemove(this.accountName)
+        .then(response => {
+          // self.getAccountInfo()
         })
     },
 

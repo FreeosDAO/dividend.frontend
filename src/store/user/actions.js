@@ -1,4 +1,6 @@
 import { connect } from 'src/utils/smartContractRequest'
+import ProtonSDK from 'src/utils/proton'
+import { Notify } from 'quasar'
 // import ProtonSDK from 'src/utils/proton'
 // import { Notify } from 'quasar'
 // import notifyAlert from 'src/services/notify-alert'
@@ -21,24 +23,30 @@ export async function getNftTable (state) {
   state.commit('setCount', result.rows.length)
 }
 
-export async function ChangeNftUserAction ({ state }, AccountName) {
-  /*
+// cleos --url https://proton-testnet.eosphere.io:443 push action freeosdiv
+// regchown '{"userfrom":"ala1ma12kota","userto":"freeosfreeos","nft_id":1}' -p eosio@active
+
+export async function actionOwnerChange ({ state }, data) {
+  const { currentAccountName, targetAccountName, nftKey } = data
   const actions = [{
-    account: process.env.APP_NAME, // freeosdiv
-    name: '', // TODO
+    account: 'freeosdiv', // process.env.APP_NAME,
+    name: 'regchown',
     authorization: [{
-      actor: AccountName,
+      actor: currentAccountName,
       permission: 'active'
     }],
     data: {
-      proposername: AccountName
+      userfrom: currentAccountName,
+      userto: targetAccountName,
+      nft_id: nftKey
     }
   }]
+
   try {
     const result = await ProtonSDK.sendTransaction(actions)
     let responseMessage = result.processed.action_traces[0].console
     if (!responseMessage) {
-      responseMessage = 'Dry Run Successfull'
+      responseMessage = 'Ownership Change Successful'
     }
     Notify.create({
       message: responseMessage,
@@ -48,5 +56,5 @@ export async function ChangeNftUserAction ({ state }, AccountName) {
   } catch (e) {
     console.log(e)
     return e
-  } */
+  }
 }

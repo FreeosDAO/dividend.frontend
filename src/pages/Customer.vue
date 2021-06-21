@@ -7,7 +7,69 @@
       style="background: radial-gradient(circle, #35a2ff 0%, #014a88 80%)"
       >
       <div class="text-h6 text-center q-ma-lg">User Access </div>
-      <q-btn class="q-ma-lg" color="secondary" no-caps @click="submit()" label="Read NFT List"/>
+      <!-- <q-btn class="q-ma-lg" color="secondary" no-caps @click="submit()" label="Refresh"/> -->
+      <div id="q-a">
+        <div class="q-pa-md">
+          <q-btn label="Change NFT Ownership" color="primary" @click="dialog = true"></q-btn>
+          <q-dialog v-model="dialog">
+            <q-card>
+              <q-card-section class="row items-center q-gutter-sm">
+                <!--   -->
+                <!-- eosaccount section -->
+                <!-- <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
+                  <div class="col-xs-5 col-sm-4 text-right">
+                    Old Owner Account
+                  </div>
+                  <div class="col-xs-1 col-sm-2"></div>
+                  <div class="col-xs-6 col-sm-6">
+                    <q-input
+                      v-model="submitData.currentAccountName"
+                      type="text"
+                      outlined
+                      dense
+                    />
+                  </div>
+                </div> -->
+                <!-- eosaccount section -->
+                <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
+                  <div class="col-xs-5 col-sm-4 text-right">
+                    New Owner Account
+                  </div>
+                  <div class="col-xs-1 col-sm-2"></div>
+                  <div class="col-xs-6 col-sm-6">
+                    <q-input
+                      v-model="submitData.targetAccountName"
+                      type="text"
+                      outlined
+                      dense
+                    />
+                  </div>
+                </div>
+                <!-- rates_left conditional section -->
+                  <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
+                    <div class="col-xs-5 col-sm-4 text-right">
+                      Key of NFT to transfer
+                    </div>
+                    <div class="col-xs-1 col-sm-2"></div>
+                    <div class="col-xs-6 col-sm-6">
+                      <q-input
+                        v-model="submitData.nftKey"
+                        type="number"
+                        outlined
+                        dense
+                      />
+                    </div>
+                </div>
+                <!--   -->
+                <div>
+                  <q-btn class="q-ma-lg" color="orange" no-caps @click="submit()" label="Make Change"/>
+                  <q-btn no-caps label="Close dialog" color="primary" v-close-popup></q-btn>
+                </div>
+              </q-card-section>
+            </q-card>
+          </q-dialog>
+        </div>
+      </div>
       <div id="q-app">
         <div class="q-pa-md">
           <q-table
@@ -17,26 +79,6 @@
             row-key="name"
           ></q-table>
         </div>
-        <!-- traditional table -->
-        <div id="app">
-          <h2>Users:</h2>
-          <table>
-            <thead>
-            <tr>
-              <th>name</th>
-              <th>price</th>
-            </tr>
-            </thead>
-            <tbody> <!--
-            <tr v-for="(item, index) in orderProducts" :key="this.category.nft_key">
-              <td>{{item.eosaccount}}</td>
-              <td>{{item.locked}}</td>
-            </tr> -->
-            </tbody>
-          </table>
-        </div>
-        <div>{{category}}/{{count}}</div>
-        <!-- -->
       </div>
     </q-card-section>
     </div>
@@ -62,24 +104,27 @@ export default {
         },
         {
           name: 'eosaccount',
-          label: 'EOS account',
+          label: 'Account',
           field: 'eosaccount',
           sortable: true
         },
         {
           name: 'roi_target_cap',
-          label: 'ROI Target Cap',
-          field: 'roi_target_cap'
+          label: 'ROI Cap',
+          field: 'roi_target_cap',
+          sortable: true
         },
         {
           name: 'nft_percentage',
           label: 'NFT Percentage',
-          field: 'nft_percentage'
+          field: 'nft_percentage',
+          sortable: true
         },
         {
           name: 'mint_date',
           label: 'Mint Date',
-          field: 'mint_date'
+          field: 'mint_date',
+          sortable: true
         },
         {
           name: 'locked',
@@ -111,10 +156,25 @@ export default {
         }
       ],
       tab: 'send',
-      users: [],
+      users: [], // ??
       loading: false,
-      setIntervalId: null
+      setIntervalId: null,
+      dialog: false,
+      submitData: {
+        currentAccountName: '',
+        targetAccountName: '',
+        nftKey: ''
+      }
     }
+  },
+  created () {
+    this.getNftTable()
+    this.setIntervalId = setInterval(() => {
+      this.getNftTable()
+    }, 1000000) // call each 10 seconds TODO remove 00
+  },
+  beforeDestroy () {
+    clearInterval(this.setIntervalId)
   },
   computed: {
     ...mapState({
@@ -124,13 +184,25 @@ export default {
     })
   },
   methods: {
-    ...mapActions('user', ['ChangeNftUserAction']),
-    ...mapActions('user', ['getNftTable']),
+    ...mapActions('user', ['actionOwnerChange', 'getNftTable']),
     submit () {
-      this.getNftTable()
-      // .then(response => {
-      // this.isDryRunfresh = true
-      // })
+      const self = this
+      this.submitData.currentAccountName = this.accountName
+      console.log(this.submitData.currentAccountName)
+      this.actionOwnerChange(this.submitData)
+        .then(response => {
+          // self.getAccountInfo()
+          self.resetForm()
+          this.getNftTable() // refresh table after operation
+        })
+    },
+
+    resetForm () {
+      this.submitData = {
+        currentAccountName: '',
+        targetAccountName: null,
+        nftKey: ''
+      }
     }
   }
 }

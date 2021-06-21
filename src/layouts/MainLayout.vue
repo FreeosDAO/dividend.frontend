@@ -86,6 +86,12 @@ const menuList = [
     label: 'Analytics',
     separator: true,
     route: '/analytics'
+  },
+  {
+    icon: 'get_app',
+    label: 'Test',
+    separator: true,
+    route: '/test'
   }
 ]
 export default {
