@@ -148,7 +148,7 @@ export default {
     this.getActionProposal()
     this.setIntervalId = setInterval(() => {
       this.getActionProposal()
-    }, 300000) // call each 30 seconds then TODO remove one zero
+    }, 300000) // call each 30 seconds then
     this.isProposalActive()
   },
   beforeDestroy () {

@@ -12,8 +12,8 @@ export async function getNftTable (state) {
     json: true,
     code: process.env.APP_NAME,
     scope: process.env.APP_NAME,
-    table: 'nfts'
-    // limit: 3
+    table: 'nfts',
+    limit: 20
   })
   const val = {
     key: 'Nft_Data',

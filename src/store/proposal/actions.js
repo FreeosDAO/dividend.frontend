@@ -5,7 +5,7 @@ import ProtonSDK from '../../utils/proton'
 // import { RpcError } from 'eosjs'
 
 export async function proposalNew ({ state }, data) {
-  const { currentAccountName, eosaccount, cap, percentage, threshold, ratesleft, locked } = data // eslint-disable-line
+  const { currentAccountName, eosaccount, cap, percentage, threshold, ratesleft, locked, tokenType } = data // eslint-disable-line
   const actions = [{
     account: 'freeosdiv', // process.env.APP_NAME,
     name: 'proposalnew',
@@ -18,9 +18,10 @@ export async function proposalNew ({ state }, data) {
       eosaccount: eosaccount,
       roi_target_cap: cap,
       period_percentage: percentage,
-      threshold: '100.0000 OPTION', // `${parseFloat(threshold).toFixed(process.env.TOKEN_PRECISION)} ${process.env.TOKEN_TYPE}`,
+      threshold: `${parseFloat(threshold).toFixed(process.env.TOKEN_PRECISION)} ${tokenType}`,
       rates_left: ratesleft,
-      locked: locked
+      locked: locked,
+      tokenType: 'OPTION'
     }
   }]
 

@@ -154,9 +154,10 @@ export default {
         eosaccount: null,
         cap: 1,
         percentage: 0.0,
-        threshold: '0.0000 OPTION',
+        threshold: null,
         ratesleft: 0,
-        locked: false
+        locked: false,
+        tokenType: 'OPTION'
       },
       isShowApprovedDialog: false,
       isShowFailedDialog: false
@@ -179,6 +180,7 @@ export default {
     ...mapActions('account', ['getActionProposal']),
     submit () {
       const self = this
+      console.log(`${parseFloat(this.submitData.threshold).toFixed(process.env.TOKEN_PRECISION)} ${this.submitData.tokenType}`)
       this.submitData.currentAccountName = this.accountName
       this.proposalNew(this.submitData)
         .then(response => {

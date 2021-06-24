@@ -1,6 +1,7 @@
 export default () => ({
   accountName: null,
   connecting: false,
+  circInfo: null,
   path: '/',
   EwsInfo: {
     EwsData: [

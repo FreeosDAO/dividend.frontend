@@ -49,3 +49,7 @@ export async function getEwsTable (state) {
   }
   state.commit('setEwsTableAttrVal', val)
 }
+
+export const setInfo = function ({ commit }, cInfo) {
+  commit('setValue', cInfo)
+}

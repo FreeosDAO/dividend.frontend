@@ -70,7 +70,7 @@
           </q-dialog>
         </div>
       </div>
-      <div id="q-app">
+      <div id="q-pp">
         <div class="q-pa-md">
           <q-table
             title="NFT List"
@@ -171,7 +171,7 @@ export default {
     this.getNftTable()
     this.setIntervalId = setInterval(() => {
       this.getNftTable()
-    }, 1000000) // call each 10 seconds TODO remove 00
+    }, 60000) // call each 60 seconds
   },
   beforeDestroy () {
     clearInterval(this.setIntervalId)
