@@ -10,7 +10,7 @@
           class="my-card text-white"
           style="background: radial-gradient(circle, #35a2ff 0%, #014a88 80%)"
         >
-          <div class="text-h6 text-center q-ma-lg">Dividend Analytics {{category1}}
+          <div class="text-h6 text-center q-ma-lg">Dividend Analytics
             <q-circular-progress
               show-value
               class="text-light-blue q-ma-md"
@@ -27,6 +27,21 @@
               :show-values="true"
             />
         </q-card-section>
+        <div id="q-app" style="min-height: 100vh;">
+          <div class="q-pa-md">
+            <q-linear-progress size="25px" :value="progress1" color="accent">
+              <div class="absolute-full flex flex-center">
+                <q-badge color="white" text-color="accent" :label="progressLabel1"></q-badge>
+              </div>
+            </q-linear-progress>
+
+            <q-linear-progress size="25px" :value="progress2" color="accent" class="q-mt-sm">
+              <div class="absolute-full flex flex-center">
+                <q-badge color="white" text-color="accent" :label="progressLabel2"></q-badge>
+              </div>
+            </q-linear-progress>
+          </div>
+        </div>
       </q-card>
     </div>
   </q-card>
@@ -44,6 +59,10 @@ export default {
   data () {
     return {
       tab: 'send',
+      progress1: 0.0,
+      progress2: 0.0,
+      progressLabel1: '%',
+      progressLabel2: '%',
       value1: null,
       datacollection: null
     }
@@ -56,34 +75,35 @@ export default {
       category3: state => state.analytics.EwsInfo.EwsData[2].bycategory,
       value: state => state.analytics.circInfo
     })
+    // update: function () { // I need that side effect :)
+    // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+    // this.progress1 = this.value
+    // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+    // this.progress2 = (1.00 - this.value)
+    // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+    // this.progressLabel1 = String(this.value * 100) + '% - to Investors'
+    // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+    // this.progressLabel2 = String(100 - (this.value * 100)) + '% - to DAO'
+    // console.log('values=', this.progress1, this.progress2)
+    // return true // not used
+    // }
   },
   methods: {
     ...mapActions('analytics', ['getDryrunAction']),
-    ...mapActions('analytics', ['getEwsTable', 'setInfo']),
+    ...mapActions('analytics', ['getEwsTable']),
     submit () {
       const self = this
       this.getDryrunAction(self.accountName)
       this.getEwsTable()
-      // this.setup()
-      this.setInfo(this.setup())
+
+      this.progress1 = this.value
+      this.progress2 = (1.00 - this.value)
+      this.progressLabel1 = String(this.value * 100) + '% - to Investors'
+      this.progressLabel2 = String(100 - (this.value * 100)) + '% - to DAO'
+      console.log('values=', this.progress1, this.progress2)
       // .then(response => {
       // this.isDryRunfresh = true
       // })
-    },
-    setup () {
-      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-      const cat1 = self.category1
-      const cat2 = self.category2
-      const cat3 = self.category3
-      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-      this.value1 = cat1 + cat2 + cat3
-      console.log('from setup:', cat1, cat2, cat3, this.value1)
-      return this.value1
-    }
-  },
-  filters: {
-    toNum (value) {
-      return `$${value.toLocaleString()}`
     }
   }
 }
