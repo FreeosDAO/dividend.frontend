@@ -13,3 +13,15 @@ export const setEwsTableAttrVal = function (state, payload) {
 // state.circInfo = circularValue
 // console.log(circularValue)
 // }
+
+export const setDryTableAttrVal = function (state, payload) {
+  // const attr = payload.key
+  const val = payload.value
+  console.log('DRYTABLE=', JSON.stringify(val)) // test
+  console.log(val)
+  state.NftList = val
+}
+
+export const setCount = function (state, count) {
+  state.count = count
+}

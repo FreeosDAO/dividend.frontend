@@ -19,7 +19,7 @@
               color="light-blue"
             />
           </div>
-            <q-btn class="q-ma-lg" color="secondary" no-caps @click="submit()" label="Perform Dry Run"/>
+            <q-btn class="q-ma-lg" color="secondary" no-caps @click="dryrun" label="Perform Dry Run"/>
             <pure-vue-chart
               :points="[Number(category1).toLocaleString(),Number(category2).toLocaleString(),Number(category3).toLocaleString()]"
               :width="400"
@@ -41,6 +41,12 @@
               </div>
             </q-linear-progress>
           </div>
+          <q-table
+            title="NFT List"
+            :data="this.byuser"
+            :columns="columns"
+            row-key="name"
+          ></q-table>
         </div>
       </q-card>
     </div>
@@ -64,7 +70,36 @@ export default {
       progressLabel1: '%',
       progressLabel2: '%',
       value1: null,
-      datacollection: null
+      columns: [
+        {
+          name: 'user',
+          align: 'center',
+          label: 'Account Name',
+          field: 'user',
+          sortable: true
+        },
+        {
+          name: 'byusertotal',
+          label: 'Total %',
+          field: 'byusertotal',
+          sortable: true
+        }],
+      category: []
+    }
+  },
+  methods: {
+    ...mapActions('analytics', ['getDryrunAction', 'getByUserTotal']),
+    ...mapActions('analytics', ['getEwsTable']),
+    submit () {
+      const self = this
+      this.getDryrunAction(self.accountName)
+      this.getEwsTable()
+      this.getByUserTotal()
+      this.progress1 = this.value
+      this.progress2 = (1.00 - this.value)
+      this.progressLabel1 = String(this.value * 100) + '% - to Investors'
+      this.progressLabel2 = String(100 - (this.value * 100)) + '% - to DAO'
+      console.log('values=', this.progress1, this.progress2)
     }
   },
   computed: {
@@ -73,37 +108,12 @@ export default {
       category1: state => state.analytics.EwsInfo.EwsData[0].bycategory,
       category2: state => state.analytics.EwsInfo.EwsData[1].bycategory,
       category3: state => state.analytics.EwsInfo.EwsData[2].bycategory,
-      value: state => state.analytics.circInfo
-    })
-    // update: function () { // I need that side effect :)
-    // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-    // this.progress1 = this.value
-    // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-    // this.progress2 = (1.00 - this.value)
-    // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-    // this.progressLabel1 = String(this.value * 100) + '% - to Investors'
-    // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-    // this.progressLabel2 = String(100 - (this.value * 100)) + '% - to DAO'
-    // console.log('values=', this.progress1, this.progress2)
-    // return true // not used
-    // }
-  },
-  methods: {
-    ...mapActions('analytics', ['getDryrunAction']),
-    ...mapActions('analytics', ['getEwsTable']),
-    submit () {
-      const self = this
-      this.getDryrunAction(self.accountName)
-      this.getEwsTable()
-
-      this.progress1 = this.value
-      this.progress2 = (1.00 - this.value)
-      this.progressLabel1 = String(this.value * 100) + '% - to Investors'
-      this.progressLabel2 = String(100 - (this.value * 100)) + '% - to DAO'
-      console.log('values=', this.progress1, this.progress2)
-      // .then(response => {
-      // this.isDryRunfresh = true
-      // })
+      value: state => state.analytics.circInfo,
+      byuser: state => state.analytics.NftList
+    }),
+    dryrun: function () {
+      this.submit()
+      return true
     }
   }
 }
