@@ -165,7 +165,7 @@
                     <div class="col-xs-1 col-sm-2"></div>
                     <div class="col-xs-6 col-sm-6">
                       <q-input
-                        v-model="submitData.nftKey"
+                        v-model="submitData1.nftKey"
                         type="number"
                         outlined
                         dense
@@ -174,7 +174,7 @@
                   </div>
                   <!--   -->
                   <div>
-                    <q-btn class="q-ma-lg" color="orange" no-caps @click="submit()" label="Unlock"/>
+                    <q-btn class="q-ma-lg" color="orange" no-caps @click="submit1()" label="Unlock"/>
                     <q-btn no-caps label="Close dialog" color="primary" v-close-popup></q-btn>
                   </div>
                 </q-card-section>
@@ -207,6 +207,10 @@ export default {
         locked: false,
         tokenType: 'OPTION'
       },
+      submitData1: {
+        NFTAccountName: '',
+        nftKey: null
+      },
       isShowApprovedDialog: false,
       isShowFailedDialog: false
     }
@@ -229,7 +233,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('proposal', ['proposalNew', 'proposalRemove']),
+    ...mapActions('proposal', ['proposalNew', 'proposalRemove', 'actionUnlockNFT']),
     ...mapActions('account', ['getActionProposal']),
     submit () {
       const self = this
@@ -239,6 +243,16 @@ export default {
         .then(response => {
           // self.getAccountInfo()
           self.resetForm()
+        })
+    },
+
+    submit1 () {
+      this.submitData1.NFTAccountName = this.accountName
+      console.log('submitData1 = ', this.submitData1)
+      this.actionUnlockNFT(this.submitData1)
+        .then(response => {
+          // self.getAccountInfo()
+          // this.submitData1.NFTAccountName = '' // reset mini-form
         })
     },
 
@@ -266,5 +280,5 @@ export default {
 
 <style scoped>
 </style>
-// cleos --url https://proton-testnet.eosphere.io:443
-// push action freeosdiv unlocknft '{"nft_id":3}' -p freeandyandy@active
+
+// push action freeosdiv unlocknft '{"nft_id":3}' -p freeosfreeos@active

@@ -122,3 +122,35 @@ export async function actionProposalVote ({ state }, data) {
     return e
   }
 }
+
+export async function actionUnlockNFT ({ state }, data) {
+  const { NFTAccountName, nftKey } = data
+  console.log('actionUnlock', data)
+  const actions = [{
+    account: process.env.APP_NAME,
+    name: 'unlocknft',
+    authorization: [{
+      actor: NFTAccountName,
+      permission: 'active'
+    }],
+    data: {
+      nft_id: nftKey
+    }
+  }]
+
+  try {
+    const result = await ProtonSDK.sendTransaction(actions)
+    let responseMessage = result.processed.action_traces[0].console
+    if (!responseMessage) {
+      responseMessage = 'Unlocking Successful or no lock present.'
+    }
+    Notify.create({
+      message: responseMessage,
+      color: 'positive'
+    })
+    return result
+  } catch (e) {
+    console.log(e)
+    return e
+  }
+}

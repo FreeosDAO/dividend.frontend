@@ -132,7 +132,7 @@ module.exports = function (/* ctx */) {
       manifest: {
         name: 'FreeOS App',
         short_name: 'FreeOS App',
-        description: 'Application to claim your FreeOS tokens',
+        description: 'Application to distribute dividends',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',

@@ -23,9 +23,6 @@ export async function getNftTable (state) {
   state.commit('setCount', result.rows.length)
 }
 
-// cleos --url https://proton-testnet.eosphere.io:443 push action freeosdiv
-// regchown '{"userfrom":"ala1ma12kota","userto":"freeosfreeos","nft_id":1}' -p eosio@active
-
 export async function actionOwnerChange ({ state }, data) {
   const { currentAccountName, targetAccountName, nftKey } = data
   const actions = [{
