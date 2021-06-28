@@ -25,3 +25,11 @@ export const setDryTableAttrVal = function (state, payload) {
 export const setCount = function (state, count) {
   state.count = count
 }
+
+export const updateLoading = function (state, loading) {
+  const { progress1, progress2, progressLabel1, progressLabel2 } = loading
+  state.progress1 = progress1
+  state.progress2 = progress2
+  state.progressLabel1 = progressLabel1
+  state.progressLabel2 = progressLabel2
+}

@@ -136,6 +136,54 @@
     </q-card>
     {{eosaccount}}
       </q-card>
+      <div id="q-app" style="min-height: 100vh;">
+        <div class="q-pa-md">
+          <q-linear-progress size="25px" :value="progress1" color="accent">
+            <div class="absolute-full flex flex-center">
+              <q-badge color="white" text-color="accent" :label="progressLabel1"></q-badge>
+            </div>
+          </q-linear-progress>
+
+          <q-linear-progress size="25px" :value="progress2" color="accent" class="q-mt-sm">
+            <div class="absolute-full flex flex-center">
+              <q-badge color="white" text-color="accent" :label="progressLabel2"></q-badge>
+            </div>
+          </q-linear-progress>
+          <!--  unlock dialog  -->
+          <div class="q-pa-md">
+            <q-btn outline label="Unlock NFT" color="secondary" @click="dialog = true"></q-btn>
+            <q-btn outline label="NFT List" color="primary" @click="$router.push('/customer')"></q-btn>
+            <q-btn outline label="Analytics" color="primary" @click="$router.push('/analytics')"></q-btn>
+            <q-dialog v-model="dialog">
+              <q-card>
+                <q-card-section class="row items-center q-gutter-sm">
+                  <!-- NFT key section -->
+                  <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
+                    <div class="col-xs-5 col-sm-4 text-right">
+                      Key of NFT to unlock
+                    </div>
+                    <div class="col-xs-1 col-sm-2"></div>
+                    <div class="col-xs-6 col-sm-6">
+                      <q-input
+                        v-model="submitData.nftKey"
+                        type="number"
+                        outlined
+                        dense
+                      />
+                    </div>
+                  </div>
+                  <!--   -->
+                  <div>
+                    <q-btn class="q-ma-lg" color="orange" no-caps @click="submit()" label="Unlock"/>
+                    <q-btn no-caps label="Close dialog" color="primary" v-close-popup></q-btn>
+                  </div>
+                </q-card-section>
+              </q-card>
+            </q-dialog>
+          </div>
+          <!-- -->
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -166,7 +214,12 @@ export default {
   computed: {
     ...mapState({
       accountName: state => state.account.accountName,
-      eosaccount: state => state.account.proposalInfo.eosaccount
+      eosaccount: state => state.account.proposalInfo.eosaccount,
+      value: state => state.analytics.circInfo,
+      progress1: state => state.analytics.progress1,
+      progress2: state => state.analytics.progress2,
+      progressLabel1: state => state.analytics.progressLabel1,
+      progressLabel2: state => state.analytics.progressLabel2
     }),
     isFormFilled () {
       let a = false
@@ -213,3 +266,5 @@ export default {
 
 <style scoped>
 </style>
+// cleos --url https://proton-testnet.eosphere.io:443
+// push action freeosdiv unlocknft '{"nft_id":3}' -p freeandyandy@active

@@ -70,3 +70,7 @@ export async function getByUserTotal (state) {
   state.commit('setDryTableAttrVal', val)
   state.commit('setCount', result.rows.length)
 }
+
+export function updateLoading (state, load) {
+  state.commit('updateLoading', load)
+}

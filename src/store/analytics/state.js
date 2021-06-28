@@ -2,6 +2,10 @@ export default () => ({
   accountName: null,
   connecting: false,
   circInfo: 0.0,
+  progress1: 0.0,
+  progress2: 0.0,
+  progressLabel1: '%',
+  progressLabel2: '%',
   path: '/',
   count: null,
   EwsInfo: {

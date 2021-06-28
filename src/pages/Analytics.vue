@@ -69,6 +69,12 @@ export default {
       progress2: 0.0,
       progressLabel1: '%',
       progressLabel2: '%',
+      dataload: {
+        progress1: 0.0,
+        progress2: 0.0,
+        progressLabel1: '%',
+        progressLabel2: '%'
+      },
       value1: null,
       columns: [
         {
@@ -89,7 +95,7 @@ export default {
   },
   methods: {
     ...mapActions('analytics', ['getDryrunAction', 'getByUserTotal']),
-    ...mapActions('analytics', ['getEwsTable']),
+    ...mapActions('analytics', ['getEwsTable', 'updateLoading']),
     submit () {
       const self = this
       this.getDryrunAction(self.accountName)
@@ -100,6 +106,11 @@ export default {
       this.progressLabel1 = String(this.value * 100) + '% - to Investors'
       this.progressLabel2 = String(100 - (this.value * 100)) + '% - to DAO'
       console.log('values=', this.progress1, this.progress2)
+      this.dataload.progress1 = this.progress1
+      this.dataload.progress2 = this.progress2
+      this.dataload.progressLabel1 = this.progressLabel1
+      this.dataload.progressLabel2 = this.progressLabel2
+      this.updateLoading(this.dataload)
     }
   },
   computed: {

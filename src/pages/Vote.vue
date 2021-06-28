@@ -118,6 +118,20 @@
       <div v-else>NOTHING TO VOTE <br> NO ACTIVE PROPOSAL</div>
     </q-card>
       </q-card>
+      <div id="q-app" style="min-height: 100vh;">
+        <div class="q-pa-md">
+          <q-linear-progress size="25px" :value="progress1" color="accent">
+            <div class="absolute-full flex flex-center">
+              <q-badge color="white" text-color="accent" :label="progressLabel1"></q-badge>
+            </div>
+          </q-linear-progress>
+          <q-linear-progress size="25px" :value="progress2" color="accent" class="q-mt-sm">
+            <div class="absolute-full flex flex-center">
+              <q-badge color="white" text-color="accent" :label="progressLabel2"></q-badge>
+            </div>
+          </q-linear-progress>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -164,7 +178,11 @@ export default {
       expires_at: state => state.account.proposalInfo.proposalInfo.expires_at,
       threshold: state => state.account.proposalInfo.proposalInfo.threshold,
       rates_left: state => state.account.proposalInfo.proposalInfo.rates_left,
-      accrued: state => state.account.proposalInfo.proposalInfo.accrued
+      accrued: state => state.account.proposalInfo.proposalInfo.accrued,
+      progress1: state => state.analytics.progress1,
+      progress2: state => state.analytics.progress2,
+      progressLabel1: state => state.analytics.progressLabel1,
+      progressLabel2: state => state.analytics.progressLabel2
       // active: state => state.account.active
     })
   },
