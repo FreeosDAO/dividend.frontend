@@ -84,24 +84,9 @@ export async function connectProton (state, name) {
 
 export const logout = async function ({ commit }) {
   commit('clearAccount', null)
-  await ProtonSDK.logout()
-
   // this.$router.push('/')
+  await ProtonSDK.logout()
 }
-// export async function getLiquidInAccount (state) {
-//  const result = await connect({
-//    json: true,
-//    code: 'eosio.token', // account containing smart contract
-//    scope: state.state.accountName, // the subset of the table to query
-//    table: 'accounts', // the name of the table
-//    limit: -1 // limit on number of rows returned
-//  })
-//  const val = {
-//    key: 'liquidInAccount',
-//    value: result.rows[0] || null
-//  }
-//  state.commit('setClaimAttributeVal', val)
-// }
 
 export function getInfo (state) {
   state.dispatch('getActionProposal')
@@ -130,12 +115,8 @@ export const setpath = function ({ commit }, pathe) {
   // this.$router.push('/')
 }
 
-// run action query from the blockchain
+// run action query from the blockchain TODO replace whole function
 export async function getActionQuery ({ state }, accountName) {
-  function commit (userAfterBalance) {
-
-  }
-
   try {
     const actions = [{
       account: process.env.APP_NAME,
@@ -158,9 +139,9 @@ export async function getActionQuery ({ state }, accountName) {
         table: 'messages',
         limit: 1
       })
-      const userAfterBalance = (resp3After.rows[0].errorno) || 0 // TODO correct
-      console.log(userAfterBalance)
-      commit('setUserAfterBalance', userAfterBalance)
+      // eslint-disable-next-line no-unused-vars
+      const userAfterBalance = (resp3After.rows[0].errorno) || 0 // TODO ??
+      // commit('setUserAfterBalance', userAfterBalance)
     } else {
       notifyAlert('err', 'EV01: The action could not be completed.')
     }
@@ -182,7 +163,7 @@ export async function getActionQuery ({ state }, accountName) {
   }
 }
 
-// retrieve logged user type  - read from message
+// retrieve logged user type  - read from message //TODO
 // export async function getActionQuery (state) {
 // const result = await connect({
 // json: true,

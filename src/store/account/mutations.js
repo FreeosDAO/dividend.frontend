@@ -17,7 +17,7 @@ export const clearAccount = function (state) {
   if (this.$router.currentRoute.fullPath !== '/') {
     this.$router.push({ path: '/' })
   }
-  notifyAlert(1, 'logout successfully')
+  notifyAlert(1, 'logout successful')
 }
 
 export const setConnecting = (state, connecting) => {

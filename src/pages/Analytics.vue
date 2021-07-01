@@ -10,22 +10,22 @@
           class="my-card text-white"
           style="background: radial-gradient(circle, #35a2ff 0%, #014a88 80%)"
         >
-          <div class="text-h6 text-center q-ma-lg">Dividend Analytics
-            <q-circular-progress
-              show-value
-              class="text-light-blue q-ma-md"
-              :value=value
-              size="50px"
-              color="light-blue"
-            />
-          </div>
-            <q-btn class="q-ma-lg" color="secondary" no-caps @click="dryrun" label="Perform Dry Run"/>
-            <pure-vue-chart
+          <div id="nav" class="text-h6 text-center q-ma-lg"> <img id="icon" width="65" src="~assets/decentralised.jpg">
+            <span id="text">&nbsp; Dividend Analytics</span></div>
+            <q-btn class="q-ma-lg" color="blue" no-caps @click="dryrun" label="Perform Dry Run"/>
+          <div align="center">
+          <pure-vue-chart
               :points="[Number(category1).toLocaleString(),Number(category2).toLocaleString(),Number(category3).toLocaleString()]"
               :width="400"
               :height="200"
               :show-values="true"
             />
+          </div>
+          <q-breadcrumbs separator="---" align="center" class="white" active-color="white">
+            <q-breadcrumbs-el label="Iteration (WayFinder)"></q-breadcrumbs-el>
+            <q-breadcrumbs-el label="Horizontal (WayFinder)"></q-breadcrumbs-el>
+            <q-breadcrumbs-el label="Vertical (WayFounder)"></q-breadcrumbs-el>
+          </q-breadcrumbs>
         </q-card-section>
         <div id="q-app" style="min-height: 100vh;">
           <div class="q-pa-md">
@@ -86,6 +86,7 @@ export default {
         },
         {
           name: 'byusertotal',
+          format: (val, row) => `${val}%`,
           label: 'Total %',
           field: 'byusertotal',
           sortable: true
@@ -93,9 +94,13 @@ export default {
       category: []
     }
   },
+  created () {
+    document.addEventListener('beforeunload', this.handler)
+  },
   methods: {
     ...mapActions('analytics', ['getDryrunAction', 'getByUserTotal']),
     ...mapActions('analytics', ['getEwsTable', 'updateLoading']),
+    ...mapActions('account', ['logout']),
     submit () {
       const self = this
       this.getDryrunAction(self.accountName)
@@ -120,8 +125,16 @@ export default {
       category2: state => state.analytics.EwsInfo.EwsData[1].bycategory,
       category3: state => state.analytics.EwsInfo.EwsData[2].bycategory,
       value: state => state.analytics.circInfo,
-      byuser: state => state.analytics.NftList
+      byuser: state => state.analytics.NftList,
+      autologout: state => state.account.autoLogout
     }),
+    // eslint-disable-next-line vue/return-in-computed-property
+    handler: function handler (event) {
+      console.log('going out')
+      if (this.autologout) {
+        this.logout()
+      }
+    },
     dryrun: function () {
       this.submit()
       return true

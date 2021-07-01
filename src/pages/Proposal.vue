@@ -19,14 +19,13 @@
       style="background: radial-gradient(circle, #35a2ff 0%, #014a88 80%)"
     >
       <q-card-section>
-            <div class="text-h6 text-center q-ma-lg">Create NFT Proposal {{eosaccount}}</div>
+            <div id="nav" class="text-h6 text-center q-ma-lg"> <img id="icon" width="65" src="~assets/decentralised.jpg">
+              <span id="text">&nbsp; Create NFT Proposal</span></div>
 <!-- Dialog -->
         <div class="q-pa-md">
-          <q-btn flat justify-center label="(Remove Active)" color="white" @click="dialog = true"></q-btn>
-
-          <q-dialog v-model="dialog">
+          <q-dialog v-model="dialogreset">
             <q-card>
-              <q-card-section class="row items-center q-gutter-sm"> <!-- TODO -->
+              <q-card-section class="row items-center q-gutter-sm">
                 Remove Active Blockchain Proposal
                 <q-btn class="q-ma-lg" color="orange" no-caps @click="breset()" label="DO IT!"/>
                 <q-btn no-caps label="Close dialog" color="primary" v-close-popup></q-btn>
@@ -36,19 +35,15 @@
         </div>
 <!-- end of DIALOG -->
             <div style="max-width: 500px; margin: 0 auto;">
-              <!-- Select corect roi cap -->
-              <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs"> -->
-                <div class="col-xs-5 col-sm-4 text-right">
-                  Policy cap
-                </div>
-                <div class="col-xs-1 col-sm-2"></div>
+              <!-- Select correct roi cap -->
+              <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
                 <div class="col-xs-6 col-sm-6">
                   <q-btn-toggle
                     v-model="submitData.cap"
                     :options="[
-                      {label: 'Horizontal', value: 1},
-                      {label: 'Vertical', value: 2},
-                      {label: 'Iterative', value: 3}
+                      {label: 'Iteration', value: 1},
+                      {label: 'Horizontal', value: 2},
+                      {label: 'Vertical', value: 3}
                     ]"
                   ></q-btn-toggle>
                 </div>
@@ -56,7 +51,7 @@
               <!-- eosaccount section -->
               <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
                 <div class="col-xs-5 col-sm-4 text-right">
-                  EOS account
+                  Account
                 </div>
                 <div class="col-xs-1 col-sm-2"></div>
                 <div class="col-xs-6 col-sm-6">
@@ -71,7 +66,7 @@
               <!-- Percentage Section -->
               <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
                 <div class="col-xs-5 col-sm-4 text-right">
-                  Percentage {{submitData.cap}}
+                  Percentage
                 </div>
                 <div class="col-xs-1 col-sm-2"></div>
                 <div class="col-xs-6 col-sm-6">
@@ -99,7 +94,7 @@
               <div v-if="submitData.cap===1">
               <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
                 <div class="col-xs-5 col-sm-4 text-right">
-                  Rates to pay
+                  Iterations to pay
                 </div>
                 <div class="col-xs-1 col-sm-2"></div>
                 <div class="col-xs-6 col-sm-6">
@@ -129,7 +124,7 @@
               </div>
             </div>
             <div class="flex justify-center">
-              <q-btn class="q-ma-lg" color="primary" no-caps @click="submit()" label="Submit" :disable="!isFormFilled"/>
+              <q-btn icon="link" class="q-ma-lg" color="primary" no-caps @click="submit()" label="Submit" :disable="!isFormFilled"/>
               <q-btn class="q-ma-lg" color="secondary" no-caps @click="resetForm()" label="Clear"/>
             </div>
       </q-card-section>
@@ -137,7 +132,7 @@
     {{eosaccount}}
       </q-card>
       <div id="q-app" style="min-height: 100vh;">
-        <div class="q-pa-md">
+        <div class="row items-center q-gutter-sm">
           <q-linear-progress size="25px" :value="progress1" color="accent">
             <div class="absolute-full flex flex-center">
               <q-badge color="white" text-color="accent" :label="progressLabel1"></q-badge>
@@ -150,10 +145,11 @@
             </div>
           </q-linear-progress>
           <!--  unlock dialog  -->
-          <div class="q-pa-md">
-            <q-btn outline label="Unlock NFT" color="secondary" @click="dialog = true"></q-btn>
-            <q-btn outline label="NFT List" color="primary" @click="$router.push('/customer')"></q-btn>
-            <q-btn outline label="Analytics" color="primary" @click="$router.push('/analytics')"></q-btn>
+          <div class="row items-center q-gutter-sm">
+            <q-btn flat icon="link" label="Cancel Proposal" color="orange" @click="dialogreset = true"></q-btn>
+            <q-btn flat icon="link" label="Unlock NFT" color="secondary" @click="dialog = true"></q-btn>
+            <q-btn flat label="NFT List" color="blue" @click="$router.push('/customer')"></q-btn>
+            <q-btn flat label="Analytics" color="blue" @click="$router.push('/analytics')"></q-btn>
             <q-dialog v-model="dialog">
               <q-card>
                 <q-card-section class="row items-center q-gutter-sm">
@@ -174,7 +170,7 @@
                   </div>
                   <!--   -->
                   <div>
-                    <q-btn class="q-ma-lg" color="orange" no-caps @click="submit1()" label="Unlock"/>
+                    <q-btn icon="link" class="q-ma-lg" color="orange" no-caps @click="submit1()" label="Unlock"/>
                     <q-btn no-caps label="Close dialog" color="primary" v-close-popup></q-btn>
                   </div>
                 </q-card-section>
@@ -197,6 +193,7 @@ export default {
     return {
       tab: 'send',
       dialog: false,
+      dialogreset: false,
       submitData: {
         currentAccountName: '',
         eosaccount: null,
@@ -214,6 +211,9 @@ export default {
       isShowApprovedDialog: false,
       isShowFailedDialog: false
     }
+  },
+  created () { // for automatic logout
+    document.addEventListener('beforeunload', this.handler)
   },
   computed: {
     ...mapState({
@@ -252,7 +252,7 @@ export default {
       this.actionUnlockNFT(this.submitData1)
         .then(response => {
           // self.getAccountInfo()
-          // this.submitData1.NFTAccountName = '' // reset mini-form
+          this.submitData1.NFTAccountName = '' // reset mini-form
         })
     },
 
@@ -278,7 +278,21 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+nav {
+  display: inline-block;
+  height: 50px;
+  margin: 30px;
+  padding: 2px;
+}
+#text,
+#icon {
+  line-height: 40px;
+}
+#icon {
+  vertical-align: middle;
+  font-size: 30px;
+}
 </style>
 
 // push action freeosdiv unlocknft '{"nft_id":3}' -p freeosfreeos@active

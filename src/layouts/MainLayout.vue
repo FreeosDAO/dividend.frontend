@@ -5,6 +5,7 @@
       <q-toolbar style="justify-content: space-between;">
         <q-btn :style="'visibility: ' + (isAuthenticated ? 'visible' : 'hidden')" dense flat round icon="menu" @click="drawer = !drawer" />
         <div style="display: flex; align-items: center;">
+          <img width="35" src="~assets/decentralised.jpg"> &nbsp;
           <div v-if="isAuthenticated" style="margin-right: 1rem;">{{accountName}}</div>
           <q-btn color="primary" label="Login" v-if="!isAuthenticated" @click="() => connectWallet('anchor')">
           </q-btn>
@@ -40,14 +41,14 @@
     <q-page-container>
       <div class="text-center q-ma-md row">
         <div class="col-md-5"></div>
-        <div class="col-xs-12 col-md-2 q-mb-md">
-          <img width="110" src="~assets/tfreeos.png">
-        </div>
+        <!-- <div class="col-xs-12 col-md-2 q-mb-md">
+          <img width="110" src="~assets/decentralised.jpg">
+        </div> -->
       </div>
       <router-view />
     </q-page-container>
 
-    <q-footer bordered class="bg-dark text-white" >
+    <!-- <q-footer bordered class="bg-dark text-white" >
       <q-toolbar>
         <q-toolbar-title>
           <q-avatar >
@@ -55,13 +56,12 @@
           </q-avatar>
         </q-toolbar-title>
       </q-toolbar>
-    </q-footer>
+    </q-footer> -->
   </q-layout>
 </template>
 <script>
 // import WalletLoginDialog from 'components/accountManagement/WalletLoginDialog'
 import { mapState, mapActions, mapGetters } from 'vuex'
-// import { getActionProposal } from 'src/store/account/actions'
 const menuList = [
   {
     icon: 'monetization_on',

@@ -19,7 +19,8 @@
       <!-- This part is displayed conditionally -->
       <div class="flex justify-center" v-if="active">
       <q-card-section>
-            <div class="text-h6 text-center q-ma-lg">Vote this NFT Proposal</div>
+        <div id="nav" class="text-h6 text-center q-ma-lg"> <img id="icon" width="65" src="~assets/decentralised.jpg">
+          <span id="text">&nbsp; Vote NFT Proposal</span></div>
             <div style="max-width: 500px; margin: 0 auto;">
               <!-- Select corect roi cap -->
               <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
@@ -32,9 +33,9 @@
                     toggle-color="blue"
                     v-model="roi_target_cap"
                     :options="[
-                      {label: 'Horizontal', value: 1},
-                      {label: 'Vertical', value: 2},
-                      {label: 'Iterative', value: 3}
+                      {label: 'Iteration', value: 1},
+                      {label: 'Horizontal', value: 2},
+                      {label: 'Vertical', value: 3}
                     ]"
                   ></q-btn-toggle>
                 </div>
@@ -43,7 +44,7 @@
               <!-- eosaccount section -->
               <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
                 <div class="col-xs-5 col-sm-4 text-right">
-                  EOS-type account
+                  Account
                 </div>
                 <div class="col-xs-1 col-sm-2"></div>
                 <div class="col-xs-6 col-sm-6">
@@ -111,7 +112,7 @@
                  ></q-toggle>
                   <div v-if="voteresult" style="color :white;">ACCEPT</div>
                   <div v-else style="color :red;"><b>REJECT</b></div>
-                 <q-btn class="q-ma-lg" color="blue" no-caps @click="submit()" label="Submit" />
+                 <q-btn icon="link" class="q-ma-lg" color="blue" no-caps @click="submit()" label="Submit" />
             </div>
       </q-card-section>
       </div>
@@ -164,6 +165,7 @@ export default {
       this.getActionProposal()
     }, 300000) // call each 30 seconds then
     this.isProposalActive()
+    document.addEventListener('beforeunload', this.handler)
   },
   beforeDestroy () {
     clearInterval(this.setIntervalId)

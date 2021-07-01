@@ -9,6 +9,7 @@
 const path = require('path')
 
 const envparser = require('./envparser.js')
+const { QBtn } = require('quasar')
 
 module.exports = function (/* ctx */) {
   return {
@@ -107,7 +108,7 @@ module.exports = function (/* ctx */) {
       // (like functional components as one of the examples),
       // you can manually specify Quasar components/directives to be available everywhere:
       //
-      // components: [],
+      components: [],
       // directives: [],
 
       // Quasar plugins

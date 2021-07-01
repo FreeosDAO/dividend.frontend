@@ -1,5 +1,6 @@
 export default () => ({
   accountName: null,
+  autoLogout: false, // Automatic logout at the end of each page.
   connecting: false,
   path: '/',
   active: true,

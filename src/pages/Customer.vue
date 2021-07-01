@@ -6,11 +6,12 @@
       class="my-card text-white"
       style="background: radial-gradient(circle, #35a2ff 0%, #014a88 80%)"
       >
-      <div class="text-h6 text-center q-ma-lg">User Access </div>
+      <div id="nav" class="text-h6 text-center q-ma-lg"> <img id="icon" width="65" src="~assets/decentralised.jpg">
+        <span id="text">&nbsp; NFT Ownership</span></div>
       <!-- <q-btn class="q-ma-lg" color="secondary" no-caps @click="submit()" label="Refresh"/> -->
       <div id="q-a">
         <div class="q-pa-md">
-          <q-btn label="Change NFT Ownership" color="primary" @click="dialog = true"></q-btn>
+          <q-btn icon="link" label="Change NFT Ownership" color="primary" @click="dialog = true"></q-btn>
           <q-dialog v-model="dialog">
             <q-card>
               <q-card-section class="row items-center q-gutter-sm">
@@ -72,13 +73,19 @@
       </div>
       <div id="q-pp">
         <div class="q-pa-md">
-          <q-table
-            title="NFT List"
-            :data="this.category"
-            :columns="columns"
-            row-key="name"
-          ></q-table>
+          <div id="q-app" style="min-height: 100vh;">
+            <div class="q-pa-md">
+              <div class="q-pa-md">
+                <q-table
+                  title="NFT List"
+                  :data="this.category"
+                  :columns="columns"
+                  row-key="name"
+                ></q-table>
+            </div>
+          </div>
         </div>
+      </div>
       </div>
     </q-card-section>
     </div>
@@ -89,9 +96,8 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 // import { connect } from 'src/utils/smartContractRequest'
-
 export default {
-  name: 'Customer',
+  name: 'NFT Owner',
   data () {
     return {
       columns: [
@@ -142,7 +148,7 @@ export default {
         },
         {
           name: 'rates_left',
-          label: 'Rates Left',
+          label: 'Iterations Left',
           field: 'rates_left',
           sortable: true,
           sort: (a, b) => parseInt(a, 10) - parseInt(b, 10)
@@ -172,6 +178,7 @@ export default {
     this.setIntervalId = setInterval(() => {
       this.getNftTable()
     }, 60000) // call each 60 seconds
+    document.addEventListener('beforeunload', this.handler)
   },
   beforeDestroy () {
     clearInterval(this.setIntervalId)
