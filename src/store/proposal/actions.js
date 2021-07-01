@@ -59,7 +59,8 @@ export async function proposalRemove ({ state }, currentAccountName) {
     const result = await ProtonSDK.sendTransaction(actions)
     let responseMessage = result.processed.action_traces[0].console
     if (!responseMessage) {
-      responseMessage = 'Proposal removing successful'
+      responseMessage = 'Proposal removed successfully'
+      this.setProposalAct('false')
     }
     Notify.create({
       message: responseMessage,
@@ -153,4 +154,8 @@ export async function actionUnlockNFT ({ state }, data) {
     console.log(e)
     return e
   }
+}
+
+export function setProposalActive ({ commit }, active) {
+  commit('setProposalAct', active)
 }

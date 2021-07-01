@@ -34,6 +34,21 @@
           </q-dialog>
         </div>
 <!-- end of DIALOG -->
+        <!-- Dialog Info -->
+        <div class="q-pa-md">
+          <q-dialog v-model="dialoginfo">
+            <q-card>
+              <q-card-section class="row items-center q-gutter-sm">
+                <p>Proposal Information <br>
+                Proposal (acct) {{propaccount}}<br>
+                Percentage {{proposal_percentage}}<br>
+                Expiration {{expires_at}}</p>
+                <q-btn no-caps label="Close dialog" color="primary" v-close-popup></q-btn>
+              </q-card-section>
+            </q-card>
+          </q-dialog>
+        </div>
+        <!-- end of DIALOG  Info -->
             <div style="max-width: 500px; margin: 0 auto;">
               <!-- Select correct roi cap -->
               <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
@@ -125,11 +140,12 @@
             </div>
             <div class="flex justify-center">
               <q-btn icon="link" class="q-ma-lg" color="primary" no-caps @click="submit()" label="Submit" :disable="!isFormFilled"/>
-              <q-btn class="q-ma-lg" color="secondary" no-caps @click="resetForm()" label="Clear"/>
+              <q-btn class="q-ma-lg" color="secondary" no-caps @click="resetForm()" label="Clear"/><br>
+              <q-btn v-if="isProposalActive===1" icon="info" no-caps class="q-ma-lg" label="Proposal Active" @click="dialoginfo = true"  />
+              <q-btn v-else icon="info" class="q-ma-lg" no-caps label="No Active Proposal" @click="dialoginfo = true" />
             </div>
       </q-card-section>
     </q-card>
-    {{eosaccount}}
       </q-card>
       <div id="q-app" style="min-height: 100vh;">
         <div class="row items-center q-gutter-sm">
@@ -194,6 +210,7 @@ export default {
       tab: 'send',
       dialog: false,
       dialogreset: false,
+      dialoginfo: false,
       submitData: {
         currentAccountName: '',
         eosaccount: null,
@@ -214,16 +231,25 @@ export default {
   },
   created () { // for automatic logout
     document.addEventListener('beforeunload', this.handler)
+    this.getActionProposal()
   },
   computed: {
     ...mapState({
       accountName: state => state.account.accountName,
-      eosaccount: state => state.account.proposalInfo.eosaccount,
+      propaccount: state => state.account.proposalInfo.proposalInfo.eosaccount,
       value: state => state.analytics.circInfo,
       progress1: state => state.analytics.progress1,
       progress2: state => state.analytics.progress2,
       progressLabel1: state => state.analytics.progressLabel1,
-      progressLabel2: state => state.analytics.progressLabel2
+      progressLabel2: state => state.analytics.progressLabel2,
+      isProposalActive: state => state.proposal.isproposalactive,
+      roi_target_cap: state => state.account.proposalInfo.proposalInfo.roi_target_cap,
+      proposal_percentage: state => state.account.proposalInfo.proposalInfo.proposal_percentage,
+      locked: state => state.account.proposalInfo.proposalInfo.locked,
+      expires_at: state => state.account.proposalInfo.proposalInfo.expires_at,
+      threshold: state => state.account.proposalInfo.proposalInfo.threshold,
+      rates_left: state => state.account.proposalInfo.proposalInfo.rates_left,
+      accrued: state => state.account.proposalInfo.proposalInfo.accrued
     }),
     isFormFilled () {
       let a = false
@@ -233,7 +259,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('proposal', ['proposalNew', 'proposalRemove', 'actionUnlockNFT']),
+    ...mapActions('proposal', ['proposalNew', 'proposalRemove', 'actionUnlockNFT', 'setProposalActive']),
     ...mapActions('account', ['getActionProposal']),
     submit () {
       const self = this
@@ -241,7 +267,8 @@ export default {
       this.submitData.currentAccountName = this.accountName
       this.proposalNew(this.submitData)
         .then(response => {
-          // self.getAccountInfo()
+          this.setProposalActive(1)
+          this.getActionProposal()
           self.resetForm()
         })
     },
@@ -259,11 +286,14 @@ export default {
     breset () {
       this.submitData.currentAccountName = this.accountName
       this.proposalRemove(this.accountName)
+      this.setProposalActive(0)
+      this.getActionProposal()
         .then(response => {
-          // self.getAccountInfo()
+          // this.setProposalActive(0)
         })
     },
-
+    propinfo () {
+    },
     resetForm () {
       this.submitData = {
         eosaccount: '',
@@ -292,6 +322,10 @@ nav {
 #icon {
   vertical-align: middle;
   font-size: 30px;
+}
+#mydiv{
+  position: fixed;
+  bottom: 0;
 }
 </style>
 
