@@ -7,7 +7,7 @@
       style="background: radial-gradient(circle, #35a2ff 0%, #014a88 80%)"
       >
       <div id="nav" class="text-h6 text-center q-ma-lg"> <img id="icon" width="65" src="~assets/decentralised.jpg">
-        <span id="text">&nbsp; NFT Ownership</span></div>
+        <span id="text">&nbsp; NFT Summary by Owner</span></div>
       <!-- <q-btn class="q-ma-lg" color="secondary" no-caps @click="submit()" label="Refresh"/> -->
       <div id="q-a">
         <div class="q-pa-md">
@@ -97,7 +97,7 @@
 import { mapState, mapActions } from 'vuex'
 // import { connect } from 'src/utils/smartContractRequest'
 export default {
-  name: 'NFT Owner',
+  name: 'Customer',
   data () {
     return {
       columns: [
@@ -124,6 +124,7 @@ export default {
           name: 'nft_percentage',
           label: 'NFT Percentage',
           field: 'nft_percentage',
+          format: (val) => `${parseFloat(val)}%`,
           sortable: true
         },
         {
@@ -214,17 +215,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-table {
-  $border: 1px solid #eee;
-  border: $border;
-  width: 100%;
-  max-width: 500px;
-  margin: 0 auto;
-td {
-  padding: 5px;
-  border: $border;
-}
-}
-
-</style>

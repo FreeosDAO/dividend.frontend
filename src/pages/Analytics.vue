@@ -1,4 +1,4 @@
-<template>
+<template xmlns:justify-content="http://www.w3.org/1999/xhtml">
 <div>
   <q-card class="q-pa-md">
     <div class="q-gutter-y-md q-mx-auto" style="max-width: 600px">
@@ -13,15 +13,17 @@
           <div id="nav" class="text-h6 text-center q-ma-lg"> <img id="icon" width="65" src="~assets/decentralised.jpg">
             <span id="text">&nbsp; Dividend Analytics</span></div>
             <q-btn class="q-ma-lg" color="blue" no-caps @click="dryrun" label="Perform Dry Run"/>
-          <div align="center">
+          <div class="container">
+            <div class="child">
           <pure-vue-chart
               :points="[Number(category1).toLocaleString(),Number(category2).toLocaleString(),Number(category3).toLocaleString()]"
               :width="400"
               :height="200"
               :show-values="true"
             />
+            </div>
           </div>
-          <q-breadcrumbs separator="---" align="center" class="white" active-color="white">
+          <q-breadcrumbs separator="-" align="center" class="white" active-color="white">
             <q-breadcrumbs-el label="Iteration (WayFinder)"></q-breadcrumbs-el>
             <q-breadcrumbs-el label="Horizontal (WayFinder)"></q-breadcrumbs-el>
             <q-breadcrumbs-el label="Vertical (WayFounder)"></q-breadcrumbs-el>
@@ -86,8 +88,8 @@ export default {
         },
         {
           name: 'byusertotal',
-          format: (val, row) => `${val}%`,
           label: 'Total %',
+          format: (val) => `${parseFloat(val)}%`,
           field: 'byusertotal',
           sortable: true
         }],
@@ -142,3 +144,9 @@ export default {
   }
 }
 </script>
+<style>
+.container {
+  display: flex;
+  justify-content: center;
+}
+</style>
