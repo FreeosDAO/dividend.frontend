@@ -7,11 +7,9 @@ const routes = [
       { path: '/proposal', component: () => import('pages/Proposal.vue') },
       { path: '/vote', component: () => import('pages/Vote.vue') },
       { path: '/customer', component: () => import('pages/Customer.vue') },
-      { path: '/test', component: () => import('pages/Test.vue') },
       { path: '/analytics', component: () => import('pages/Analytics.vue') }
     ]
   },
-
   // Always leave this as last one,
   // but you can also remove it
   {

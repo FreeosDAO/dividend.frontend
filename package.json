@@ -11,6 +11,7 @@
     "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
+    "@melmacaluso/vue-modal": "^2.1.0",
     "@protonprotocol/proton-web-sdk": "^2.7.0",
     "@quasar/extras": "^1.0.0",
     "@quasar/quasar-app-extension-dotenv": "^1.0.5",

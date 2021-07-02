@@ -29,13 +29,13 @@
                 </div>
                 <div class="col-xs-1 col-sm-2"></div> -->
                 <div class="col-xs-6 col-sm-6">
-                  <q-btn-toggle
+                  <q-btn-toggle no-caps
                     toggle-color="blue"
                     v-model="roi_target_cap"
                     :options="[
-                      {label: 'Iteration', value: 1},
-                      {label: 'Horizontal', value: 2},
-                      {label: 'Vertical', value: 3}
+                      {label: 'WayFinder', value: 1},
+                      {label: 'WayFarer', value: 2},
+                      {label: 'WayFounder', value: 3}
                     ]"
                   ></q-btn-toggle>
                 </div>

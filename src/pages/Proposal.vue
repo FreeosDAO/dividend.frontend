@@ -25,10 +25,10 @@
         <div class="q-pa-md">
           <q-dialog v-model="dialogreset">
             <q-card>
+              <q-card-section class="row items-center q-gutter-sm">Remove Active Blockchain Proposal</q-card-section>
               <q-card-section class="row items-center q-gutter-sm">
-                Remove Active Blockchain Proposal
-                <q-btn class="q-ma-lg" color="orange" no-caps @click="breset()" label="DO IT!"/>
-                <q-btn no-caps label="Close dialog" color="primary" v-close-popup></q-btn>
+                <q-btn class="q-ma-lg" color="orange" no-caps @click="breset()" label="Remove Proposal"/>
+                <q-btn no-caps label="Close Dialog" color="primary" v-close-popup></q-btn>
               </q-card-section>
             </q-card>
           </q-dialog>
@@ -38,7 +38,7 @@
         <div class="q-pa-md">
           <q-dialog v-model="dialoginfo">
             <q-card>
-              <q-card-section class="row items-center q-gutter-sm">
+                <q-card-section class="row items-center q-gutter-sm">
                 <p>Proposal Information <br>
                 Proposal (acct) {{propaccount}}<br>
                 Percentage {{proposal_percentage}}<br>
@@ -53,12 +53,12 @@
               <!-- Select correct roi cap -->
               <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
                 <div class="col-xs-6 col-sm-6">
-                  <q-btn-toggle
+                  <q-btn-toggle no-caps
                     v-model="submitData.cap"
                     :options="[
-                      {label: 'Iteration', value: 1},
-                      {label: 'Horizontal', value: 2},
-                      {label: 'Vertical', value: 3}
+                      {label: 'WayFinder', value: 1},
+                      {label: 'WayFarer', value: 2},
+                      {label: 'WayFounder', value: 3}
                     ]"
                   ></q-btn-toggle>
                 </div>
@@ -141,8 +141,8 @@
             <div class="flex justify-center">
               <q-btn icon="link" class="q-ma-lg" color="primary" no-caps @click="submit()" label="Submit" :disable="!isFormFilled"/>
               <q-btn class="q-ma-lg" color="secondary" no-caps @click="resetForm()" label="Clear"/><br>
-              <q-btn v-if="isProposalActive===1" icon="info" no-caps class="q-ma-lg" label="Proposal Active" @click="dialoginfo = true"  />
-              <q-btn v-else icon="info" class="q-ma-lg" no-caps label="No Active Proposal" @click="dialoginfo = true" />
+              <q-btn v-if="isProposalActive===1" icon="info" no-caps class="q-ma-lg" label="Proposal Active" @click="dialogInfoService()" />
+              <q-btn v-else icon="info" class="q-ma-lg" no-caps label="No Active Proposal" @click="dialogInfoService()" />
             </div>
       </q-card-section>
     </q-card>
@@ -272,7 +272,12 @@ export default {
           self.resetForm()
         })
     },
-
+    yourOpenFn () {
+      console.log('yourOpenFn invoked.')
+    },
+    yourCloseFn () {
+      console.log('yourCloseFn invoked.')
+    },
     submit1 () {
       this.submitData1.NFTAccountName = this.accountName
       console.log('submitData1 = ', this.submitData1)
@@ -282,7 +287,10 @@ export default {
           this.submitData1.NFTAccountName = '' // reset mini-form
         })
     },
-
+    dialogInfoService () {
+      this.dialoginfo = true
+      this.getActionProposal()
+    },
     breset () {
       this.submitData.currentAccountName = this.accountName
       this.proposalRemove(this.accountName)
@@ -291,8 +299,6 @@ export default {
         .then(response => {
           // this.setProposalActive(0)
         })
-    },
-    propinfo () {
     },
     resetForm () {
       this.submitData = {

@@ -23,10 +23,10 @@
             />
             </div>
           </div>
-          <q-breadcrumbs separator="-" align="center" class="white" active-color="white">
-            <q-breadcrumbs-el label="Iteration (WayFinder)"></q-breadcrumbs-el>
-            <q-breadcrumbs-el label="Horizontal (WayFinder)"></q-breadcrumbs-el>
-            <q-breadcrumbs-el label="Vertical (WayFounder)"></q-breadcrumbs-el>
+          <q-breadcrumbs separator="--" align="center" class="white" active-color="white">
+            <q-breadcrumbs-el label="WayFinder"></q-breadcrumbs-el>
+            <q-breadcrumbs-el label="WayFarer"></q-breadcrumbs-el>
+            <q-breadcrumbs-el label="WayFounder"></q-breadcrumbs-el>
           </q-breadcrumbs>
         </q-card-section>
         <div id="q-app" style="min-height: 100vh;">

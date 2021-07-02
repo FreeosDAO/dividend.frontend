@@ -77,7 +77,7 @@
             <div class="q-pa-md">
               <div class="q-pa-md">
                 <q-table
-                  title="NFT List"
+                  title="NFT Summary by Owner"
                   :data="this.category"
                   :columns="columns"
                   row-key="name"
