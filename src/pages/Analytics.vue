@@ -12,7 +12,7 @@
         >
           <div id="nav" class="text-h6 text-center q-ma-lg"> <img id="icon" width="65" src="~assets/decentralised.jpg">
             <span id="text">&nbsp; Dividend Analytics</span></div>
-            <q-btn class="q-ma-lg" color="blue" no-caps @click="dryrun" label="Perform Dry Run"/>
+            <q-btn class="q-ma-lg" color="blue" no-caps @click="submit()" label="Perform Dry Run"/>
           <div class="container">
             <div class="child">
           <pure-vue-chart
@@ -90,14 +90,16 @@ export default {
           name: 'byusertotal',
           label: 'Total %',
           format: (val) => `${parseFloat(val)}%`,
+          sort: (a, b) => parseFloat(a) - parseFloat(b),
           field: 'byusertotal',
           sortable: true
         }],
       category: []
     }
   },
-  created () {
-    document.addEventListener('beforeunload', this.handler)
+  mounted () {
+    this.getEwsTable()
+    this.submit()
   },
   methods: {
     ...mapActions('analytics', ['getDryrunAction', 'getByUserTotal']),
@@ -105,14 +107,16 @@ export default {
     ...mapActions('account', ['logout']),
     submit () {
       const self = this
-      this.getDryrunAction(self.accountName)
+      this.getDryrunAction(self.accountName) // value is counter here from categories
       this.getEwsTable()
       this.getByUserTotal()
+      // Count current bar values
       this.progress1 = this.value
       this.progress2 = (1.00 - this.value)
       this.progressLabel1 = String(this.value * 100) + '% - to Investors'
       this.progressLabel2 = String(100 - (this.value * 100)) + '% - to DAO'
       console.log('values=', this.progress1, this.progress2)
+      // Counted bar values are stored in Vuex:
       this.dataload.progress1 = this.progress1
       this.dataload.progress2 = this.progress2
       this.dataload.progressLabel1 = this.progressLabel1
@@ -126,21 +130,16 @@ export default {
       category1: state => state.analytics.EwsInfo.EwsData[0].bycategory,
       category2: state => state.analytics.EwsInfo.EwsData[1].bycategory,
       category3: state => state.analytics.EwsInfo.EwsData[2].bycategory,
-      value: state => state.analytics.circInfo,
-      byuser: state => state.analytics.NftList,
-      autologout: state => state.account.autoLogout
-    }),
-    // eslint-disable-next-line vue/return-in-computed-property
-    handler: function handler (event) {
-      console.log('going out')
-      if (this.autologout) {
-        this.logout()
-      }
-    },
-    dryrun: function () {
-      this.submit()
-      return true
-    }
+      // progress1: state => state.analytics.progress1,
+      // progress2: state => state.analytics.progress2,
+      // progressLabel1: state => state.analytics.progressLabel1,
+      // progressLabel2: state => state.analytics.progressLabel2,
+      value: state => state.analytics.circInfo, // value is read from Vuex
+      byuser: state => state.analytics.NftList
+    })
+    // dryrun () {
+    // this.submit()
+    // }
   }
 }
 </script>
