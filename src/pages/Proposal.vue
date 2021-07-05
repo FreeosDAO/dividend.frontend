@@ -140,9 +140,10 @@
             </div>
             <div class="flex justify-center">
               <q-btn icon="link" class="q-ma-lg" color="primary" no-caps @click="submit()" label="Submit" :disable="!isFormFilled"/>
-              <q-btn class="q-ma-lg" color="secondary" no-caps @click="resetForm()" label="Clear"/><br>
-              <q-btn v-if="isProposalActive===1" icon="info" no-caps class="q-ma-lg" label="Proposal Active" @click="dialogInfoService()" />
-              <q-btn v-else icon="info" class="q-ma-lg" no-caps label="No Active Proposal" @click="dialogInfoService()" />
+              <q-btn class="q-ma-lg" color="secondary" no-caps @click="resetForm()" label="Clear"/>
+              <q-btn round class="q-ma-lg" color="primary" glossy icon="info" @click="dialogInfoService()"/>
+              <div class="q-ma-lg" v-if="isProposalActive===1"> Proposal Active </div>
+              <div class="q-ma-lg" v-else> No Active Proposal </div>
             </div>
       </q-card-section>
     </q-card>
@@ -333,6 +334,13 @@ nav {
   position: fixed;
   bottom: 0;
 }
+.Row {
+  display: table;
+  width: 100%; /*Optional*/
+  table-layout: fixed; /*Optional*/
+  border-spacing: 10px; /*Optional*/
+}
+.Column {
+  display: table-cell;
+}
 </style>
-
-// push action freeosdiv unlocknft '{"nft_id":3}' -p freeosfreeos@active

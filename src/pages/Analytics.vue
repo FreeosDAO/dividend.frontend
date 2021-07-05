@@ -44,10 +44,11 @@
             </q-linear-progress>
           </div>
           <q-table
-            title="NFT List"
+            title="NFTs Summary by Owner "
             :data="this.byuser"
             :columns="columns"
             row-key="name"
+            :pagination.sync="pagination"
           ></q-table>
         </div>
       </q-card>
@@ -66,6 +67,9 @@ export default {
   },
   data () {
     return {
+      pagination: {
+        rowsPerPage: 30 // current rows per page being displayed
+      },
       tab: 'send',
       progress1: 0.0,
       progress2: 0.0,

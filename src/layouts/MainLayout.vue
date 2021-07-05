@@ -4,6 +4,9 @@
     <q-header reveal elevated class="bg-primary" height-hint="98">
       <q-toolbar style="justify-content: space-between;">
         <q-btn :style="'visibility: ' + (isAuthenticated ? 'visible' : 'hidden')" dense flat round icon="menu" @click="drawer = !drawer" />
+        <q-btn v-if="isAuthenticated" flat no-caps color="white" label="Dividend Compute" @click="DividendCompute()"
+          style="width: 150px"
+        ></q-btn>
         <div style="display: flex; align-items: center;">
           <img width="35" src="~assets/decentralised.jpg"> &nbsp;
           <div v-if="isAuthenticated" style="margin-right: 1rem;">{{accountName}}</div>
@@ -121,7 +124,11 @@ export default {
       (this.$route.path !== menuItem.route) && this.$router.push(menuItem.route)
       this.selectedItemLabel = menuItem.label
     },
-    ...mapActions('account', ['checkIfLoggedIn', 'connectWallet', 'logout', 'getActionProposal'])
+    ...mapActions('account', ['checkIfLoggedIn', 'connectWallet', 'logout', 'getActionProposal']),
+    ...mapActions('analytics', ['actionDividendCompute']),
+    DividendCompute () {
+      this.actionDividendCompute(this.accountName)
+    }
   },
   watch: {
     isAuthenticated: {

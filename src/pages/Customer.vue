@@ -81,7 +81,19 @@
                   :data="this.category"
                   :columns="columns"
                   row-key="name"
-                ></q-table>
+                  :pagination.sync="pagination"
+                >      <template v-slot:body-cell-roi_target_cap="props">
+                  <q-td :props="props">
+                    <div>
+                      <q-badge v-if="props.value==2" color="purple" :label="props.value"></q-badge>
+                      <q-badge v-else-if="props.value==3" color="green" :label="props.value"></q-badge>
+                      <q-badge v-else color="blue" :label="props.value"></q-badge>
+                    </div>
+                    <div class="my-table-details">
+                      {{ props.row.details }}
+                    </div>
+                  </q-td>
+                </template></q-table>
             </div>
           </div>
         </div>
@@ -100,6 +112,9 @@ export default {
   name: 'Customer',
   data () {
     return {
+      pagination: {
+        rowsPerPage: 30 // current rows per page being displayed
+      },
       columns: [
         {
           name: 'nft_key',
@@ -204,7 +219,6 @@ export default {
           this.getNftTable() // refresh table after operation
         })
     },
-
     resetForm () {
       this.submitData = {
         currentAccountName: '',
@@ -215,3 +229,13 @@ export default {
   }
 }
 </script>
+<style scoped>
+.my-table-details {
+  font-size: 0.85em;
+  font-style: italic;
+  max-width: 200px;
+  white-space: normal;
+  color: #555;
+  margin-top: 4px;
+}
+</style>

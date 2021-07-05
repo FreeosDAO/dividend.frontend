@@ -21,7 +21,36 @@ export async function getDryrunAction ({ state }, AccountName) {
     const result = await ProtonSDK.sendTransaction(actions)
     let responseMessage = result.processed.action_traces[0].console
     if (!responseMessage) {
-      responseMessage = 'Dry Run Successfull'
+      responseMessage = 'Dry Run Successful'
+    }
+    Notify.create({
+      message: responseMessage,
+      color: 'positive'
+    })
+    return result
+  } catch (e) {
+    console.log(e)
+    return e
+  }
+}
+
+export async function actionDividendCompute ({ state }, AccountName) {
+  const actions = [{
+    account: process.env.APP_NAME, // freeosdiv
+    name: 'dividcompute',
+    authorization: [{
+      actor: AccountName,
+      permission: 'active'
+    }],
+    data: {
+    }
+  }]
+
+  try {
+    const result = await ProtonSDK.sendTransaction(actions)
+    let responseMessage = result.processed.action_traces[0].console
+    if (!responseMessage) {
+      responseMessage = 'Dividend Compute Successful'
     }
     Notify.create({
       message: responseMessage,
