@@ -14,6 +14,11 @@
           <q-btn icon="link" label="Change NFT Ownership" color="primary" @click="dialog = true"></q-btn>
           <q-dialog v-model="dialog">
             <q-card>
+              <q-card-section class="row items-center q-pb-none">
+                <div class="text-h6">Close icon</div>
+                <q-space></q-space>
+                <q-btn icon="close" flat round dense v-close-popup></q-btn>
+              </q-card-section>
               <q-card-section class="row items-center q-gutter-sm">
                 <!--   -->
                 <!-- eosaccount section -->
@@ -64,7 +69,6 @@
                 <!--   -->
                 <div>
                   <q-btn class="q-ma-lg" color="orange" no-caps @click="submit()" label="Make Change"/>
-                  <q-btn no-caps label="Close dialog" color="primary" v-close-popup></q-btn>
                 </div>
               </q-card-section>
             </q-card>

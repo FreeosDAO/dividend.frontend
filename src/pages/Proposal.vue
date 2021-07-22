@@ -34,7 +34,7 @@
           </q-dialog>
         </div>
 <!-- end of DIALOG -->
-        <!-- Dialog Info -->
+        <!-- Dialog Info Content -->
         <div class="q-pa-md">
           <q-dialog v-model="dialoginfo">
             <q-card>
@@ -48,7 +48,7 @@
             </q-card>
           </q-dialog>
         </div>
-        <!-- end of DIALOG  Info -->
+        <!-- end of DIALOG Info Content-->
             <div style="max-width: 500px; margin: 0 auto;">
               <!-- Select correct roi cap -->
               <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
@@ -141,7 +141,19 @@
             <div class="flex justify-center">
               <q-btn icon="link" class="q-ma-lg" color="primary" no-caps @click="submit()" label="Submit" :disable="!isFormFilled"/>
               <q-btn class="q-ma-lg" color="secondary" no-caps @click="resetForm()" label="Clear"/>
-              <q-btn round class="q-ma-lg" color="primary" glossy icon="info" @click="dialogInfoService()"/>
+              <q-btn round class="q-ma-lg" color="primary" glossy icon="info">
+                 <q-tooltip glossy icon="info"
+                     transition-show="scale"
+                     transition-hide="scale"
+                 >
+                 <div>
+                     <p>Proposal Information <br>
+                      Proposal (acct) {{propaccount}}<br>
+                      Percentage {{proposal_percentage}}<br>
+                      Expiration {{expires_at}}</p>
+                 </div>
+                 </q-tooltip>
+              </q-btn>
               <div class="q-ma-lg" v-if="isProposalActive===1"> Proposal Active </div>
               <div class="q-ma-lg" v-else> No Active Proposal </div>
             </div>

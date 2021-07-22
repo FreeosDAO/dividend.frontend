@@ -26,7 +26,7 @@ export async function getNftTable (state) {
 export async function actionOwnerChange ({ state }, data) {
   const { currentAccountName, targetAccountName, nftKey } = data
   const actions = [{
-    account: 'freeosdiv', // process.env.APP_NAME,
+    account: process.env.APP_NAME,
     name: 'regchown',
     authorization: [{
       actor: currentAccountName,

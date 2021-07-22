@@ -75,6 +75,7 @@ export default {
       progress2: 0.0,
       progressLabel1: '%',
       progressLabel2: '%',
+      working: '',
       dataload: {
         progress1: 0.0,
         progress2: 0.0,
@@ -117,10 +118,13 @@ export default {
       // Count current bar values
       this.progress1 = this.value
       this.progress2 = (1.00 - this.value)
-      this.progressLabel1 = String(this.value * 100) + '% - to Investors'
-      this.progressLabel2 = String(100 - (this.value * 100)) + '% - to DAO'
+      this.working = this.value * 100
+      this.progressLabel1 = String(this.working.toFixed(2)) + '% - to Investors'
+      // this.progressLabel1 = String(this.value * 100) + '% - to Investors'
+      this.progressLabel2 = String(100 - this.working) + '% - to DAO'
+      // this.progressLabel2 = String(100 - (this.value * 100)) + '% - to DAO'
       console.log('values=', this.progress1, this.progress2)
-      // Counted bar values are stored in Vuex:
+      // Store counted bar values to Vuex:
       this.dataload.progress1 = this.progress1
       this.dataload.progress2 = this.progress2
       this.dataload.progressLabel1 = this.progressLabel1

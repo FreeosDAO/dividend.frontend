@@ -7,7 +7,7 @@ import ProtonSDK from '../../utils/proton'
 export async function proposalNew ({ state }, data) {
   const { currentAccountName, eosaccount, cap, percentage, threshold, ratesleft, locked, tokenType } = data // eslint-disable-line
   const actions = [{
-    account: 'freeosdiv', // process.env.APP_NAME,
+    account: process.env.APP_NAME,
     name: 'proposalnew',
     authorization: [{
       actor: currentAccountName,
@@ -44,7 +44,7 @@ export async function proposalNew ({ state }, data) {
 
 export async function proposalRemove ({ state }, currentAccountName) {
   const actions = [{
-    account: 'freeosdiv', // process.env.APP_NAME,
+    account: process.env.APP_NAME,
     name: 'propreset',
     authorization: [{
       actor: currentAccountName,
