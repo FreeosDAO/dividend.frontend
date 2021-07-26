@@ -12,7 +12,9 @@
         >
           <div id="nav" class="text-h6 text-center q-ma-lg"> <img id="icon" width="65" src="~assets/decentralised.jpg">
             <span id="text">&nbsp; Dividend Analytics</span></div>
-            <q-btn class="q-ma-lg" color="blue" no-caps @click="submit()" label="Perform Dry Run"/>
+            <div v-if="isProposerActive">
+              <q-btn class="q-ma-lg" color="blue" no-caps @click="submit()" label="Perform Dry Run"/>
+            </div>
           <div class="container">
             <div class="child">
           <pure-vue-chart
@@ -71,6 +73,7 @@ export default {
         rowsPerPage: 30 // current rows per page being displayed
       },
       tab: 'send',
+      isProposerActive: false,
       progress1: 0.0,
       progress2: 0.0,
       progressLabel1: '%',
@@ -102,17 +105,26 @@ export default {
       category: []
     }
   },
+  created () {
+    this.isProposer()
+  },
   mounted () {
-    this.getEwsTable()
+    // this.getEwsTable()
     this.submit()
   },
   methods: {
     ...mapActions('analytics', ['getDryrunAction', 'getByUserTotal']),
     ...mapActions('analytics', ['getEwsTable', 'updateLoading']),
     ...mapActions('account', ['logout']),
+    isProposer () {
+      if (this.accountName === this.proposer) {
+        this.isProposerActive = true
+        console.log(' isProposer:', this.accountName, this.proposer, this.isProposerActive)
+      }
+    },
     submit () {
-      const self = this
-      this.getDryrunAction(self.accountName) // value is counter here from categories
+      // const self = this
+      // this.getDryrunAction(self.accountName) // value is counter here from categories
       this.getEwsTable()
       this.getByUserTotal()
       // Count current bar values
@@ -143,7 +155,8 @@ export default {
       // progressLabel1: state => state.analytics.progressLabel1,
       // progressLabel2: state => state.analytics.progressLabel2,
       value: state => state.analytics.circInfo, // value is read from Vuex
-      byuser: state => state.analytics.NftList
+      byuser: state => state.analytics.NftList,
+      proposer: state => state.account.proposer
     })
     // dryrun () {
     // this.submit()

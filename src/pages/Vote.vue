@@ -17,12 +17,13 @@
       style="background: radial-gradient(circle, #35a2ff 0%, #014a88 80%)"
     >
       <!-- This part is displayed conditionally -->
-      <div class="flex justify-center" v-if="active">
+      <div class="flex justify-center" v-if="activeProposal">
       <q-card-section>
         <div id="nav" class="text-h6 text-center q-ma-lg"> <img id="icon" width="65" src="~assets/decentralised.jpg">
           <span id="text">&nbsp; Vote NFT Proposal</span></div>
+        <div class="q-ma-lg" v-if="activeProposal"> Proposal Active &nbsp; {{expiration_timer}}</div>
             <div style="max-width: 500px; margin: 0 auto;">
-              <!-- Select corect roi cap -->
+              <!-- Select correct roi cap -->
               <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
                 <!--<div class="col-xs-5 col-sm-4 text-right">
                   Policy cap
@@ -112,7 +113,18 @@
                  ></q-toggle>
                   <div v-if="voteresult" style="color :white;">ACCEPT</div>
                   <div v-else style="color :red;"><b>REJECT</b></div>
-                 <q-btn icon="link" class="q-ma-lg" color="blue" no-caps @click="submit()" label="Submit" />
+                  <div v-if="isProposerActive">
+                 <q-btn icon="link" class="q-ma-lg" color="grey" disable no-caps label="Submit Vote" />
+                    <q-tooltip transition-show="scale"
+                               transition-hide="scale"
+                    >
+                      <div>
+                        You are the Proposer!
+                      </div>
+                    </q-tooltip>
+                  </div>
+                 <div v-else> <q-btn icon="link" class="q-ma-lg" color="blue" no-caps @click="submit()" label="Submit Vote" />
+                 </div>
             </div>
       </q-card-section>
       </div>
@@ -147,9 +159,12 @@ export default {
     return {
       value: 1,
       timestamp: '',
-      expires: '',
+      displayed_percentage: 0.0,
+      expires: '', // normalised (UTC) expiration time for proposal
       tab: 'send',
-      active: false,
+      activeProposal: false, // if false - no active proposal
+      expiration_timer: '',
+      isProposerActive: false, // proposer is logged in currently if true
       submitData: {
         currentAccountName: '',
         toVote: 0
@@ -161,15 +176,21 @@ export default {
   },
   created () {
     this.getActionProposal()
+    this.isPropoActive()
     this.setIntervalId = setInterval(() => {
       this.getActionProposal()
-    }, 300000) // call each 30 seconds then
-    this.isProposalActive()
+      this.isPropoActive() // set up 'activeProposal' and 'expiration_timer' values
+    }, 30000) // call each 30 seconds then
     document.addEventListener('beforeunload', this.handler)
+    this.isProposer()
+    this.update()
   },
   beforeDestroy () {
     clearInterval(this.setIntervalId)
   },
+  // mounted () {
+  // this.update()
+  // },
   computed: {
     ...mapState({
       accountName: state => state.account.accountName,
@@ -184,13 +205,14 @@ export default {
       progress1: state => state.analytics.progress1,
       progress2: state => state.analytics.progress2,
       progressLabel1: state => state.analytics.progressLabel1,
-      progressLabel2: state => state.analytics.progressLabel2
-      // active: state => state.account.active
+      progressLabel2: state => state.analytics.progressLabel2,
+      proposer: state => state.account.proposer
     })
   },
   methods: {
     ...mapActions('proposal', ['actionProposalVote']),
     ...mapActions('account', ['getActionProposal']),
+    ...mapActions('analytics', ['getByUserTotal', 'getEwsTable']),
     submit () { // only use to send vote cast
       // const self = this
       if (this.voteresult === true) this.submitData.toVote = 2
@@ -202,15 +224,34 @@ export default {
     getTimestamp: function () {
       return Date.now()
     },
-    isProposalActive () {
-      this.active = true// false
-      // blockchain already added one hour to expires_at
-      this.expires = (this.expires_at * 1000) + 43200000 // +12h
-      this.timestamp = this.getTimestamp()
-      console.log(this.expires) // http://jsfiddle.net/JamesFM/bxEJd/
-      console.log(this.timestamp)
-      if (this.expires > this.timestamp) {
-        this.active = true
+    update () {
+      this.getEwsTable()
+      this.getByUserTotal()
+      // this.displayed_percentage = this.proposal_percentage.toFixed(2)
+    },
+    isProposer () {
+      if (this.accountName === this.proposer) {
+        this.isProposerActive = true
+        console.log(' isProposer:', this.accountName, this.proposer, this.isProposerActive)
+      }
+    },
+    isPropoActive () {
+      if (this.eosaccount !== 'empty') {
+        this.expires = (this.expires_at * 1000) // normalize UTC formats
+        // http://jsfiddle.net/JamesFM/bxEJd/
+        const timestamp = Date.now()
+        if (timestamp > this.expires) {
+          this.activeProposal = false // no active proposal
+          this.expiration_timer = 0.0
+        } else {
+          this.activeProposal = true
+          this.expiration_timer = (this.expires - timestamp) / 60000 // display in minutes
+          this.expiration_timer = this.expiration_timer.toFixed(2)
+        }
+        console.log('timestamp:', this.expires, timestamp)
+      } else {
+        this.activeProposal = false // no active proposal
+        this.expiration_timer = 0.0
       }
     }
   }

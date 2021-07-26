@@ -65,6 +65,7 @@
 <script>
 // import WalletLoginDialog from 'components/accountManagement/WalletLoginDialog'
 import { mapState, mapActions, mapGetters } from 'vuex'
+// import { getwhitelistTable } from 'src/store/account/actions'
 const menuList = [
   {
     icon: 'monetization_on',
@@ -120,12 +121,18 @@ export default {
         this.onSelectMenu(menuList[0])
       }
     },
+    initiateValues () {
+      this.getEwsTable()
+      this.getByUserTotal()
+    },
     onSelectMenu (menuItem) {
       (this.$route.path !== menuItem.route) && this.$router.push(menuItem.route)
       this.selectedItemLabel = menuItem.label
     },
     ...mapActions('account', ['checkIfLoggedIn', 'connectWallet', 'logout', 'getActionProposal']),
     ...mapActions('analytics', ['actionDividendCompute']),
+    ...mapActions('analytics', ['getByUserTotal', 'getEwsTable']),
+    ...mapActions('account', ['getwhitelistTable']),
     DividendCompute () {
       this.actionDividendCompute(this.accountName)
     }
@@ -146,7 +153,12 @@ export default {
   },
   created () {
     this.checkIfLoggedIn()
+    this.initiateValues()
+    this.getwhitelistTable()
   }
+  // mounted () {
+  // this.getwhitelistTable(this.accountName)
+  // }
 }
 </script>
 

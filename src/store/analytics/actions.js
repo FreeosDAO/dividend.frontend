@@ -63,7 +63,7 @@ export async function actionDividendCompute ({ state }, AccountName) {
   }
 }
 
-// retrieve current proposal info
+// retrieve ews info
 export async function getEwsTable (state) {
   const result = await connect({
     json: true,
@@ -83,7 +83,7 @@ export async function getEwsTable (state) {
 // commit('setValue', cInfo)
 // }
 
-// retrieve dryrub info by user
+// retrieve dryrun info by user
 export async function getByUserTotal (state) {
   const result = await connect({
     json: true,

@@ -1,7 +1,7 @@
 {
   "name": "freeos",
   "version": "0.0.1",
-  "description": "Application to claim your FreeOS tokens",
+  "description": "Dividend Application ver. 23 July 2021",
   "productName": "FreeOS App",
   "author": "FreeDAO",
   "private": true,

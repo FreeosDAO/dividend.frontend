@@ -9,7 +9,7 @@ export const setEwsTableAttrVal = function (state, payload) {
   state.EwsInfo[attr] = val
 }
 
-// export const setValue = function (state, circularValue) {
+// export const setValue = function (state, circularValue) { TODO eventually remove
 // state.circInfo = circularValue
 // console.log(circularValue)
 // }

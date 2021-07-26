@@ -39,20 +39,6 @@ export default {
   },
   methods: {
     ...mapActions('account', ['getActionProposal']),
-    getTimestamp: function () {
-      return Date.now()
-    },
-    isProposalActive () {
-      this.active = true// false
-      // blockchain already added one hour to expires_at
-      this.expires = (this.expires_at * 1000) + 43200000 // +12h
-      this.timestamp = this.getTimestamp()
-      console.log(this.expires) // http://jsfiddle.net/JamesFM/bxEJd/
-      console.log(this.timestamp)
-      if (this.expires > this.timestamp) {
-        this.active = true
-      }
-    }
   }
 }
 </script>

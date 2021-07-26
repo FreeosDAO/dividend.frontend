@@ -24,7 +24,6 @@ export async function proposalNew ({ state }, data) {
       tokenType: 'OPTION'
     }
   }]
-
   try {
     const result = await ProtonSDK.sendTransaction(actions)
     let responseMessage = result.processed.action_traces[0].console

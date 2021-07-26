@@ -154,7 +154,7 @@
                  </div>
                  </q-tooltip>
               </q-btn>
-              <div class="q-ma-lg" v-if="isProposalActive===1"> Proposal Active </div>
+              <div class="q-ma-lg" v-if="activeProposal"> Proposal Active &nbsp; {{expiration_timer}}</div>
               <div class="q-ma-lg" v-else> No Active Proposal </div>
             </div>
       </q-card-section>
@@ -224,6 +224,8 @@ export default {
       dialog: false,
       dialogreset: false,
       dialoginfo: false,
+      activeProposal: false, // if false - no active proposal
+      expiration_timer: 0.0,
       submitData: {
         currentAccountName: '',
         eosaccount: null,
@@ -243,8 +245,15 @@ export default {
     }
   },
   created () { // for automatic logout
+    this.isProActive()
+    this.setIntervalId = setInterval(() => {
+      this.getActionProposal()
+      this.isProActive()
+    }, 30000) // call each 30 sec after the tests
     document.addEventListener('beforeunload', this.handler)
-    this.getActionProposal()
+  },
+  beforeDestroy () {
+    clearInterval(this.setIntervalId)
   },
   computed: {
     ...mapState({
@@ -285,12 +294,12 @@ export default {
           self.resetForm()
         })
     },
-    yourOpenFn () {
-      console.log('yourOpenFn invoked.')
-    },
-    yourCloseFn () {
-      console.log('yourCloseFn invoked.')
-    },
+    // yourOpenFn () {
+    // console.log('yourOpenFn invoked.')
+    // },
+    // yourCloseFn () {
+    // console.log('yourCloseFn invoked.')
+    // },
     submit1 () {
       this.submitData1.NFTAccountName = this.accountName
       console.log('submitData1 = ', this.submitData1)
@@ -300,9 +309,28 @@ export default {
           this.submitData1.NFTAccountName = '' // reset mini-form
         })
     },
-    dialogInfoService () {
-      this.dialoginfo = true
-      this.getActionProposal()
+    // dialogInfoService () {
+    // this.dialoginfo = true
+    // this.getActionProposal()
+    // },
+    isProActive () {
+      if (this.eosaccount !== 'empty') {
+        this.expires = (this.expires_at * 1000) // normalize UTC formats
+        // http://jsfiddle.net/JamesFM/bxEJd/
+        const timestamp = Date.now()
+        if (timestamp > this.expires) {
+          this.activeProposal = false // no active proposal
+          this.expiration_timer = 0.0
+        } else {
+          this.activeProposal = true
+          this.expiration_timer = (this.expires - timestamp) / 60000 // display in minutes
+          this.expiration_timer = this.expiration_timer.toFixed(2)
+        }
+        console.log('timestamp:', this.expires, timestamp)
+      } else {
+        this.activeProposal = false // no active proposal
+        this.expiration_timer = 0.0
+      }
     },
     breset () {
       this.submitData.currentAccountName = this.accountName
@@ -310,7 +338,7 @@ export default {
       this.setProposalActive(0)
       this.getActionProposal()
         .then(response => {
-          // this.setProposalActive(0)
+          this.isProposalActive()
         })
     },
     resetForm () {

@@ -1,6 +1,7 @@
 import notifyAlert from 'src/services/notify-alert'
 import { connect } from 'src/utils/smartContractRequest'
 import ProtonSDK from '../../utils/proton'
+import { Notify } from 'quasar'
 
 export async function checkIfLoggedIn (state) {
   const { auth } = await ProtonSDK.restoreSession()
@@ -117,64 +118,47 @@ export const setpath = function ({ commit }, pathe) {
 
 // run action query from the blockchain TODO replace whole function
 export async function getActionQuery ({ state }, accountName) {
-  try {
-    const actions = [{
-      account: process.env.APP_NAME,
-      name: 'query',
-      authorization: [{
-        actor: accountName,
-        permission: 'active'
-      }],
-      data: {
-        eosaccount: accountName
-      }
-    }]
-    const result = await ProtonSDK.sendTransaction(actions)
-    if (result.processed.receipt.status === 'executed') {
-      notifyAlert('success', result.processed.action_traces[0].console)
-      const resp3After = connect({
-        json: true,
-        code: process.env.APP_NAME,
-        scope: accountName,
-        table: 'messages',
-        limit: 1
-      })
-      // eslint-disable-next-line no-unused-vars
-      const userAfterBalance = (resp3After.rows[0].errorno) || 0 // TODO ??
-      // commit('setUserAfterBalance', userAfterBalance)
-    } else {
-      notifyAlert('err', 'EV01: The action could not be completed.')
+  const actions = [{
+    account: process.env.APP_NAME,
+    name: 'query',
+    authorization: [{
+      actor: accountName,
+      permission: 'active'
+    }],
+    data: {
+      eosaccount: accountName
     }
+  }]
+  try {
+    const result = await ProtonSDK.sendTransaction(actions)
+    let responseMessage = result.processed.action_traces[0].console
+    if (!responseMessage) {
+      responseMessage = 'Account identified'
+    }
+    Notify.create({
+      message: responseMessage,
+      color: 'positive'
+    })
     return result
   } catch (e) {
     console.log(e)
-    notifyAlert('err', 'Other error: ', e.message)
-    if (e.message === 'UnAuthorized') {
-      notifyAlert('err', 'EV02: Please check that your wallet contains the correct keys for the account you are trying to register')
-    } else if (e.message.startsWith('EV03: assertion failure with message: ')) {
-      notifyAlert('err', e.message.split('EV04: assertion failure with message: ')[1])
-    } else if (e.message === 'EV05: unrecognized private key type') {
-      notifyAlert('err', 'EV06: There is a problem with your private key. Please check your wallet has the correct key(s)')
-      // } else if (e instanceof RpcError || e instanceof TypeError) {
-      //   notifyAlert('err', 'Connection error. Please try later') // Notify in red
-    } else {
-      notifyAlert('err', 'EV07: The action could not be completed. Please try later')
-    }
+    return e
   }
 }
 
-// retrieve logged user type  - read from message //TODO
-// export async function getActionQuery (state) {
-// const result = await connect({
-// json: true,
-// code: process.env.APP_NAME,
-// scope: process.env.APP_NAME,
-// table: 'proposals',
-// limit: -1
-// })
-// const val = {
-// key: 'proposalInfo',
-// value: result.rows[0]
-// }
-// state.commit('setProposalAttrVal', val)
-// }
+// retrieve whitelist
+// retrieve ews info
+export async function getwhitelistTable (state) {
+  const result = await connect({
+    json: true,
+    code: process.env.APP_NAME,
+    scope: process.env.APP_NAME,
+    table: 'whitelist',
+    limit: 3
+  })
+  const val = {
+    // key: accountName,
+    value: result.rows
+  }
+  state.commit('setwhitelistTableAttrVal', val)
+}
