@@ -7,6 +7,7 @@
         <q-btn v-if="isAuthenticated" flat no-caps color="white" label="Dividend Compute" @click="DividendCompute()"
           style="width: 150px"
         ></q-btn>
+        <div v-if="isAuthenticated">{{this.version}}</div>
         <div style="display: flex; align-items: center;">
           <img width="35" src="~assets/decentralised.jpg"> &nbsp;
           <div v-if="isAuthenticated" style="margin-right: 1rem;">{{accountName}}</div>
@@ -101,9 +102,11 @@ const menuList = [
 export default {
   data () {
     return {
+      version: '',
       isShowDrawerButton: false,
       drawer: false,
       selectedItemLabel: null,
+      tokenType: '',
       menuList
     }
   },
@@ -155,6 +158,7 @@ export default {
     this.checkIfLoggedIn()
     this.initiateValues()
     this.getwhitelistTable()
+    this.version = process.env.V_STRING // TODO
   }
   // mounted () {
   // this.getwhitelistTable(this.accountName)

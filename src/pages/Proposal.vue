@@ -27,7 +27,7 @@
             <q-card>
               <q-card-section class="row items-center q-gutter-sm">Remove Active Blockchain Proposal</q-card-section>
               <q-card-section class="row items-center q-gutter-sm">
-                <q-btn class="q-ma-lg" color="orange" no-caps @click="breset()" label="Remove Proposal"/>
+                <q-btn class="q-ma-lg" color="orange" no-caps @click="breset()" label="Cancel Active Proposal"/>
                 <q-btn no-caps label="Close Dialog" color="primary" v-close-popup></q-btn>
               </q-card-section>
             </q-card>
@@ -55,6 +55,9 @@
                 <div class="col-xs-6 col-sm-6">
                   <q-btn-toggle no-caps
                     v-model="submitData.cap"
+                    push
+                    glossy
+                    toggle-color="green"
                     :options="[
                       {label: 'WayFinder', value: 1},
                       {label: 'WayFarer', value: 2},
@@ -73,6 +76,7 @@
                   <q-input
                     v-model="submitData.eosaccount"
                     type="text"
+                    color="white"
                     outlined
                     dense
                   />
@@ -85,7 +89,7 @@
                 </div>
                 <div class="col-xs-1 col-sm-2"></div>
                 <div class="col-xs-6 col-sm-6">
-                  <q-input dense outlined v-model="submitData.percentage" />
+                  <q-input dense outlined color="white" v-model="submitData.percentage" />
                 </div>
               </div>
               <!-- Threshold conditional section -->
@@ -95,13 +99,10 @@
                   Threshold
                 </div>
                 <div class="col-xs-1 col-sm-2"></div>
-                <div class="col-xs-6 col-sm-6">
-                  <q-input
-                    v-model="submitData.threshold"
-                    type="number"
-                    outlined
-                    dense
-                  />
+                <div class="col-xs-6 col-sm-6" color="white">
+                  <q-input outlined v-model="submitData.threshold" label="POINT" color="white"
+                    placeholder='0.0000' dense >
+                  </q-input>
                 </div>
               </div>
               </div>
@@ -139,7 +140,10 @@
               </div>
             </div>
             <div class="flex justify-center">
-              <q-btn icon="link" class="q-ma-lg" color="primary" no-caps @click="submit()" label="Submit" :disable="!isFormFilled"/>
+              <div class="flex justify-center" v-if="isProposerActive">
+               <q-btn icon="link" class="q-ma-lg" color="primary" no-caps @click="submit()" label="Submit" :disable="!isFormFilled"/>
+              </div>
+              <div id="div1" v-else>You're not the proposer</div>
               <q-btn class="q-ma-lg" color="secondary" no-caps @click="resetForm()" label="Clear"/>
               <q-btn round class="q-ma-lg" color="primary" glossy icon="info">
                  <q-tooltip glossy icon="info"
@@ -158,6 +162,7 @@
               <div class="q-ma-lg" v-else> No Active Proposal </div>
             </div>
       </q-card-section>
+          <div id="div2" class="flex justify-center">Fill up the Form before Submit.</div>
     </q-card>
       </q-card>
       <div id="q-app" style="min-height: 100vh;">
@@ -167,7 +172,6 @@
               <q-badge color="white" text-color="accent" :label="progressLabel1"></q-badge>
             </div>
           </q-linear-progress>
-
           <q-linear-progress size="25px" :value="progress2" color="accent" class="q-mt-sm">
             <div class="absolute-full flex flex-center">
               <q-badge color="white" text-color="accent" :label="progressLabel2"></q-badge>
@@ -226,15 +230,15 @@ export default {
       dialoginfo: false,
       activeProposal: false, // if false - no active proposal
       expiration_timer: 0.0,
+      isProposerActive: false,
       submitData: {
         currentAccountName: '',
         eosaccount: null,
         cap: 1,
         percentage: 0.0,
-        threshold: 0.0,
+        threshold: '',
         ratesleft: 0,
-        locked: false,
-        tokenType: 'OPTION'
+        locked: false
       },
       submitData1: {
         NFTAccountName: '',
@@ -244,11 +248,15 @@ export default {
       isShowFailedDialog: false
     }
   },
+  mounted () {
+    this.isProposer1()
+  },
   created () { // for automatic logout
     this.isProActive()
     this.setIntervalId = setInterval(() => {
       this.getActionProposal()
       this.isProActive()
+      this.isProposer1()
     }, 30000) // call each 30 sec after the tests
     document.addEventListener('beforeunload', this.handler)
   },
@@ -271,7 +279,8 @@ export default {
       expires_at: state => state.account.proposalInfo.proposalInfo.expires_at,
       threshold: state => state.account.proposalInfo.proposalInfo.threshold,
       rates_left: state => state.account.proposalInfo.proposalInfo.rates_left,
-      accrued: state => state.account.proposalInfo.proposalInfo.accrued
+      accrued: state => state.account.proposalInfo.proposalInfo.accrued,
+      proposer: state => state.account.proposer
     }),
     isFormFilled () {
       let a = false
@@ -288,11 +297,17 @@ export default {
       console.log('TOKEN: ', `${parseFloat(this.submitData.threshold).toFixed(process.env.TOKEN_PRECISION)} ${this.submitData.tokenType}`)
       this.submitData.currentAccountName = this.accountName
       this.proposalNew(this.submitData)
-        .then(response => {
-          this.setProposalActive(1)
-          this.getActionProposal()
+        .then(response => { // TODO remove it
+          // this.setProposalActive(1) // TODO ?? remove it
+          this.getActionProposal() // updates info on proposal
           self.resetForm()
         })
+    },
+    isProposer1 () {
+      if (this.accountName === this.proposer) {
+        this.isProposerActive = true
+        console.log(' isProposer1:', this.accountName, this.proposer, this.isProposerActive)
+      }
     },
     // yourOpenFn () {
     // console.log('yourOpenFn invoked.')
@@ -322,24 +337,24 @@ export default {
           this.activeProposal = false // no active proposal
           this.expiration_timer = 0.0
         } else {
-          this.activeProposal = true
+          this.activeProposal = true // active proposal
           this.expiration_timer = (this.expires - timestamp) / 60000 // display in minutes
           this.expiration_timer = this.expiration_timer.toFixed(2)
         }
         console.log('timestamp:', this.expires, timestamp)
-      } else {
+      } else { // proposal 'empty'
         this.activeProposal = false // no active proposal
         this.expiration_timer = 0.0
       }
     },
-    breset () {
+    breset () { // removes active proposal
       this.submitData.currentAccountName = this.accountName
       this.proposalRemove(this.accountName)
       this.setProposalActive(0)
       this.getActionProposal()
-        .then(response => {
-          this.isProposalActive()
-        })
+      // .then(response => {
+      // this.isProposalActive()
+      // })
     },
     resetForm () {
       this.submitData = {
@@ -379,6 +394,12 @@ nav {
   width: 100%; /*Optional*/
   table-layout: fixed; /*Optional*/
   border-spacing: 10px; /*Optional*/
+}
+#div1{
+  color:yellow;
+}
+#div2{
+  color:lightblue;
 }
 .Column {
   display: table-cell;

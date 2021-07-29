@@ -10,11 +10,12 @@
           class="my-card text-white"
           style="background: radial-gradient(circle, #35a2ff 0%, #014a88 80%)"
         >
-          <div id="nav" class="text-h6 text-center q-ma-lg"> <img id="icon" width="65" src="~assets/decentralised.jpg">
-            <span id="text">&nbsp; Dividend Analytics</span></div>
-            <div v-if="isProposerActive">
-              <q-btn class="q-ma-lg" color="blue" no-caps @click="submit()" label="Perform Dry Run"/>
-            </div>
+          <div id="nav" class="text-h6 text-center q-ma-lg"> <img id="icon" width="65" src="~assets/decentralised.jpg"><span id="text">&nbsp; Dividend Analytics</span></div>
+          <q-btn class="q-ma-lg" color="blue" rounded no-caps @click="submit()" label="Data Update">
+            <q-tooltip anchor="top middle" round self="bottom middle" :offset="[10, 10]">
+              <strong>Updates dryrun data. <br> Require transaction acceptance</strong>
+            </q-tooltip>
+          </q-btn>
           <div class="container">
             <div class="child">
           <pure-vue-chart

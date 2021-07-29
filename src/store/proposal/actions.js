@@ -18,10 +18,10 @@ export async function proposalNew ({ state }, data) {
       eosaccount: eosaccount,
       roi_target_cap: cap,
       period_percentage: percentage,
-      threshold: `${parseFloat(threshold).toFixed(process.env.TOKEN_PRECISION)} ${tokenType}`,
+      threshold: `${parseFloat(threshold).toFixed(process.env.TOKEN_PRECISION)} ${process.env.TOKEN_NAME}`,
       rates_left: ratesleft,
       locked: locked,
-      tokenType: 'OPTION'
+      tokenType: process.env.TOKEN_NAME
     }
   }]
   try {
@@ -155,6 +155,6 @@ export async function actionUnlockNFT ({ state }, data) {
   }
 }
 
-export function setProposalActive ({ commit }, active) {
+export function setProposalActive ({ commit }, active) { // TODO
   commit('setProposalAct', active)
 }

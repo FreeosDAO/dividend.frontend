@@ -117,10 +117,10 @@ export const setpath = function ({ commit }, pathe) {
 }
 
 // run action query from the blockchain TODO replace whole function
-export async function getActionQuery ({ state }, accountName) {
+export async function getVersionQuery ({ state }, accountName) {
   const actions = [{
     account: process.env.APP_NAME,
-    name: 'query',
+    name: 'version',
     authorization: [{
       actor: accountName,
       permission: 'active'
@@ -133,7 +133,7 @@ export async function getActionQuery ({ state }, accountName) {
     const result = await ProtonSDK.sendTransaction(actions)
     let responseMessage = result.processed.action_traces[0].console
     if (!responseMessage) {
-      responseMessage = 'Account identified'
+      responseMessage = 'Version identified'
     }
     Notify.create({
       message: responseMessage,

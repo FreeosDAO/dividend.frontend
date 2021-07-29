@@ -15,7 +15,7 @@
           <q-dialog v-model="dialog">
             <q-card>
               <q-card-section class="row items-center q-pb-none">
-                <div class="text-h6">Close icon</div>
+                <div class="text-h6">Change NFT Ownership</div>
                 <q-space></q-space>
                 <q-btn icon="close" flat round dense v-close-popup></q-btn>
               </q-card-section>
@@ -68,7 +68,7 @@
                 </div>
                 <!--   -->
                 <div>
-                  <q-btn class="q-ma-lg" color="orange" no-caps @click="submit()" label="Make Change"/>
+                  <q-btn class="q-ma-lg" color="orange" no-caps @click="submit()" label="Make Change" :disable="!isFormFilled"/>
                 </div>
               </q-card-section>
             </q-card>
@@ -208,7 +208,12 @@ export default {
       accountName: state => state.account.accountName,
       category: state => state.user.NftList,
       count: state => state.user.count
-    })
+    }),
+    isFormFilled () {
+      let a = false
+      a = ((this.submitData.targetAccountName) && (this.submitData.nftKey))
+      return a
+    }
   },
   methods: {
     ...mapActions('user', ['actionOwnerChange', 'getNftTable']),
