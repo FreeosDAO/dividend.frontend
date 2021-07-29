@@ -1,8 +1,8 @@
 {
   "name": "freeos",
-  "version": "0.0.1",
+  "version": "0.9.1",
   "description": "Dividend Application ver. 23 July 2021",
-  "productName": "FreeOS App",
+  "productName": "Freeos Dividend",
   "author": "FreeDAO",
   "private": true,
   "scripts": {
