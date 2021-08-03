@@ -140,10 +140,7 @@
               </div>
             </div>
             <div class="flex justify-center">
-              <div class="flex justify-center" v-if="isProposerActive">
                <q-btn icon="link" class="q-ma-lg" color="primary" no-caps @click="submit()" label="Submit" :disable="!isFormFilled"/>
-              </div>
-              <div id="div1" v-else>You're not the proposer</div>
               <q-btn class="q-ma-lg" color="secondary" no-caps @click="resetForm()" label="Clear"/>
               <q-btn round class="q-ma-lg" color="primary" glossy icon="info">
                  <q-tooltip glossy icon="info"
@@ -236,7 +233,7 @@ export default {
         eosaccount: null,
         cap: 1,
         percentage: 0.0,
-        threshold: '',
+        threshold: 0,
         ratesleft: 0,
         locked: false
       },
@@ -248,15 +245,11 @@ export default {
       isShowFailedDialog: false
     }
   },
-  mounted () {
-    this.isProposer1()
-  },
-  created () { // for automatic logout
+  created () {
     this.isProActive()
     this.setIntervalId = setInterval(() => {
       this.getActionProposal()
       this.isProActive()
-      this.isProposer1()
     }, 30000) // call each 30 sec after the tests
     document.addEventListener('beforeunload', this.handler)
   },
@@ -276,11 +269,10 @@ export default {
       roi_target_cap: state => state.account.proposalInfo.proposalInfo.roi_target_cap,
       proposal_percentage: state => state.account.proposalInfo.proposalInfo.proposal_percentage,
       locked: state => state.account.proposalInfo.proposalInfo.locked,
-      expires_at: state => state.account.proposalInfo.proposalInfo.expires_at,
+      expires_at: state => state.account.proposalInfo.proposalInfo.expires_at, // TODO ??
       threshold: state => state.account.proposalInfo.proposalInfo.threshold,
       rates_left: state => state.account.proposalInfo.proposalInfo.rates_left,
-      accrued: state => state.account.proposalInfo.proposalInfo.accrued,
-      proposer: state => state.account.proposer
+      accrued: state => state.account.proposalInfo.proposalInfo.accrued
     }),
     isFormFilled () {
       let a = false
@@ -294,27 +286,15 @@ export default {
     ...mapActions('account', ['getActionProposal']),
     submit () {
       const self = this
-      console.log('TOKEN: ', `${parseFloat(this.submitData.threshold).toFixed(process.env.TOKEN_PRECISION)} ${this.submitData.tokenType}`)
+      console.log('TOKEN: ', `${parseFloat(this.submitData.threshold).toFixed(process.env.TOKEN_PRECISION)} ${process.env.TOKEN_NAME}`)
       this.submitData.currentAccountName = this.accountName
+      console.log('PROPOSAL DATA=', this.submitData)
       this.proposalNew(this.submitData)
-        .then(response => { // TODO remove it
-          // this.setProposalActive(1) // TODO ?? remove it
-          this.getActionProposal() // updates info on proposal
-          self.resetForm()
-        })
+      // .then(response => { // TODO remove it
+      // this.setProposalActive(1) // TODO ?? remove it
+      this.getActionProposal() // updates info on proposal
+      self.resetForm()
     },
-    isProposer1 () {
-      if (this.accountName === this.proposer) {
-        this.isProposerActive = true
-        console.log(' isProposer1:', this.accountName, this.proposer, this.isProposerActive)
-      }
-    },
-    // yourOpenFn () {
-    // console.log('yourOpenFn invoked.')
-    // },
-    // yourCloseFn () {
-    // console.log('yourCloseFn invoked.')
-    // },
     submit1 () {
       this.submitData1.NFTAccountName = this.accountName
       console.log('submitData1 = ', this.submitData1)
@@ -324,10 +304,6 @@ export default {
           this.submitData1.NFTAccountName = '' // reset mini-form
         })
     },
-    // dialogInfoService () {
-    // this.dialoginfo = true
-    // this.getActionProposal()
-    // },
     isProActive () {
       if (this.eosaccount !== 'empty') {
         this.expires = (this.expires_at * 1000) // normalize UTC formats
@@ -366,7 +342,7 @@ export default {
         locked: false
       }
     }
-  }
+  } // methods
 }
 </script>
 

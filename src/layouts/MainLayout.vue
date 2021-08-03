@@ -156,7 +156,7 @@ export default {
   },
   created () {
     this.checkIfLoggedIn()
-    this.initiateValues()
+    // this.initiateValues() // TODO commented
     this.getwhitelistTable()
     this.version = process.env.V_STRING // TODO
   }

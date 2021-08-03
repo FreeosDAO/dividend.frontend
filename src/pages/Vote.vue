@@ -31,7 +31,7 @@
                 <div class="col-xs-1 col-sm-2"></div> -->
                 <div class="col-xs-6 col-sm-6">
                   <q-btn-toggle no-caps
-                    toggle-color="blue"
+                    toggle-color="green"
                     v-model="roi_target_cap"
                     :options="[
                       {label: 'WayFinder', value: 1},

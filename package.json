@@ -1,9 +1,9 @@
 {
-  "name": "freeos",
+  "name": "dividend",
   "version": "0.0.1",
-  "description": "Dividend Application ver. 23 July 2021",
-  "productName": "FreeOS App",
-  "author": "FreeDAO",
+  "description": "Dividend",
+  "productName": "Dividend App",
+  "author": "andyzal",
   "private": true,
   "scripts": {
     "start": "quasar dev",

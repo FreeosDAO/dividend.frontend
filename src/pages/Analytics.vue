@@ -27,9 +27,9 @@
             </div>
           </div>
           <q-breadcrumbs separator="--" align="center" class="white" active-color="white">
-            <q-breadcrumbs-el label="WayFinder"></q-breadcrumbs-el>
-            <q-breadcrumbs-el label="WayFarer"></q-breadcrumbs-el>
-            <q-breadcrumbs-el label="WayFounder"></q-breadcrumbs-el>
+            <q-breadcrumbs-el class="text-blue" label="WayFinder"></q-breadcrumbs-el>
+            <q-breadcrumbs-el class="text-red" label="WayFarer"></q-breadcrumbs-el>
+            <q-breadcrumbs-el class="text-green" label="WayFounder"></q-breadcrumbs-el>
           </q-breadcrumbs>
         </q-card-section>
         <div id="q-app" style="min-height: 100vh;">
@@ -109,10 +109,10 @@ export default {
   created () {
     this.isProposer()
   },
-  mounted () {
-    // this.getEwsTable()
-    this.submit()
-  },
+  // mounted () {
+  // this.getEwsTable()
+  //   this.submit()
+  // },
   methods: {
     ...mapActions('analytics', ['getDryrunAction', 'getByUserTotal']),
     ...mapActions('analytics', ['getEwsTable', 'updateLoading']),
@@ -124,8 +124,8 @@ export default {
       }
     },
     submit () {
-      // const self = this
-      // this.getDryrunAction(self.accountName) // value is counter here from categories
+      const self = this
+      this.getDryrunAction(self.accountName) // value is counted here from categories
       this.getEwsTable()
       this.getByUserTotal()
       // Count current bar values
