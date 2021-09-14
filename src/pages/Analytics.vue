@@ -75,10 +75,6 @@ export default {
       },
       tab: 'send',
       isProposerActive: false,
-      progress1: 0.0,
-      progress2: 0.0,
-      progressLabel1: '%',
-      progressLabel2: '%',
       working: '',
       dataload: {
         progress1: 0.0,
@@ -129,20 +125,21 @@ export default {
       this.getEwsTable()
       this.getByUserTotal()
       // Count current bar values
-      this.progress1 = this.value
-      this.progress2 = (1.00 - this.value)
+      console.log('value circInfo', this.value)
+      this.dataload.progress1 = this.value
+      this.dataload.progress2 = (1.00 - this.value)
       this.working = this.value * 100
-      this.progressLabel1 = String(this.working.toFixed(2)) + '% - to Investors'
+      this.dataload.progressLabel1 = String(this.working.toFixed(2)) + '% - to Investors'
       // this.progressLabel1 = String(this.value * 100) + '% - to Investors'
-      this.progressLabel2 = String(100 - this.working) + '% - to DAO'
+      this.dataload.progressLabel2 = String(100 - this.working) + '% - to DAO'
       // this.progressLabel2 = String(100 - (this.value * 100)) + '% - to DAO'
       console.log('values=', this.progress1, this.progress2)
       // Store counted bar values to Vuex:
-      this.dataload.progress1 = this.progress1
-      this.dataload.progress2 = this.progress2
-      this.dataload.progressLabel1 = this.progressLabel1
-      this.dataload.progressLabel2 = this.progressLabel2
-      this.updateLoading(this.dataload)
+      // this.dataload.progress1 = this.progress1
+      // this.dataload.progress2 = this.progress2
+      // this.dataload.progressLabel1 = this.progressLabel1
+      // this.dataload.progressLabel2 = this.progressLabel2
+      this.updateLoading(this.dataload) // Packs all above to Vuex (update on button request)
     }
   },
   computed: {
@@ -151,10 +148,11 @@ export default {
       category1: state => state.analytics.EwsInfo.EwsData[0].bycategory,
       category2: state => state.analytics.EwsInfo.EwsData[1].bycategory,
       category3: state => state.analytics.EwsInfo.EwsData[2].bycategory,
-      // progress1: state => state.analytics.progress1,
-      // progress2: state => state.analytics.progress2,
-      // progressLabel1: state => state.analytics.progressLabel1,
-      // progressLabel2: state => state.analytics.progressLabel2,
+      // From Vuex to Display
+      progress1: state => state.analytics.progress1,
+      progress2: state => state.analytics.progress2,
+      progressLabel1: state => state.analytics.progressLabel1,
+      progressLabel2: state => state.analytics.progressLabel2,
       value: state => state.analytics.circInfo, // value is read from Vuex
       byuser: state => state.analytics.NftList,
       proposer: state => state.account.proposer

@@ -6,7 +6,7 @@
         Welcome at {{this.version}}
       </div>
       <div class="q-mt-sm q-mb-sm">
-        This website is for testing purposes only. It is not public and not official, however feel invited to http://freeos.io
+        This website is for testing purposes only. It is not public and not official, however feel invited to https://freeos.io
       </div>
     </div>
   </div>

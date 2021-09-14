@@ -107,16 +107,72 @@ export default {
       drawer: false,
       selectedItemLabel: null,
       tokenType: '',
+      dataload: {
+        progress1: 0.0,
+        progress2: 0.0,
+        progressLabel1: '%',
+        progressLabel2: '%'
+      },
       menuList
     }
   },
+  created () {
+    this.getEwsTable()
+    this.getByUserTotal()
+    // Count current bar values
+    this.progress1 = this.value
+    this.progress2 = (1.00 - this.value)
+    this.working = this.value * 100
+    this.progressLabel1 = String(this.working.toFixed(2)) + '% - to Investors'
+    // this.progressLabel1 = String(this.value * 100) + '% - to Investors'
+    this.progressLabel2 = String(100 - this.working) + '% - to DAO'
+    // this.progressLabel2 = String(100 - (this.value * 100)) + '% - to DAO'
+    console.log('value on layout =', this.progress1, this.progress2)
+    // Store counted bar values to Vuex:
+    this.dataload.progress1 = this.progress1
+    this.dataload.progress2 = this.progress2
+    this.dataload.progressLabel1 = this.progressLabel1
+    this.dataload.progressLabel2 = this.progressLabel2
+    this.updateLoading(this.dataload)
+    // set interval - other TODO
+    this.setIntervalId1 = setInterval(() => {
+      this.getEwsTable()
+      this.getByUserTotal()
+      // Count current bar values
+      this.progress1 = this.value
+      this.progress2 = (1.00 - this.value)
+      this.working = this.value * 100
+      this.progressLabel1 = String(this.working.toFixed(2)) + '% - to Investors'
+      // this.progressLabel1 = String(this.value * 100) + '% - to Investors'
+      this.progressLabel2 = String(100 - this.working) + '% - to DAO'
+      // this.progressLabel2 = String(100 - (this.value * 100)) + '% - to DAO'
+      console.log('values on loop =', this.progress1, this.progress2)
+      // Store counted bar values to Vuex:
+      this.dataload.progress1 = this.progress1
+      this.dataload.progress2 = this.progress2
+      this.dataload.progressLabel1 = this.progressLabel1
+      this.dataload.progressLabel2 = this.progressLabel2
+      this.updateLoading(this.dataload)
+    }, 30000) // call each 30 sec after the tests
+    // document.addEventListener('beforeunload', this.handler)
+    this.checkIfLoggedIn()
+    // this.initiateValues() // TODO
+    this.getwhitelistTable()
+    this.version = process.env.V_STRING
+  },
+  beforeDestroy () {
+    clearInterval(this.setIntervalId1)
+  },
   computed: {
     ...mapState({
-      accountName: state => state.account.accountName
+      accountName: state => state.account.accountName,
+      value: state => state.analytics.circInfo // value is read from Vuex
     }),
     ...mapGetters('account', ['isAuthenticated', 'connecting'])
   },
   methods: {
+    ...mapActions('analytics', ['getEwsTable', 'getByUserTotal']),
+    ...mapActions('analytics', ['updateLoading']),
     onSigninFinish (event) {
       if (event.isFinished) {
         this.isShowDrawerButton = true
@@ -153,16 +209,16 @@ export default {
         }
       }
     }
-  },
-  created () {
-    this.checkIfLoggedIn()
-    // this.initiateValues() // TODO commented
-    this.getwhitelistTable()
-    this.version = process.env.V_STRING // TODO
-  }
-  // mounted () {
-  // this.getwhitelistTable(this.accountName)
+  } // ,
+  // created () {
+  // this.checkIfLoggedIn()
+  // // this.initiateValues() // TODO commented
+  // this.getwhitelistTable()
+  // this.version = process.env.V_STRING // TODO
   // }
+  // // mounted () {
+  // // this.getwhitelistTable(this.accountName)
+  // // }
 }
 </script>
 

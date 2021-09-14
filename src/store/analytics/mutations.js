@@ -9,11 +9,6 @@ export const setEwsTableAttrVal = function (state, payload) {
   state.EwsInfo[attr] = val
 }
 
-// export const setValue = function (state, circularValue) { TODO eventually remove
-// state.circInfo = circularValue
-// console.log(circularValue)
-// }
-
 export const setDryTableAttrVal = function (state, payload) {
   // const attr = payload.key
   const val = payload.value
