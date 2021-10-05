@@ -16,7 +16,7 @@
 
         <q-card
       class="my-card text-white"
-      style="background: radial-gradient(circle, #35a2ff 0%, #014a88 80%)"
+      style="background: #1C2D39;"
     >
       <q-card-section>
             <div id="nav" class="text-h6 text-center q-ma-lg"> <img id="icon" width="65" src="~assets/decentralised.jpg">

@@ -1,14 +1,14 @@
 <template xmlns:justify-content="http://www.w3.org/1999/xhtml">
 <div>
-  <q-card class="q-pa-md">
+  <q-card class="q-pa-md" style="background: #1C2D39;">
     <div class="q-gutter-y-md q-mx-auto" style="max-width: 600px">
       <q-card
         class="my-card text-white"
-        style="background: radial-gradient(circle, #35a2ff 0%, #014a88 80%)"
+        style="background: #1C2D39;"
         >
         <q-card-section
           class="my-card text-white"
-          style="background: radial-gradient(circle, #35a2ff 0%, #014a88 80%)"
+          style="background: #1C2D39;"
         >
           <div id="nav" class="text-h6 text-center q-ma-lg"> <img id="icon" width="65" src="~assets/decentralised.jpg"><span id="text">&nbsp; Dividend Analytics</span></div>
           <q-btn class="q-ma-lg" color="blue" rounded no-caps @click="submit()" label="Data Update">
