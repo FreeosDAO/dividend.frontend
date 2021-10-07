@@ -83,6 +83,7 @@
                 <q-table
                   title="NFT Summary by Owner"
                   :data="this.category"
+                  :table-style="{ backgroundColor: '#101c28' }"
                   :columns="columns"
                   row-key="name"
                   :pagination.sync="pagination"

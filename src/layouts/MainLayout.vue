@@ -1,19 +1,19 @@
 <template>
   <q-layout view="hHh Lpr fFf">
 
-    <q-header reveal elevated class="bg-primary" height-hint="98">
-      <q-toolbar style="justify-content: space-between;">
+    <q-header reveal bordered class="uxblue" height-hint="90">
+      <q-toolbar reveal bordered class="ux_bar text-uxblue" style="justify-content: space-between; ux_bar">
         <q-btn :style="'visibility: ' + (isAuthenticated ? 'visible' : 'hidden')" dense flat round icon="menu" @click="drawer = !drawer" />
         <q-btn v-if="isAuthenticated" flat no-caps color="white" label="Dividend Compute" @click="DividendCompute()"
           style="width: 150px"
         ></q-btn>
-        <div v-if="isAuthenticated">{{this.version}}</div>
+        <!-- <div v-if="isAuthenticated">{{this.version}}</div> -->
         <div style="display: flex; align-items: center;">
-          <img width="35" src="~assets/decentralised.jpg"> &nbsp;
+          <img width="35" src="~assets/decentralised.jpg"> &nbsp; &nbsp;
           <div v-if="isAuthenticated" style="margin-right: 1rem;">{{accountName}}</div>
           <q-btn color="primary" label="Login" v-if="!isAuthenticated" @click="() => connectWallet('anchor')">
           </q-btn>
-          <q-btn v-if="isAuthenticated" style="justify-self: flex-end;" @click="() => logout()">Logout</q-btn>
+          <q-btn v-if="isAuthenticated" flat no-caps style="justify-self: flex-end;" label="Logout" @click="() => logout()"></q-btn>
         </div>
       </q-toolbar>
     </q-header>
@@ -22,13 +22,12 @@
       v-model="drawer"
       :width="200"
       :breakpoint="800"
-      bordered
-      content-class="bg-grey-0"
+      content-class="uxdrawer"
     >
       <q-scroll-area class="fit">
-        <q-list>
+        <q-list class="uxdrawer">
           <template v-for="(menuItem, index) in menuList">
-            <q-item :key="index" clickable :active="selectedItemLabel === menuItem.label" active-class="bg-grey-4" v-ripple @click="onSelectMenu(menuItem)">
+            <q-item :key="index" clickable :active="selectedItemLabel === menuItem.label" active-class="uxblue" v-ripple @click="onSelectMenu(menuItem)">
                 <q-item-section avatar>
                   <q-icon :name="menuItem.icon" />
                 </q-item-section>
@@ -36,31 +35,14 @@
                   {{ menuItem.label }}
                 </q-item-section>
             </q-item>
-            <q-separator :key="'sep' + index" v-if="menuItem.separator" />
+            <q-separator class="uxblue" :key="'sep' + index" v-if="menuItem.separator" />
           </template>
         </q-list>
       </q-scroll-area>
     </q-drawer>
-
     <q-page-container>
-      <div class="text-center q-ma-md row">
-        <div class="col-md-5"></div>
-        <!-- <div class="col-xs-12 col-md-2 q-mb-md">
-          <img width="110" src="~assets/decentralised.jpg">
-        </div> -->
-      </div>
       <router-view />
     </q-page-container>
-
-    <!-- <q-footer bordered class="bg-dark text-white" >
-      <q-toolbar>
-        <q-toolbar-title>
-          <q-avatar >
-            <img src="https://cdn.quasar.dev/logo/svg/quasar-logo.svg">
-          </q-avatar>
-        </q-toolbar-title>
-      </q-toolbar>
-    </q-footer> -->
   </q-layout>
 </template>
 <script>
@@ -231,7 +213,19 @@ export default {
   zoom: 1;
   position: relative;
 }
-
+.start {
+background-color: 'newback'
+}
+.ux_bar {
+background-color: #3B4653;
+}
+.uxblue {
+background-color: #00ACEF;
+}
+.uxdrawer {
+background-color: rgb(28, 38, 47);
+color:#00ACEF;
+}
 @font-face {
   font-family: 'MyWebFont';
   src: url('Franklin Gothic Medium Regular/Franklin Gothic Medium Regular.ttf')  format('truetype');

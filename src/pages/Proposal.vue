@@ -7,7 +7,7 @@
           class="text-grey"
           active-color="primary"
           indicator-color="primary"
-          align="justify"
+          align="center"
           narrow-indicator
         >
         </q-tabs>
@@ -34,7 +34,7 @@
           </q-dialog>
         </div>
 <!-- end of DIALOG -->
-        <!-- Dialog Info Content -->
+<!-- Dialog Info Content -->
         <div class="q-pa-md">
           <q-dialog v-model="dialoginfo">
             <q-card>
@@ -48,15 +48,16 @@
             </q-card>
           </q-dialog>
         </div>
-        <!-- end of DIALOG Info Content-->
+  <!-- end of DIALOG Info Content-->
             <div style="max-width: 500px; margin: 0 auto;">
               <!-- Select correct roi cap -->
               <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
                 <div class="col-xs-6 col-sm-6">
                   <q-btn-toggle no-caps
+                    spread
                     v-model="submitData.cap"
                     push
-                    glossy
+                    outline
                     toggle-color="green"
                     :options="[
                       {label: 'WayFinder', value: 1},
@@ -140,9 +141,9 @@
               </div>
             </div>
             <div class="flex justify-center">
-               <q-btn icon="link" class="q-ma-lg" color="primary" no-caps @click="submit()" label="Submit" :disable="!isFormFilled"/>
-              <q-btn class="q-ma-lg" color="secondary" no-caps @click="resetForm()" label="Clear"/>
-              <q-btn round class="q-ma-lg" color="primary" glossy icon="info">
+               <q-btn outline icon="link" class="q-ma-lg" color="primary" no-caps @click="submit()" label="Submit" :disable="!isFormFilled"/>
+              <q-btn outline class="q-ma-lg" color="secondary" no-caps @click="resetForm()" label="Clear"/>
+              <q-btn round class="q-ma-lg" color="primary" outline icon="info">
                  <q-tooltip glossy icon="info"
                      transition-show="scale"
                      transition-hide="scale"
@@ -176,10 +177,10 @@
           </q-linear-progress>
           <!--  unlock dialog  -->
           <div class="row items-center q-gutter-sm">
-            <q-btn flat icon="link" label="Cancel Proposal" color="orange" @click="dialogreset = true"></q-btn>
-            <q-btn flat icon="link" label="Unlock NFT" color="secondary" @click="dialog = true"></q-btn>
-            <q-btn flat label="NFT List" color="blue" @click="$router.push('/customer')"></q-btn>
-            <q-btn flat label="Analytics" color="blue" @click="$router.push('/analytics')"></q-btn>
+            <q-btn outline icon="link" label="Cancel Proposal" color="#00ACEF" @click="dialogreset = true"></q-btn>
+            <q-btn outline icon="link" label="Unlock NFT" color="secondary" @click="dialog = true"></q-btn>
+            <q-btn outline label="NFT List" color="blue" @click="$router.push('/customer')"></q-btn>
+            <q-btn outline label="Analytics" color="blue" @click="$router.push('/analytics')"></q-btn>
             <q-dialog v-model="dialog">
               <q-card>
                 <q-card-section class="row items-center q-gutter-sm">
