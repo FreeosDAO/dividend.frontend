@@ -27,7 +27,8 @@
       <q-scroll-area class="fit">
         <q-list class="uxdrawer">
           <template v-for="(menuItem, index) in menuList">
-            <q-item :key="index" clickable :active="selectedItemLabel === menuItem.label" active-class="uxblue" v-ripple @click="onSelectMenu(menuItem)">
+            <q-item
+                :key="index" clickable :active="selectedItemLabel === menuItem.label" active-class="uxdraweract" v-ripple @click="onSelectMenu(menuItem)">
                 <q-item-section avatar>
                   <q-icon :name="menuItem.icon" />
                 </q-item-section>
@@ -225,6 +226,10 @@ background-color: #00ACEF;
 .uxdrawer {
 background-color: rgb(28, 38, 47);
 color:#00ACEF;
+}
+.uxdraweract {
+  background-color: #00ACEF;
+  color: #3B4653;
 }
 @font-face {
   font-family: 'MyWebFont';
