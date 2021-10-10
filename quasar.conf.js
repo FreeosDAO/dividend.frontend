@@ -105,7 +105,10 @@ module.exports = function (/* ctx */) {
           uxbar: '3B4653',
           uxtablebg: '#101C28',
           uxtabletx: '#00ACEF',
-          uxtablet1: '#096085'
+          uxtablet1: '#096085',
+          newback: '#202b38',
+          newblue: '#4fa9e9',
+          newgrey: '#3a4753'
         }
       },
 

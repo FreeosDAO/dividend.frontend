@@ -2,7 +2,7 @@
   <q-layout view="hHh Lpr fFf">
 
     <q-header reveal bordered class="uxblue" height-hint="90">
-      <q-toolbar reveal bordered class="ux_bar text-uxblue" style="justify-content: space-between; ux_bar">
+      <q-toolbar bordered class="ux_bar text-uxblue" style="justify-content: space-between; ux_bar">
         <q-btn :style="'visibility: ' + (isAuthenticated ? 'visible' : 'hidden')" dense flat round icon="menu" @click="drawer = !drawer" />
         <q-btn v-if="isAuthenticated" flat no-caps color="white" label="Dividend Compute" @click="DividendCompute()"
           style="width: 150px"
@@ -36,7 +36,7 @@
                   {{ menuItem.label }}
                 </q-item-section>
             </q-item>
-            <q-separator class="uxblue" :key="'sep' + index" v-if="menuItem.separator" />
+            <q-separator class="uxblue1" :key="'sep' + index" v-if="menuItem.separator" />
           </template>
         </q-list>
       </q-scroll-area>
@@ -106,9 +106,9 @@ export default {
     this.progress1 = this.value
     this.progress2 = (1.00 - this.value)
     this.working = this.value * 100
-    this.progressLabel1 = String(this.working.toFixed(2)) + '% - to Investors'
+    this.progressLabel1 = String(this.working.toFixed(2)) + '%'
     // this.progressLabel1 = String(this.value * 100) + '% - to Investors'
-    this.progressLabel2 = String(100 - this.working) + '% - to DAO'
+    this.progressLabel2 = String(100 - this.working) + '%'
     // this.progressLabel2 = String(100 - (this.value * 100)) + '% - to DAO'
     console.log('value on layout =', this.progress1, this.progress2)
     // Store counted bar values to Vuex:
@@ -125,9 +125,9 @@ export default {
       this.progress1 = this.value
       this.progress2 = (1.00 - this.value)
       this.working = this.value * 100
-      this.progressLabel1 = String(this.working.toFixed(2)) + '% - to Investors'
+      this.progressLabel1 = String(this.working.toFixed(2)) + '%'
       // this.progressLabel1 = String(this.value * 100) + '% - to Investors'
-      this.progressLabel2 = String(100 - this.working) + '% - to DAO'
+      this.progressLabel2 = String(100 - this.working) + '%'
       // this.progressLabel2 = String(100 - (this.value * 100)) + '% - to DAO'
       console.log('values on loop =', this.progress1, this.progress2)
       // Store counted bar values to Vuex:
@@ -220,8 +220,9 @@ background-color: 'newback'
 .ux_bar {
 background-color: #3B4653;
 }
-.uxblue {
+.uxblue1 {
 background-color: #00ACEF;
+color: #00ACEF;
 }
 .uxdrawer {
 background-color: rgb(28, 38, 47);

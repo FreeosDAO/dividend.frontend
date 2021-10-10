@@ -1,34 +1,25 @@
 <template>
   <div class="q-pa-md">
-    <div class="q-gutter-y-md q-mx-auto" style="max-width: 600px">
-      <q-card>
-        <q-tabs
-          v-model="tab"
-          class="text-grey"
-          active-color="primary"
-          indicator-color="primary"
-          align="center"
-          narrow-indicator
-        >
-        </q-tabs>
-
-        <q-separator />
-
-        <q-card
-      class="my-card text-white"
-      style="background: #1C2D39;"
+    <div class="q-gutter-y-md q-mx-auto" style="max-width: 550px">
+    <q-card flat
+      class="uxblue"
     >
       <q-card-section>
-            <div id="nav" class="text-h6 text-center q-ma-lg"> <img id="icon" width="65" src="~assets/decentralised.jpg">
-              <span id="text">&nbsp; Create NFT Proposal</span></div>
+            <div id="nav" class="text-h6 text-center q-ma-lg">
+              <span id="text">Create NFT Proposal</span></div>
 <!-- Dialog -->
         <div class="q-pa-md">
           <q-dialog v-model="dialogreset">
-            <q-card>
-              <q-card-section class="row items-center q-gutter-sm">Remove Active Blockchain Proposal</q-card-section>
+            <q-card class="uxdialog">
               <q-card-section class="row items-center q-gutter-sm">
-                <q-btn class="q-ma-lg" color="orange" no-caps @click="breset()" label="Cancel Active Proposal"/>
-                <q-btn no-caps label="Close Dialog" color="primary" v-close-popup></q-btn>
+          <q-toolbar>
+            <q-toolbar-title>Remove Active Blockchain Proposal</q-toolbar-title>
+            <q-btn flat v-close-popup round dense icon="close"></q-btn>
+          </q-toolbar>
+              </q-card-section>
+              <q-card-section class="row items-center q-gutter-sm">
+                <q-btn outline class="q-ma-lg" style="color:#4fa9e9" no-caps @click="breset()" label="Cancel Active Proposal"/>
+                <q-btn outline label="Close Dialog" style="color:#4fa9e9" no-caps v-close-popup></q-btn>
               </q-card-section>
             </q-card>
           </q-dialog>
@@ -37,8 +28,8 @@
 <!-- Dialog Info Content -->
         <div class="q-pa-md">
           <q-dialog v-model="dialoginfo">
-            <q-card>
-                <q-card-section class="row items-center q-gutter-sm">
+            <q-card style="uxdialog">
+                <q-card-section class="row items-center q-gutter-sm uxdialog">
                 <p>Proposal Information <br>
                 Proposal (acct) {{propaccount}}<br>
                 Percentage {{proposal_percentage}}<br>
@@ -53,12 +44,11 @@
               <!-- Select correct roi cap -->
               <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
                 <div class="col-xs-6 col-sm-6">
-                  <q-btn-toggle no-caps
+                  <q-btn-toggle no-caps flat
                     spread
                     v-model="submitData.cap"
                     push
-                    outline
-                    toggle-color="green"
+                    toggle-color="blue"
                     :options="[
                       {label: 'WayFinder', value: 1},
                       {label: 'WayFarer', value: 2},
@@ -69,15 +59,14 @@
               </div>
               <!-- eosaccount section -->
               <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
-                <div class="col-xs-5 col-sm-4 text-right">
-                  Account
+                <div class="col-xs-5 col-sm-4 text-left">
+                  Account (Name)
                 </div>
-                <div class="col-xs-1 col-sm-2"></div>
-                <div class="col-xs-6 col-sm-6">
+                <div class="col-xs-7 col-sm-7">
                   <q-input
+                    input-style="color: #00ACEF"
                     v-model="submitData.eosaccount"
                     type="text"
-                    color="white"
                     outlined
                     dense
                   />
@@ -85,23 +74,26 @@
               </div>
               <!-- Percentage Section -->
               <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
-                <div class="col-xs-5 col-sm-4 text-right">
-                  Percentage
+                <div class="col-xs-5 col-sm-4 text-left">
+                  % for the Account
                 </div>
-                <div class="col-xs-1 col-sm-2"></div>
-                <div class="col-xs-6 col-sm-6">
-                  <q-input dense outlined color="white" v-model="submitData.percentage" />
+                <div class="col-xs-7 col-sm-7">
+                  <q-input
+                  input-style="color: #00ACEF"
+                  dense
+                  outlined v-model="submitData.percentage" />
                 </div>
               </div>
               <!-- Threshold conditional section -->
               <div v-if="submitData.cap!==1">
               <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
-                <div class="col-xs-5 col-sm-4 text-right">
-                  Threshold
+                <div class="col-xs-5 col-sm-4 text-left">
+                  Threshold Point
                 </div>
-                <div class="col-xs-1 col-sm-2"></div>
-                <div class="col-xs-6 col-sm-6" color="white">
-                  <q-input outlined v-model="submitData.threshold" label="POINT" color="white"
+                <div class="col-xs-7 col-sm-7">
+                  <q-input outlined
+                    input-style="color: #00ACEF"
+                    v-model="submitData.threshold" label="POINT"
                     placeholder='0.0000' dense >
                   </q-input>
                 </div>
@@ -110,12 +102,13 @@
               <!-- rates_left conditional section -->
               <div v-if="submitData.cap===1">
               <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
-                <div class="col-xs-5 col-sm-4 text-right">
+                <div class="col-xs-5 col-sm-4 text-left">
                   Iterations to pay
                 </div>
-                <div class="col-xs-1 col-sm-2"></div>
-                <div class="col-xs-6 col-sm-6">
+                <div class="col-xs-7 col-sm-7">
                   <q-input
+                    input-style="color: #00ACEF"
+                    class="form-control"
                     v-model="submitData.ratesleft"
                     type="number"
                     outlined
@@ -127,82 +120,94 @@
               <!-- locked conditional section -->
               <div v-if="submitData.cap===3">
               <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
-                <div class="col-xs-5 col-sm-4 text-right">
+                <div class="col-xs-5 col-sm-4 text-left">
                   Locked
                 </div>
-                <div class="col-xs-1 col-sm-2"></div>
-                <div class="col-xs-6 col-sm-6">
+                <div class="col-xs-7 col-sm-7">
                 <q-toggle
+                  size="xl"
+                  keep-color
+                  checked-icon="check"
                   v-model="submitData.value"
-                  color="red"
+                  color="blue"
                 ></q-toggle>
                 </div>
               </div>
               </div>
             </div>
             <div class="flex justify-center">
-               <q-btn outline icon="link" class="q-ma-lg" color="primary" no-caps @click="submit()" label="Submit" :disable="!isFormFilled"/>
-              <q-btn outline class="q-ma-lg" color="secondary" no-caps @click="resetForm()" label="Clear"/>
-              <q-btn round class="q-ma-lg" color="primary" outline icon="info">
+              <q-btn outline class="q-ma-lg uxblue" no-caps @click="resetForm()" label="Clear Form"/>
+              <q-btn outline class="q-ma-lg uxblue" no-caps @click="submit()" label="Submit" :disable="!isFormFilled"/>
+              <q-btn outline class="q-ma-lg uxblue" icon="info">
                  <q-tooltip glossy icon="info"
+                     content-class="uxdialog"
                      transition-show="scale"
                      transition-hide="scale"
                  >
-                 <div>
-                     <p>Proposal Information <br>
+                     <p style="font-size: 0.8rem;">Proposal Information <br>
                       Proposal (acct) {{propaccount}}<br>
                       Percentage {{proposal_percentage}}<br>
                       Expiration {{expires_at}}</p>
-                 </div>
                  </q-tooltip>
               </q-btn>
-              <div class="q-ma-lg" v-if="activeProposal"> Proposal Active &nbsp; {{expiration_timer}}</div>
-              <div class="q-ma-lg" v-else> No Active Proposal </div>
             </div>
       </q-card-section>
-          <div id="div2" class="flex justify-center">Fill up the Form before Submit.</div>
+      <div class="q-ma-lg" v-if="activeProposal"> Proposal Active &nbsp; {{expiration_timer}}</div>
+      <div class="q-ma-lg" v-else> No Active Proposal </div>
+      <q-separator color="blue" inset></q-separator>
     </q-card>
-      </q-card>
+    <!-- </q-card> -->
+    <!-- Clear/Submit Form section -->
+    <q-card>
+      <div id="div2" class="flex justify-center">Fill up the Form before Submit.</div>
+
+    </q-card>
       <div id="q-app" style="min-height: 100vh;">
         <div class="row items-center q-gutter-sm">
-          <q-linear-progress size="25px" :value="progress1" color="accent">
-            <div class="absolute-full flex flex-center">
-              <q-badge color="white" text-color="accent" :label="progressLabel1"></q-badge>
+          <q-linear-progress style="border-radius: 25px;" size="25px" :value="progress1" class="uxblue">
+            <div class="absolute-full flex flex-left">
+              <q-badge class="uxbadge" :label="progressLabel1"></q-badge>
             </div>
           </q-linear-progress>
-          <q-linear-progress size="25px" :value="progress2" color="accent" class="q-mt-sm">
-            <div class="absolute-full flex flex-center">
-              <q-badge color="white" text-color="accent" :label="progressLabel2"></q-badge>
+          <q-linear-progress style="border-radius: 25px;" round size="25px" :value="progress2" class="uxblue q-mt-sm">
+            <div class="absolute-full flex flex-left">
+              <q-badge class="uxbadge" :label="progressLabel2"></q-badge>
             </div>
           </q-linear-progress>
           <!--  unlock dialog  -->
           <div class="row items-center q-gutter-sm">
-            <q-btn outline icon="link" label="Cancel Proposal" color="#00ACEF" @click="dialogreset = true"></q-btn>
-            <q-btn outline icon="link" label="Unlock NFT" color="secondary" @click="dialog = true"></q-btn>
-            <q-btn outline label="NFT List" color="blue" @click="$router.push('/customer')"></q-btn>
-            <q-btn outline label="Analytics" color="blue" @click="$router.push('/analytics')"></q-btn>
-            <q-dialog v-model="dialog">
-              <q-card>
-                <q-card-section class="row items-center q-gutter-sm">
+            <q-btn outline no-caps label="Cancel Proposal" class="uxblue" @click="dialogreset = true"></q-btn>
+            <q-btn outline no-caps label="Unlock NFT" class="uxblue" @click="dialog = true"></q-btn>
+            <q-btn outline no-caps label="NFT List" class="uxblue" @click="$router.push('/customer')"></q-btn>
+            <q-btn outline no-caps label="Analytics" class="uxblue" @click="$router.push('/analytics')"></q-btn>
+              <q-dialog rounded v-model="dialog" style="uxdialog">
+              <q-card style="max-width: 350px" class="uxdialog">
+                          <q-toolbar>
+            <q-toolbar-title>Unlock Given NFT</q-toolbar-title>
+            <q-btn flat v-close-popup round dense icon="close"></q-btn>
+          </q-toolbar>
+                <q-card-section class="row items-center start q-gutter-sm" style="uxdialog">
                   <!-- NFT key section -->
-                  <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
+                  <div style="align-items: uxdialog center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
                     <div class="col-xs-5 col-sm-4 text-right">
-                      Key of NFT to unlock
+                      Enter the Key of NFT to unlock
                     </div>
                     <div class="col-xs-1 col-sm-2"></div>
                     <div class="col-xs-6 col-sm-6">
                       <q-input
+                        input-style="color: #00ACEF"
                         v-model="submitData1.nftKey"
                         type="number"
                         outlined
                         dense
+                        placeholder=0
                       />
                     </div>
                   </div>
                   <!--   -->
                   <div>
-                    <q-btn icon="link" class="q-ma-lg" color="orange" no-caps @click="submit1()" label="Unlock"/>
-                    <q-btn no-caps label="Close dialog" color="primary" v-close-popup></q-btn>
+                    <q-btn no-caps outline class="q-ma-lg" style="color:#4fa9e9" @click="submit1()" label="Unlock"/>
+                    <q-btn no-caps outline label="Close dialog" style="start" v-close-popup></q-btn>
                   </div>
                 </q-card-section>
               </q-card>
@@ -212,6 +217,7 @@
         </div>
       </div>
     </div>
+    <q-separator color="blue" inset></q-separator>
   </div>
 </template>
 
@@ -345,14 +351,29 @@ export default {
     }
   } // methods
 }
-</script>
+</script >
 
-<style>
+<style language=scss>
 nav {
   display: inline-block;
   height: 50px;
   margin: 30px;
   padding: 2px;
+}
+.uxdialog {
+background-color: rgb(28, 44, 56);
+color: rgb(0,172,239);
+border-radius: 1.25rem;
+border-color: #00AECF;
+border-style: solid;
+}
+.uxblue {
+background-color: #1C2C38;
+color:#3387a8;
+}
+.uxbadge {
+color:#1C2C38;
+background-color:#00ACEF;
 }
 #text,
 #icon {
@@ -366,17 +387,33 @@ nav {
   position: fixed;
   bottom: 0;
 }
+input {
+  color: white;
+}
 .Row {
   display: table;
   width: 100%; /*Optional*/
   table-layout: fixed; /*Optional*/
   border-spacing: 10px; /*Optional*/
 }
+.form-control {
+    background-color: transparent;
+    color: red;
+}
+textarea:focus, input:focus {
+    color: #00ACEF;
+}
 #div1{
   color:yellow;
 }
 #div2{
   color:lightblue;
+}
+.q-if-control {
+  color: blue !important;
+}
+.q-field__input{
+color:#00ACEF !important;
 }
 .Column {
   display: table-cell;

@@ -79,8 +79,8 @@ export default {
       dataload: {
         progress1: 0.0,
         progress2: 0.0,
-        progressLabel1: '%',
-        progressLabel2: '%'
+        progressLabel1: '',
+        progressLabel2: ''
       },
       value1: null,
       columns: [
@@ -129,9 +129,9 @@ export default {
       this.dataload.progress1 = this.value
       this.dataload.progress2 = (1.00 - this.value)
       this.working = this.value * 100
-      this.dataload.progressLabel1 = String(this.working.toFixed(2)) + '% - to Investors'
+      this.dataload.progressLabel1 = String(this.working.toFixed(2)) + '%'
       // this.progressLabel1 = String(this.value * 100) + '% - to Investors'
-      this.dataload.progressLabel2 = String(100 - this.working) + '% - to DAO'
+      this.dataload.progressLabel2 = String(100 - this.working) + '%'
       // this.progressLabel2 = String(100 - (this.value * 100)) + '% - to DAO'
       console.log('values=', this.progress1, this.progress2)
       // Store counted bar values to Vuex:
