@@ -1,21 +1,25 @@
 <template xmlns:justify-content="http://www.w3.org/1999/xhtml">
 <div>
-  <q-card class="q-pa-md" style="background: #1C2D39;">
+  <q-card class="q-pa-md" style="background: #1C2C38;">
     <div class="q-gutter-y-md q-mx-auto" style="max-width: 600px">
       <q-card
         class="my-card text-white"
-        style="background: #1C2D39;"
+        flat
+        style="background: #1C2C38;"
         >
         <q-card-section
-          class="my-card text-white"
-          style="background: #1C2D39;"
+          class="texblue"
+          style="background: #1C2C38;"
         >
-          <div id="nav" class="text-h6 text-center q-ma-lg"> <img id="icon" width="65" src="~assets/decentralised.jpg"><span id="text">&nbsp; Dividend Analytics</span></div>
-          <q-btn class="q-ma-lg" color="blue" rounded no-caps @click="submit()" label="Data Update">
-            <q-tooltip anchor="top middle" round self="bottom middle" :offset="[10, 10]">
-              <strong>Updates dryrun data. <br> Require transaction acceptance</strong>
-            </q-tooltip>
-          </q-btn>
+          <div class="text-h5 text-center">
+            <span id="text">Dividend Analytics</span> &nbsp;
+            <q-btn outline no-caps label="Data Update" style="color:#00ACEF" @click="submit()">
+             <q-tooltip anchor="top middle" round self="bottom middle" :offset="[10, 10]">
+               <strong>Updates dryrun data. <br> Require transaction acceptance</strong>
+             </q-tooltip>
+            </q-btn>
+          </div>
+          <br>
           <div class="container">
             <div class="child">
           <pure-vue-chart
@@ -26,23 +30,34 @@
             />
             </div>
           </div>
-          <q-breadcrumbs separator="--" align="center" class="white" active-color="white">
-            <q-breadcrumbs-el class="text-blue" label="WayFinder"></q-breadcrumbs-el>
-            <q-breadcrumbs-el class="text-red" label="WayFarer"></q-breadcrumbs-el>
-            <q-breadcrumbs-el class="text-green" label="WayFounder"></q-breadcrumbs-el>
+          <q-breadcrumbs gutter="xl" separator=" " align="center" class="texblue" active-color="#00ACEF">
+            <q-breadcrumbs-el class="text-lightblue" label="WayFinder"></q-breadcrumbs-el>
+            <q-breadcrumbs-el class="text-lightblue" label="WayFarer"></q-breadcrumbs-el>
+            <q-breadcrumbs-el class="text-lightblue" label="WayFounder"></q-breadcrumbs-el>
           </q-breadcrumbs>
         </q-card-section>
+        <q-separator color="blue"></q-separator>
         <div id="q-app" style="min-height: 100vh;">
-          <div class="q-pa-md">
-            <q-linear-progress size="25px" :value="progress1" color="accent">
-              <div class="absolute-full flex flex-center">
-                <q-badge color="white" text-color="accent" :label="progressLabel1"></q-badge>
+          <div class="q-pa-md q-gutter-sm">
+            <div id="container">
+              <span class="infotext" style="font-size:16px;"><b>Percentage share</b></span><br>
+              <span class="infotext">Investors/Founders</span>
+            </div>
+            <q-linear-progress style="border-radius: 25px;" size="25px" :value="progress1"
+                               track-color="black"
+                               class="uxblue">
+              <div class="absolute-full flex flex-left">
+                <q-badge class="uxbadge" :label="progressLabel1"></q-badge>
               </div>
             </q-linear-progress>
-
-            <q-linear-progress size="25px" :value="progress2" color="accent" class="q-mt-sm">
-              <div class="absolute-full flex flex-center">
-                <q-badge color="white" text-color="accent" :label="progressLabel2"></q-badge>
+            <div class="q-gutter-sm">
+              <span class="infotext">DAO</span>
+            </div>
+            <q-linear-progress style="border-radius: 25px;" size="25px" :value="progress2"
+                               track-color="black"
+                               class="uxblue">
+              <div class="absolute-full flex flex-left">
+                <q-badge class="uxbadge" :label="progressLabel2"></q-badge>
               </div>
             </q-linear-progress>
           </div>
@@ -167,5 +182,24 @@ export default {
 .container {
   display: flex;
   justify-content: center;
+}
+.texblue {
+  color:#00ACEF;
+}
+.uxbadge {
+  color:#1C2C38;
+  background-color:#00ACEF;
+}
+.uxblue {
+  background-color: #1C2D39;
+  color:#00ACEF;
+}
+.texblue {
+  color:#00ACEF;
+}
+.infotext {
+  color: #00ACEF;
+  font-size: 0.9em;
+  position: relative;
 }
 </style>

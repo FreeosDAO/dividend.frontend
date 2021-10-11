@@ -154,26 +154,32 @@
       </q-card-section>
       <div class="q-ma-lg" v-if="activeProposal"> Proposal Active &nbsp; {{expiration_timer}}</div>
       <div class="q-ma-lg" v-else> No Active Proposal </div>
-      <q-separator color="blue" inset></q-separator>
     </q-card>
     <!-- </q-card> -->
     <!-- Clear/Submit Form section -->
-    <q-card>
-      <div id="div2" class="flex justify-center">Fill up the Form before Submit.</div>
-
-    </q-card>
       <div id="q-app" style="min-height: 100vh;">
         <div class="row items-center q-gutter-sm">
-          <q-linear-progress style="border-radius: 25px;" size="25px" :value="progress1" class="uxblue">
+          <q-separator color="blue"></q-separator>
+          <div id="container">
+                <span class="infotext" style="font-size:16px;"><b>Percentage share</b></span><br>
+              <span class="infotext">Investors/Founders</span>
+          </div>
+          <q-linear-progress style="border-radius: 25px;" size="25px" :value="progress1"
+                             track-color="black"
+                             class="uxblue">
             <div class="absolute-full flex flex-left">
               <q-badge class="uxbadge" :label="progressLabel1"></q-badge>
             </div>
           </q-linear-progress>
-          <q-linear-progress style="border-radius: 25px;" round size="25px" :value="progress2" class="uxblue q-mt-sm">
+          <span class="infotext">DAO</span>
+          <q-linear-progress style="border-radius: 25px;" round size="25px" :value="progress2"
+                             track-color="black"
+                             class="uxblue q-mt-sm">
             <div class="absolute-full flex flex-left">
               <q-badge class="uxbadge" :label="progressLabel2"></q-badge>
             </div>
           </q-linear-progress>
+          <q-separator color="blue"></q-separator>
           <!--  unlock dialog  -->
           <div class="row items-center q-gutter-sm">
             <q-btn outline no-caps label="Cancel Proposal" class="uxblue" @click="dialogreset = true"></q-btn>
@@ -217,7 +223,7 @@
         </div>
       </div>
     </div>
-    <q-separator color="blue" inset></q-separator>
+    <q-separator color="blue"></q-separator>
   </div>
 </template>
 
@@ -356,20 +362,20 @@ export default {
 <style language=scss>
 nav {
   display: inline-block;
-  height: 50px;
-  margin: 30px;
+  height: 20px;
+  margin: 10px;
   padding: 2px;
 }
 .uxdialog {
 background-color: rgb(28, 44, 56);
 color: rgb(0,172,239);
 border-radius: 1.25rem;
-border-color: #00AECF;
+border-color: #00ACEF;
 border-style: solid;
 }
 .uxblue {
 background-color: #1C2C38;
-color:#3387a8;
+color:#00ACEF;
 }
 .uxbadge {
 color:#1C2C38;
@@ -417,5 +423,21 @@ color:#00ACEF !important;
 }
 .Column {
   display: table-cell;
+}
+h5 {
+    color: #00ACEF;
+    font-size: 1.0em;
+    position: relative;
+    left: 5px;
+}
+#info {
+    height: 100px;
+    width: 300px;
+}
+.infotext {
+    color: #00ACEF;
+    font-size: 0.9em;
+    position: relative;
+    left: 5px;
 }
 </style>

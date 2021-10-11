@@ -102,7 +102,7 @@ module.exports = function (/* ctx */) {
           uxdrawer: '#1C262F',
           uxblue: '#00ACEF',
           uxbg: '#1C2C38',
-          uxbar: '3B4653',
+          uxbar: '#3B4653',
           uxtablebg: '#101C28',
           uxtabletx: '#00ACEF',
           uxtablet1: '#096085',

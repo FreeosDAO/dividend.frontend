@@ -9,7 +9,7 @@
         ></q-btn>
         <!-- <div v-if="isAuthenticated">{{this.version}}</div> -->
         <div style="display: flex; align-items: center;">
-          <img width="35" src="~assets/decentralised.jpg"> &nbsp; &nbsp;
+          <img width="35" src="~assets/decentralised.png"> &nbsp; &nbsp;
           <div v-if="isAuthenticated" style="margin-right: 1rem;">{{accountName}}</div>
           <q-btn color="primary" label="Login" v-if="!isAuthenticated" @click="() => connectWallet('anchor')">
           </q-btn>

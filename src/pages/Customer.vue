@@ -1,113 +1,122 @@
 <template>
-<div>
-  <q-card class="q-pa-md" style="background: #1C2D39;">
-    <div class="q-gutter-y-md q-mx-auto" style="background: #1C2D39;">
-    <q-card-section
-      class="my-card text-white"
-      style="background: #1C2D39;"
-      >
-      <div id="nav" class="text-h6 text-center q-ma-lg"> <img id="icon" width="65" src="~assets/decentralised.jpg">
-        <span id="text">&nbsp; NFT Summary by Owner</span></div>
-      <!-- <q-btn class="q-ma-lg" color="secondary" no-caps @click="submit()" label="Refresh"/> -->
-      <div id="q-a">
-        <div class="q-pa-md">
-          <q-btn icon="link" label="Change NFT Ownership" color="primary" @click="dialog = true"></q-btn>
-          <q-dialog v-model="dialog">
-            <q-card>
-              <q-card-section class="row items-center q-pb-none">
-                <div class="text-h6">Change NFT Ownership</div>
-                <q-space></q-space>
-                <q-btn icon="close" flat round dense v-close-popup></q-btn>
-              </q-card-section>
-              <q-card-section class="row items-center q-gutter-sm">
-                <!--   -->
-                <!-- eosaccount section -->
-                <!-- <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
-                  <div class="col-xs-5 col-sm-4 text-right">
-                    Old Owner Account
-                  </div>
-                  <div class="col-xs-1 col-sm-2"></div>
-                  <div class="col-xs-6 col-sm-6">
-                    <q-input
-                      v-model="submitData.currentAccountName"
-                      type="text"
-                      outlined
-                      dense
-                    />
-                  </div>
-                </div> -->
-                <!-- eosaccount section -->
-                <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
-                  <div class="col-xs-5 col-sm-4 text-right">
-                    New Owner Account
-                  </div>
-                  <div class="col-xs-1 col-sm-2"></div>
-                  <div class="col-xs-6 col-sm-6">
-                    <q-input
-                      v-model="submitData.targetAccountName"
-                      type="text"
-                      outlined
-                      dense
-                    />
-                  </div>
-                </div>
-                <!-- rates_left conditional section -->
-                  <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
-                    <div class="col-xs-5 col-sm-4 text-right">
-                      Key of NFT to transfer
+  <div>
+    <q-card class="q-pa-md" style="background: #1C2D39;">
+      <div class="q-gutter-y-md q-mx-auto" style="background: #1C2C28;">
+        <q-card-section
+          class="texblue"
+          style="background: #1C2C38;"
+        >
+          <div class="text-h5 text-center">
+            <span id="text">NFT Summary by Owner</span> &nbsp;
+            <q-btn outline no-caps label="Change NFT Ownership" style="color:#00ACEF" @click="dialog = true"></q-btn>
+          </div>
+          <div id="q-a">
+            <div>
+              <!-- q-dialog -->
+              <q-dialog v-model="dialog">
+                <q-card class="uxdialog">
+                  <q-card-section class="row items-center q-pb-none">
+                    <div class="text-h6">Change NFT Ownership</div>
+                    <q-space></q-space>
+                    <q-btn icon="close" flat round dense v-close-popup></q-btn>
+                  </q-card-section>
+                  <q-card-section class="row items-center q-gutter-sm">
+                    <!--   -->
+                    <!-- eosaccount section -->
+                    <!-- <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
+                      <div class="col-xs-5 col-sm-4 text-right">
+                        Old Owner Account
+                      </div>
+                      <div class="col-xs-1 col-sm-2"></div>
+                      <div class="col-xs-6 col-sm-6">
+                        <q-input
+                          v-model="submitData.currentAccountName"
+                          type="text"
+                          outlined
+                          dense
+                        />
+                      </div>
+                    </div> -->
+                    <!-- eosaccount section -->
+                    <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
+                      <div class="col-xs-5 col-sm-4 text-right">
+                        New Owner Account
+                      </div>
+                      <div class="col-xs-1 col-sm-2"></div>
+                      <div class="col-xs-6 col-sm-6">
+                        <q-input
+                          input-style="color: #00ACEF"
+                          v-model="submitData.targetAccountName"
+                          type="text"
+                          outlined
+                          dense
+                        />
+                      </div>
                     </div>
-                    <div class="col-xs-1 col-sm-2"></div>
-                    <div class="col-xs-6 col-sm-6">
-                      <q-input
-                        v-model="submitData.nftKey"
-                        type="number"
-                        outlined
-                        dense
-                      />
+                    <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
+                      <div class="col-xs-5 col-sm-4 text-right">
+                        Key of NFT to transfer
+                      </div>
+                      <div class="col-xs-1 col-sm-2"></div>
+                      <div class="col-xs-6 col-sm-6">
+                        <q-input
+                          input-style="color: #00ACEF"
+                          v-model="submitData.nftKey"
+                          type="number"
+                          outlined
+                          dense
+                        />
+                      </div>
                     </div>
-                </div>
-                <!--   -->
-                <div>
-                  <q-btn class="q-ma-lg" color="orange" no-caps @click="submit()" label="Make Change" :disable="!isFormFilled"/>
-                </div>
-              </q-card-section>
-            </q-card>
-          </q-dialog>
-        </div>
-      </div>
-      <div id="q-pp">
-        <div class="q-pa-md">
-          <div id="q-app" style="min-height: 100vh;">
-            <div class="q-pa-md">
-              <div class="q-pa-md">
-                <q-table
-                  title="NFT Summary by Owner"
-                  :data="this.category"
-                  :table-style="{ backgroundColor: '#101c28' }"
-                  :columns="columns"
-                  row-key="name"
-                  :pagination.sync="pagination"
-                >      <template v-slot:body-cell-roi_target_cap="props">
-                  <q-td :props="props">
-                    <div>
-                      <q-badge v-if="props.value==2" color="purple" :label="props.value"></q-badge>
-                      <q-badge v-else-if="props.value==3" color="green" :label="props.value"></q-badge>
-                      <q-badge v-else color="blue" :label="props.value"></q-badge>
-                    </div>
-                    <div class="my-table-details">
-                      {{ props.row.details }}
-                    </div>
-                  </q-td>
-                </template></q-table>
+                    <q-card-section class="row items-center q-gutter-sm">
+                      <q-btn outline class="q-ma-lg" style="color:#00ACEF" no-caps @click="submit()"
+                             label="Make Change" :disable="!isFormFilled"/>
+                      <q-btn outline label="Close Dialog" style="color:#00ACEF" no-caps v-close-popup></q-btn>
+                    </q-card-section>
+                  </q-card-section>
+                </q-card>
+              </q-dialog>
             </div>
           </div>
-        </div>
+          <div id="q-pp">
+            <div class="q-pa-md">
+              <div id="q-app" style="min-height: 100vh;">
+                <div class="q-pa-md">
+                  <div class="q-pa-md">
+                    <q-table
+                      color="primary"
+                      card-class="uxtable text-lightblue"
+                      table-class="text-lightblue"
+                      table-header-class="text-lightblue"
+                      title="NFT Summary by Owner"
+                      :data="this.category"
+                      :table-style="{ backgroundColor: '#101c28' }"
+                      :columns="columns"
+                      row-key="name"
+                      :pagination.sync="pagination"
+                    >
+                      <!-- <template v-slot:body-cell-roi_target_cap="props">
+                      <q-td :props="props">
+                        <div>
+                          <q-badge v-if="props.value==2" color="purple" :label="props.value"></q-badge>
+                          <q-badge v-else-if="props.value==3" color="green" :label="props.value"></q-badge>
+                          <q-badge v-else color="blue" :label="props.value"></q-badge>
+                        </div>
+                        <div class="my-table-details">
+                          {{ props.row.details }}
+                        </div>
+                      </q-td>
+                    </template> -->
+                    </q-table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </q-card-section>
       </div>
-      </div>
-    </q-card-section>
-    </div>
-  </q-card>
-</div>
+    </q-card>
+  </div>
 </template>
 
 <script>
@@ -240,6 +249,17 @@ export default {
 }
 </script>
 <style scoped>
+.uxdialog {
+  background-color: rgb(28, 44, 56);
+  color: #00ACEF;
+  border-radius: 1.25rem;
+  border-color: #00ACEF;
+  border-style: solid;
+}
+.uxtable {
+  background-color: #101C28;
+  color:#00ACEF;
+}
 .my-table-details {
   font-size: 0.85em;
   font-style: italic;
@@ -247,5 +267,8 @@ export default {
   white-space: normal;
   color: #555;
   margin-top: 4px;
+}
+.texblue {
+  color:#00ACEF;
 }
 </style>
