@@ -1,13 +1,14 @@
 <template>
   <q-layout view="hHh Lpr fFf">
-
-    <q-header reveal bordered class="uxblue" height-hint="90">
-      <q-toolbar bordered class="ux_bar text-uxblue" style="justify-content: space-between; ux_bar">
+    <q-header reveal bordered class="uxtext" height-hint="90">
+      <q-toolbar bordered class="ux_bar text-uxblue">
         <q-btn :style="'visibility: ' + (isAuthenticated ? 'visible' : 'hidden')" dense flat round icon="menu" @click="drawer = !drawer" />
-        <q-btn v-if="isAuthenticated" flat no-caps color="white" label="Dividend Compute" @click="DividendCompute()"
+        <q-toolbar-title>
+        <q-btn v-if="isAuthenticated" flat no-caps class="uxtext" label="Compute Dividend" @click="DividendCompute()"
           style="width: 150px"
         ></q-btn>
-        <!-- <div v-if="isAuthenticated">{{this.version}}</div> -->
+        </q-toolbar-title>
+        <q-space></q-space>
         <div style="display: flex; align-items: center;">
           <img width="35" src="~assets/decentralised.png"> &nbsp; &nbsp;
           <div v-if="isAuthenticated" style="margin-right: 1rem;">{{accountName}}</div>
@@ -28,9 +29,10 @@
         <q-list class="uxdrawer">
           <template v-for="(menuItem, index) in menuList">
             <q-item
-                :key="index" clickable :active="selectedItemLabel === menuItem.label" active-class="uxdraweract" v-ripple @click="onSelectMenu(menuItem)">
+                :key="index" clickable :active="selectedItemLabel === menuItem.label" active-class="uxdraweract"
+                v-ripple @click="onSelectMenu(menuItem)">
                 <q-item-section avatar>
-                  <q-icon :name="menuItem.icon" />
+                  <img :src="menuItem.image" class="img-fluid"/>
                 </q-item-section>
                 <q-item-section>
                   {{ menuItem.label }}
@@ -47,39 +49,37 @@
   </q-layout>
 </template>
 <script>
-// import WalletLoginDialog from 'components/accountManagement/WalletLoginDialog'
 import { mapState, mapActions, mapGetters } from 'vuex'
-// import { getwhitelistTable } from 'src/store/account/actions'
 const menuList = [
   {
-    icon: 'monetization_on',
+    image: [require('../assets/Home.png')],
+    label: 'Home',
+    separator: true,
+    route: '/'
+  },
+  {
+    image: [require('../assets/Proposal.png')],
     label: 'Proposal',
     separator: true,
     route: '/proposal'
   },
   {
-    icon: 'swap_horiz',
+    image: [require('../assets/Vote1.png')],
     label: 'Vote',
     separator: true,
     route: '/vote'
   },
   {
-    icon: 'get_app',
+    image: [require('../assets/Customer.png')],
     label: 'Customer',
     separator: true,
     route: '/customer'
   },
   {
-    icon: 'get_app',
+    image: [require('../assets/Analytics.png')],
     label: 'Analytics',
     separator: true,
     route: '/analytics'
-  },
-  {
-    icon: 'get_app',
-    label: 'Test',
-    separator: true,
-    route: '/test'
   }
 ]
 export default {
@@ -139,7 +139,6 @@ export default {
     }, 30000) // call each 30 sec after the tests
     // document.addEventListener('beforeunload', this.handler)
     this.checkIfLoggedIn()
-    // this.initiateValues() // TODO
     this.getwhitelistTable()
     this.version = process.env.V_STRING
   },
@@ -218,18 +217,21 @@ export default {
 background-color: 'newback'
 }
 .ux_bar {
-background-color: #3B4653;
+background-color: #3B4752;
 }
 .uxblue1 {
-background-color: #00ACEF;
-color: #00ACEF;
+background-color: #00ADEE;
+color: #00ADEE;
+}
+.uxtext {
+  color: #00ADEE;
 }
 .uxdrawer {
 background-color: rgb(28, 38, 47);
-color:#00ACEF;
+color:#00ADEE;
 }
 .uxdraweract {
-  background-color: #00ACEF;
+  background-color: #00ADEE;
   color: #3B4653;
 }
 @font-face {
@@ -239,7 +241,13 @@ color:#00ACEF;
 .my-font {
   font-family:'MyWebFont'
 }
-
+.img-fluid {
+  gutter: 6px;
+  width: 28px;
+  text-align: center;
+  height: 30px;
+  padding-bottom: 4px;
+}
 .pex1{
   padding-right: 2em;
 }

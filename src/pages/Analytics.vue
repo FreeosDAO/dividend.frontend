@@ -13,7 +13,7 @@
         >
           <div class="text-h5 text-center">
             <span id="text">Dividend Analytics</span> &nbsp;
-            <q-btn outline no-caps label="Data Update" style="color:#00ACEF" @click="submit()">
+            <q-btn outline no-caps label="Data Update" style="color:#00ADEE" @click="submit()">
              <q-tooltip anchor="top middle" round self="bottom middle" :offset="[10, 10]">
                <strong>Updates dryrun data. <br> Require transaction acceptance</strong>
              </q-tooltip>
@@ -30,7 +30,7 @@
             />
             </div>
           </div>
-          <q-breadcrumbs gutter="xl" separator=" " align="center" class="texblue" active-color="#00ACEF">
+          <q-breadcrumbs gutter="xl" separator=" " align="center" class="texblue" active-color="#00ADEE">
             <q-breadcrumbs-el class="text-lightblue" label="WayFinder"></q-breadcrumbs-el>
             <q-breadcrumbs-el class="text-lightblue" label="WayFarer"></q-breadcrumbs-el>
             <q-breadcrumbs-el class="text-lightblue" label="WayFounder"></q-breadcrumbs-el>
@@ -63,6 +63,9 @@
           </div>
           <q-table
             title="NFTs Summary by Owner "
+            card-class="uxtable text-lightblue"
+            table-class="text-lightblue"
+            table-header-class="text-lightblue"
             :data="this.byuser"
             :columns="columns"
             row-key="name"
@@ -184,22 +187,26 @@ export default {
   justify-content: center;
 }
 .texblue {
-  color:#00ACEF;
+  color:#00ADEE;
 }
 .uxbadge {
   color:#1C2C38;
-  background-color:#00ACEF;
+  background-color:#00ADEE;
 }
 .uxblue {
   background-color: #1C2D39;
-  color:#00ACEF;
+  color:#00ADEE;
 }
 .texblue {
-  color:#00ACEF;
+  color:#00ADEE;
 }
 .infotext {
-  color: #00ACEF;
+  color: #00ADEE;
   font-size: 0.9em;
   position: relative;
+}
+.uxtable {
+  background-color: #101C28;
+  color:#00ADEE;
 }
 </style>

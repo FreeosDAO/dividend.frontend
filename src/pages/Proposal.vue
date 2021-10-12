@@ -5,7 +5,8 @@
       class="uxblue"
     >
       <q-card-section>
-            <div id="nav" class="text-h6 text-center q-ma-lg">
+            <!-- <div id="nav" class="text-h6 text-center q-ma-lg"> -->
+              <div class="text-h5 text-center">
               <span id="text">Create NFT Proposal</span></div>
 <!-- Dialog -->
         <div class="q-pa-md">
@@ -19,7 +20,7 @@
               </q-card-section>
               <q-card-section class="row items-center q-gutter-sm">
                 <q-btn outline class="q-ma-lg" style="color:#4fa9e9" no-caps @click="breset()" label="Cancel Active Proposal"/>
-                <q-btn outline label="Close Dialog" style="color:#4fa9e9" no-caps v-close-popup></q-btn>
+                <!-- <q-btn outline label="Close Dialog" style="color:#4fa9e9" no-caps v-close-popup></q-btn> -->
               </q-card-section>
             </q-card>
           </q-dialog>
@@ -44,11 +45,12 @@
               <!-- Select correct roi cap -->
               <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
                 <div class="col-xs-6 col-sm-6">
+                  Select Policy:
                   <q-btn-toggle no-caps flat
                     spread
                     v-model="submitData.cap"
                     push
-                    toggle-color="blue"
+                    toggle-color="blue-4"
                     :options="[
                       {label: 'WayFinder', value: 1},
                       {label: 'WayFarer', value: 2},
@@ -64,7 +66,7 @@
                 </div>
                 <div class="col-xs-7 col-sm-7">
                   <q-input
-                    input-style="color: #00ACEF"
+                    input-style="color: #00ADEE"
                     v-model="submitData.eosaccount"
                     type="text"
                     outlined
@@ -79,7 +81,7 @@
                 </div>
                 <div class="col-xs-7 col-sm-7">
                   <q-input
-                  input-style="color: #00ACEF"
+                  input-style="color: #00ADEE"
                   dense
                   outlined v-model="submitData.percentage" />
                 </div>
@@ -92,7 +94,7 @@
                 </div>
                 <div class="col-xs-7 col-sm-7">
                   <q-input outlined
-                    input-style="color: #00ACEF"
+                    input-style="color: #00ADEE"
                     v-model="submitData.threshold" label="POINT"
                     placeholder='0.0000' dense >
                   </q-input>
@@ -107,7 +109,7 @@
                 </div>
                 <div class="col-xs-7 col-sm-7">
                   <q-input
-                    input-style="color: #00ACEF"
+                    input-style="color: #00ADEE"
                     class="form-control"
                     v-model="submitData.ratesleft"
                     type="number"
@@ -138,8 +140,8 @@
             <div class="flex justify-center">
               <q-btn outline class="q-ma-lg uxblue" no-caps @click="resetForm()" label="Clear Form"/>
               <q-btn outline class="q-ma-lg uxblue" no-caps @click="submit()" label="Submit" :disable="!isFormFilled"/>
-              <q-btn outline class="q-ma-lg uxblue" icon="info">
-                 <q-tooltip glossy icon="info"
+              <q-btn outline class="q-ma-lg uxblue" no-caps label="Info">
+                 <q-tooltip
                      content-class="uxdialog"
                      transition-show="scale"
                      transition-hide="scale"
@@ -201,7 +203,7 @@
                     <div class="col-xs-1 col-sm-2"></div>
                     <div class="col-xs-6 col-sm-6">
                       <q-input
-                        input-style="color: #00ACEF"
+                        input-style="color: #00ADEE"
                         v-model="submitData1.nftKey"
                         type="number"
                         outlined
@@ -213,7 +215,7 @@
                   <!--   -->
                   <div>
                     <q-btn no-caps outline class="q-ma-lg" style="color:#4fa9e9" @click="submit1()" label="Unlock"/>
-                    <q-btn no-caps outline label="Close dialog" style="start" v-close-popup></q-btn>
+                    <!-- <q-btn no-caps outline label="Close dialog" class="start" v-close-popup></q-btn> -->
                   </div>
                 </q-card-section>
               </q-card>
@@ -282,7 +284,7 @@ export default {
       roi_target_cap: state => state.account.proposalInfo.proposalInfo.roi_target_cap,
       proposal_percentage: state => state.account.proposalInfo.proposalInfo.proposal_percentage,
       locked: state => state.account.proposalInfo.proposalInfo.locked,
-      expires_at: state => state.account.proposalInfo.proposalInfo.expires_at, // TODO ??
+      expires_at: state => state.account.proposalInfo.proposalInfo.expires_at,
       threshold: state => state.account.proposalInfo.proposalInfo.threshold,
       rates_left: state => state.account.proposalInfo.proposalInfo.rates_left,
       accrued: state => state.account.proposalInfo.proposalInfo.accrued
@@ -370,16 +372,16 @@ nav {
 background-color: rgb(28, 44, 56);
 color: rgb(0,172,239);
 border-radius: 1.25rem;
-border-color: #00ACEF;
+border-color: #00ADEE;
 border-style: solid;
 }
 .uxblue {
 background-color: #1C2C38;
-color:#00ACEF;
+color:#00ADEE;
 }
 .uxbadge {
 color:#1C2C38;
-background-color:#00ACEF;
+background-color:#00ADEE;
 }
 #text,
 #icon {
@@ -407,7 +409,7 @@ input {
     color: red;
 }
 textarea:focus, input:focus {
-    color: #00ACEF;
+    color: #00ADEE;
 }
 #div1{
   color:yellow;
@@ -419,13 +421,13 @@ textarea:focus, input:focus {
   color: blue !important;
 }
 .q-field__input{
-color:#00ACEF !important;
+color:#00ADEE !important;
 }
 .Column {
   display: table-cell;
 }
 h5 {
-    color: #00ACEF;
+    color: #00ADEE;
     font-size: 1.0em;
     position: relative;
     left: 5px;
@@ -435,7 +437,7 @@ h5 {
     width: 300px;
 }
 .infotext {
-    color: #00ACEF;
+    color: #00ADEE;
     font-size: 0.9em;
     position: relative;
     left: 5px;

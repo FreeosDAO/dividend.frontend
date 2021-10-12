@@ -1,37 +1,24 @@
 <template>
   <div class="q-pa-md">
     <div class="q-gutter-y-md q-mx-auto" style="max-width: 600px">
-      <q-card>
-        <q-tabs
-          v-model="tab"
-          class="text-grey"
-          active-color="primary"
-          indicator-color="primary"
-          align="justify"
-          narrow-indicator
-        >
-        </q-tabs>
-        <q-separator />
-        <q-card
-      class="my-card text-white"
-      style="background: radial-gradient(circle, #35a2ff 0%, #014a88 80%)"
+      <q-card flat class="uxblue"
     >
       <!-- This part is displayed conditionally -->
-      <div class="flex justify-center" v-if="activeProposal">
+      <div class="flex justify-center" v-if="true">
       <q-card-section>
-        <div id="nav" class="text-h6 text-center q-ma-lg"> <img id="icon" width="65" src="~assets/decentralised.jpg">
-          <span id="text">&nbsp; Vote NFT Proposal</span></div>
-        <div class="q-ma-lg" v-if="activeProposal"> Proposal Active &nbsp; {{expiration_timer}}</div>
-            <div style="max-width: 500px; margin: 0 auto;">
-              <!-- Select correct roi cap -->
-              <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
-                <!--<div class="col-xs-5 col-sm-4 text-right">
+        <div class="text-h5 text-center">
+          <span>Vote NFT Proposal</span></div>
+        <div class="q-ma-lg uxblue" v-if="true"> Proposal Active &nbsp; {{expiration_timer}}</div>
+            <div>
+              <!--  -->
+              <div style="align-items: center;" class="row justify-left q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
+                <div class="col-xs-5 col-sm-4 text-left">
                   Policy cap
                 </div>
-                <div class="col-xs-1 col-sm-2"></div> -->
-                <div class="col-xs-6 col-sm-6">
-                  <q-btn-toggle no-caps
-                    toggle-color="green"
+                <div class="col-xs-1 col-sm-2"></div>
+                <div class="col-xs-7 col-sm-7">
+                  <q-btn-toggle no-caps flat
+                    toggle-color="blue-4"
                     v-model="roi_target_cap"
                     :options="[
                       {label: 'WayFinder', value: 1},
@@ -44,33 +31,33 @@
 
               <!-- eosaccount section -->
               <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
-                <div class="col-xs-5 col-sm-4 text-right">
-                  Account
+                <div class="col-xs-5 col-sm-4 text-left">
+                  Account (Name)
                 </div>
                 <div class="col-xs-1 col-sm-2"></div>
-                <div class="col-xs-6 col-sm-6">
+                <div class="col-xs-6 col-sm-6 uxblue">
                     {{eosaccount}}
                 </div>
               </div>
 
               <!-- Percentage Section -->
               <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
-                <div class="col-xs-5 col-sm-4 text-right">
-                  Percentage
+                <div class="col-xs-5 col-sm-4 text-left">
+                  % for the Account
                 </div>
                 <div class="col-xs-1 col-sm-2"></div>
-                <div class="col-xs-6 col-sm-6">
+                <div class="col-xs-6 col-sm-6 uxblue">
                    {{proposal_percentage}}
                 </div>
               </div>
               <!-- Threshold conditional section -->
               <div v-if="roi_target_cap!==1">
-              <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
-                <div class="col-xs-5 col-sm-4 text-right">
+                <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
+                  <div class="col-xs-5 col-sm-4 text-left">
                   Threshold
                 </div>
                 <div class="col-xs-1 col-sm-2"></div>
-                <div class="col-xs-6 col-sm-6">
+                <div class="col-xs-6 col-sm-6 uxblue">
                   {{threshold}}
                 </div>
               </div>
@@ -78,11 +65,11 @@
               <!-- rates_left conditional section -->
               <div v-if="roi_target_cap===1">
               <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
-                <div class="col-xs-5 col-sm-4 text-right">
+                <div class="col-xs-5 col-sm-4 text-left">
                   Rates to pay
                 </div>
                 <div class="col-xs-1 col-sm-2"></div>
-                <div class="col-xs-6 col-sm-6">
+                <div class="col-xs-6 col-sm-6 uxblue">
                   {{rates_left}}
                 </div>
               </div>
@@ -90,7 +77,7 @@
               <!-- locked conditional section -->
               <div v-if="roi_target_cap===3">
               <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
-                <div class="col-xs-5 col-sm-4 text-right">
+                <div class="col-xs-5 col-sm-4 text-left">
                   Locked
                 </div>
                 <div class="col-xs-1 col-sm-2"></div>
@@ -114,7 +101,7 @@
                   <div v-if="voteresult" style="color :white;">ACCEPT</div>
                   <div v-else style="color :red;"><b>REJECT</b></div>
                   <div v-if="isProposerActive">
-                 <q-btn icon="link" class="q-ma-lg" color="grey" disable no-caps label="Submit Vote" />
+                 <q-btn class="q-ma-lg uxblue" outline disable no-caps label="Submit Vote" />
                     <q-tooltip transition-show="scale"
                                transition-hide="scale"
                     >
@@ -123,26 +110,39 @@
                       </div>
                     </q-tooltip>
                   </div>
-                 <div v-else> <q-btn icon="link" class="q-ma-lg" color="blue" no-caps @click="submit()" label="Submit Vote" />
+                 <div v-else> <q-btn outline class="q-ma-lg uxblue" no-caps @click="submit()" label="Submit Vote" />
                  </div>
             </div>
       </q-card-section>
       </div>
       <div v-else>NOTHING TO VOTE <br> NO ACTIVE PROPOSAL</div>
     </q-card>
-      </q-card>
-      <div id="q-app" style="min-height: 100vh;">
-        <div class="q-pa-md">
-          <q-linear-progress size="25px" :value="progress1" color="accent">
-            <div class="absolute-full flex flex-center">
-              <q-badge color="white" text-color="accent" :label="progressLabel1"></q-badge>
+        <!--  -->
+        <div id="q-app" style="min-height: 100vh;">
+          <div class="row items-center q-gutter-sm">
+            <q-separator color="blue"></q-separator>
+            <div id="container">
+              <span class="infotext" style="font-size:16px;"><b>Percentage share</b></span><br>
+              <span class="infotext">Investors/Founders</span>
             </div>
-          </q-linear-progress>
-          <q-linear-progress size="25px" :value="progress2" color="accent" class="q-mt-sm">
-            <div class="absolute-full flex flex-center">
-              <q-badge color="white" text-color="accent" :label="progressLabel2"></q-badge>
-            </div>
-          </q-linear-progress>
+            <q-linear-progress style="border-radius: 25px;" size="25px" :value="progress1"
+                               track-color="black"
+                               class="uxblue">
+              <div class="absolute-full flex flex-left">
+                <q-badge class="uxbadge" :label="progressLabel1"></q-badge>
+              </div>
+            </q-linear-progress>
+            <span class="infotext">DAO</span>
+            <q-linear-progress style="border-radius: 25px;" round size="25px" :value="progress2"
+                               track-color="black"
+                               class="uxblue q-mt-sm">
+              <div class="absolute-full flex flex-left">
+                <q-badge class="uxbadge" :label="progressLabel2"></q-badge>
+              </div>
+            </q-linear-progress>
+            <q-space></q-space>
+            <q-separator color="blue"></q-separator>
+            <!--  unlock dialog  -->
         </div>
       </div>
     </div>
@@ -162,15 +162,16 @@ export default {
       displayed_percentage: 0.0,
       expires: '', // normalised (UTC) expiration time for proposal
       tab: 'send',
-      activeProposal: false, // if false - no active proposal
+      activeProposal: false, // if false - no active proposal - default false!
       expiration_timer: '',
-      isProposerActive: false, // proposer is logged in currently if true
+      isProposerActive: false, // proposer is logged in currently if true - default false
       submitData: {
         currentAccountName: '',
         toVote: 0
       },
       voteresult: false,
       isShowApprovedDialog: false,
+      // roi_target_cap: 1, // TODO!!! delete this line!!!
       isShowFailedDialog: false
     }
   },
@@ -258,5 +259,25 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+.uxblue {
+  background-color: #1D2C39;
+  color:#00ADEE;
+}
+.uxbadge {
+  color:#1C2C38;
+  background-color:#00ADEE;
+}
+#text,
+#icon {
+  line-height: 40px;
+}
+#icon {
+  vertical-align: middle;
+  font-size: 30px;
+}
+#mydiv{
+  position: fixed;
+  bottom: 0;
+}
 </style>

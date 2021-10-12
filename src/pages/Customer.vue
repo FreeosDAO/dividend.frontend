@@ -8,7 +8,7 @@
         >
           <div class="text-h5 text-center">
             <span id="text">NFT Summary by Owner</span> &nbsp;
-            <q-btn outline no-caps label="Change NFT Ownership" style="color:#00ACEF" @click="dialog = true"></q-btn>
+            <q-btn outline no-caps label="Change NFT Ownership" style="color:#00ADEE" @click="dialog = true"></q-btn>
           </div>
           <div id="q-a">
             <div>
@@ -45,7 +45,7 @@
                       <div class="col-xs-1 col-sm-2"></div>
                       <div class="col-xs-6 col-sm-6">
                         <q-input
-                          input-style="color: #00ACEF"
+                          input-style="color: #00ADEE"
                           v-model="submitData.targetAccountName"
                           type="text"
                           outlined
@@ -60,7 +60,7 @@
                       <div class="col-xs-1 col-sm-2"></div>
                       <div class="col-xs-6 col-sm-6">
                         <q-input
-                          input-style="color: #00ACEF"
+                          input-style="color: #00ADEE"
                           v-model="submitData.nftKey"
                           type="number"
                           outlined
@@ -69,9 +69,9 @@
                       </div>
                     </div>
                     <q-card-section class="row items-center q-gutter-sm">
-                      <q-btn outline class="q-ma-lg" style="color:#00ACEF" no-caps @click="submit()"
+                      <q-btn outline class="q-ma-lg" style="color:#00ADEE" no-caps @click="submit()"
                              label="Make Change" :disable="!isFormFilled"/>
-                      <q-btn outline label="Close Dialog" style="color:#00ACEF" no-caps v-close-popup></q-btn>
+                      <q-btn outline label="Close Dialog" style="color:#00ADEE" no-caps v-close-popup></q-btn>
                     </q-card-section>
                   </q-card-section>
                 </q-card>
@@ -251,14 +251,14 @@ export default {
 <style scoped>
 .uxdialog {
   background-color: rgb(28, 44, 56);
-  color: #00ACEF;
+  color: #00ADEE;
   border-radius: 1.25rem;
-  border-color: #00ACEF;
+  border-color: #00ADEE;
   border-style: solid;
 }
 .uxtable {
   background-color: #101C28;
-  color:#00ACEF;
+  color:#00ADEE;
 }
 .my-table-details {
   font-size: 0.85em;
@@ -269,6 +269,6 @@ export default {
   margin-top: 4px;
 }
 .texblue {
-  color:#00ACEF;
+  color:#00ADEE;
 }
 </style>
