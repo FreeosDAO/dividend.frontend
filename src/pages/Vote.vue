@@ -1,10 +1,25 @@
 <template>
   <div class="q-pa-md">
     <div class="q-gutter-y-md q-mx-auto" style="max-width: 600px">
+      <q-dialog v-model="this.isMessage" persistent transition-show="flip-down" transition-hide="flip-up">
+        <!-- TODO This pop-up must appear only for second voter -->
+        <q-card class="bg-primary text-white">
+          <q-card-section class="row items-center q-pb-none">
+            <div class="text-h6 alerttext">Important Message from the Proposer</div>
+            <q-space></q-space>
+          </q-card-section>
+          <q-card-section>
+            <h7>The Actual proposal must be cancelled.</h7> <br/>
+            Please, press the button bellow to vote 'no' and cancel the current proposal.<br>
+            <!-- TODO put setter. use hideDialog to remove dialog -->
+            <q-btn class="alerttext" label="Authorise Current Proposal Removal" no-caps flat style="justify-self: flex-end;" @click="byebye()"></q-btn>
+          </q-card-section>
+        </q-card>
+      </q-dialog>
       <q-card flat class="uxblue"
     >
       <!-- This part is displayed conditionally -->
-      <div class="flex justify-center" v-if="true">
+      <div class="flex justify-center" v-if="true"> <!-- todo ??? -->
       <q-card-section>
         <div class="text-h5 text-center">
           <span>Vote NFT Proposal</span></div>
@@ -150,7 +165,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapMutations } from 'vuex'
 // import state from 'src/store/account/state'
 
 export default {
@@ -158,6 +173,7 @@ export default {
   data () {
     return {
       value: 1,
+      isMessage: false,
       timestamp: '',
       displayed_percentage: 0.0,
       expires: '', // normalised (UTC) expiration time for proposal
@@ -171,15 +187,23 @@ export default {
       },
       voteresult: false,
       isShowApprovedDialog: false,
-      // roi_target_cap: 1, // TODO!!! delete this line!!!
+      // roi_target_cap: 1, // TODO!!! delete this line!!! but Why?
       isShowFailedDialog: false
     }
   },
   created () {
+    this.readPostBox()
     this.getActionProposal()
     this.isPropoActive()
     this.setIntervalId = setInterval(() => {
       this.getActionProposal()
+      if (this.isSecondVoter) {
+        // display message from proposer
+        this.isMessage = true
+      } else {
+        this.readPostBox()
+        this.isMessage = false
+      }
       this.isPropoActive() // set up 'activeProposal' and 'expiration_timer' values
     }, 30000) // call each 30 seconds then
     document.addEventListener('beforeunload', this.handler)
@@ -195,6 +219,7 @@ export default {
   computed: {
     ...mapState({
       accountName: state => state.account.accountName,
+      isMessage: state => state.vote.isMessage,
       eosaccount: state => state.account.proposalInfo.proposalInfo.eosaccount,
       roi_target_cap: state => state.account.proposalInfo.proposalInfo.roi_target_cap,
       proposal_percentage: state => state.account.proposalInfo.proposalInfo.proposal_percentage,
@@ -207,13 +232,15 @@ export default {
       progress2: state => state.analytics.progress2,
       progressLabel1: state => state.analytics.progressLabel1,
       progressLabel2: state => state.analytics.progressLabel2,
-      proposer: state => state.account.proposer
+      proposer: state => state.account.proposer,
+      isSecondVoter: state => state.account.isSecondVoter
     })
   },
   methods: {
     ...mapActions('proposal', ['actionProposalVote']),
-    ...mapActions('account', ['getActionProposal']),
+    ...mapActions('account', ['getActionProposal', 'readPostBox', 'callDividendVote']),
     ...mapActions('analytics', ['getByUserTotal', 'getEwsTable']),
+    ...mapMutations('account', ['hideModal']),
     submit () { // only use to send vote cast
       // const self = this
       if (this.voteresult === true) this.submitData.toVote = 2
@@ -221,6 +248,16 @@ export default {
       this.submitData.currentAccountName = this.accountName
       console.log(this.submitData.currentAccountName, this.toVote, this.voteresult)
       this.actionProposalVote(this.submitData)
+    },
+    byebye () {
+      this.isMessage = false
+      this.callDividendVote(this.accountName)
+      // this.hideModal() // clean up current isMessage dialog pop-up
+      // notifyAlert('warning', 'Exiting') // todo notifyAlert should be called from action.js action.
+      // Important: Call in 'divpropdel' contract the function called div2ndvote(name voter).
+      // The 'div2ndvote' makes remote call (to dividenda contract), voting 'no' for the current proposal
+      // ... (what's in practice removes the questioned proposal)
+      // ... and reset the 'proposer message indicator'.
     },
     getTimestamp: function () {
       return Date.now()
@@ -263,6 +300,17 @@ export default {
 .uxblue {
   background-color: #1D2C39;
   color:#00ADEE;
+}
+.infotext {
+  color: #00ADEE;
+  font-size: 0.9em;
+  position: relative;
+  left: 5px;
+}
+.alerttext {
+  color:#1C2C38;
+  position: relative;
+  left: 5px;
 }
 .uxbadge {
   color:#1C2C38;

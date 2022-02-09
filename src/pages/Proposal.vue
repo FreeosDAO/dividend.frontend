@@ -8,7 +8,7 @@
             <!-- <div id="nav" class="text-h6 text-center q-ma-lg"> -->
               <div class="text-h5 text-center">
               <span id="text">Create NFT Proposal</span></div>
-<!-- Dialog -->
+        <!-- Dialog --- for proposal cancellation -->
         <div class="q-pa-md">
           <q-dialog v-model="dialogreset">
             <q-card class="uxdialog">
@@ -18,9 +18,15 @@
             <q-btn flat v-close-popup round dense icon="close"></q-btn>
           </q-toolbar>
               </q-card-section>
-              <q-card-section class="row items-center q-gutter-sm">
+              <!-- Removal of proposal is fully allowed - no special condition: -->
+              <q-card-section v-if="!isVoted" class="row items-center q-gutter-sm">
                 <q-btn outline class="q-ma-lg" style="color:#4fa9e9" no-caps @click="breset()" label="Cancel Active Proposal"/>
                 <!-- <q-btn outline label="Close Dialog" style="color:#4fa9e9" no-caps v-close-popup></q-btn> -->
+              </q-card-section>
+              <!-- 2nd voter solver --- Special case of proposal removal - actions to avoid software glitch: -->
+              <q-card-section v-else>
+                <q-btn outline class="q-ma-lg" style="color:#4fa9e9" no-caps @click="dialogreset = false" label="Abort proposal cancellation"/>
+                <q-btn outline class="q-ma-lg" style="color:#4fa9e9" no-caps @click="pushToVoter()" label="Push to the second voter"/>
               </q-card-section>
             </q-card>
           </q-dialog>
@@ -230,7 +236,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapMutations } from 'vuex'
 
 export default {
   name: 'Proposal',
@@ -256,15 +262,22 @@ export default {
         NFTAccountName: '',
         nftKey: null
       },
+      submitData2: { // used for so called '2nd voter problem'.
+        currentAccountName: '',
+        secondVoterName: ''
+      },
       isShowApprovedDialog: false,
       isShowFailedDialog: false
     }
   },
   created () {
     this.isProActive()
+    this.getVoteStatus() // new
     this.setIntervalId = setInterval(() => {
       this.getActionProposal()
       this.isProActive()
+      this.getVoteStatus() // new
+      console.log('in Proposal')
     }, 30000) // call each 30 sec after the tests
     document.addEventListener('beforeunload', this.handler)
   },
@@ -274,6 +287,7 @@ export default {
   computed: {
     ...mapState({
       accountName: state => state.account.accountName,
+      secondVoterName: state => state.account.secondVoterName,
       propaccount: state => state.account.proposalInfo.proposalInfo.eosaccount,
       value: state => state.analytics.circInfo,
       progress1: state => state.analytics.progress1,
@@ -287,7 +301,8 @@ export default {
       expires_at: state => state.account.proposalInfo.proposalInfo.expires_at,
       threshold: state => state.account.proposalInfo.proposalInfo.threshold,
       rates_left: state => state.account.proposalInfo.proposalInfo.rates_left,
-      accrued: state => state.account.proposalInfo.proposalInfo.accrued
+      accrued: state => state.account.proposalInfo.proposalInfo.accrued,
+      isVoted: state => state.account.isVoted // '2nd Voter solver'
     }),
     isFormFilled () {
       let a = false
@@ -298,7 +313,9 @@ export default {
   },
   methods: {
     ...mapActions('proposal', ['proposalNew', 'proposalRemove', 'actionUnlockNFT', 'setProposalActive']),
-    ...mapActions('account', ['getActionProposal']),
+    ...mapActions('account', ['reqVoterAct']), // '2nd voter problem' solving
+    ...mapActions('account', ['getActionProposal', 'getVoteStatus']),
+    ...mapMutations('account', ['hideModal']),
     submit () {
       const self = this
       console.log('TOKEN: ', `${parseFloat(this.submitData.threshold).toFixed(process.env.TOKEN_PRECISION)} ${process.env.TOKEN_NAME}`)
@@ -319,8 +336,17 @@ export default {
           this.submitData1.NFTAccountName = '' // reset mini-form
         })
     },
+    pushToVoter () { // sends message to not-voting voter through trigger contract
+      console.log('pushToVoter()')
+      this.dialogreset = false
+      this.submitData2.secondVoterName = this.secondVoterName // TODO maybe use getter to setup data directly?
+      this.submitData2.currentAccountName = this.accountName
+      console.log('@voteraction submitData2=', this.submitData2)
+      this.reqVoterAct(this.submitData2) // call request for 2nd voter action
+      //
+    },
     isProActive () {
-      if (this.eosaccount !== 'empty') {
+      if ((this.eosaccount !== 'empty') && (this.eosaccount !== 'erased')) {
         this.expires = (this.expires_at * 1000) // normalize UTC formats
         // http://jsfiddle.net/JamesFM/bxEJd/
         const timestamp = Date.now()
@@ -333,16 +359,16 @@ export default {
           this.expiration_timer = this.expiration_timer.toFixed(2)
         }
         console.log('timestamp:', this.expires, timestamp)
-      } else { // proposal 'empty'
+      } else { // proposal 'empty' or 'erased'
         this.activeProposal = false // no active proposal
         this.expiration_timer = 0.0
       }
     },
-    breset () { // removes active proposal
+    breset () { // safely removes active proposal
       this.submitData.currentAccountName = this.accountName
       this.proposalRemove(this.accountName)
       this.setProposalActive(0)
-      this.getActionProposal()
+      this.getActionProposal() // todo verify - does it exists
       // .then(response => {
       // this.isProposalActive()
       // })
