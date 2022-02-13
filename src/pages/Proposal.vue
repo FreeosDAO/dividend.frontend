@@ -9,6 +9,7 @@
               <div class="text-h5 text-center">
               <span id="text">Create NFT Proposal</span></div>
         <!-- Dialog --- for proposal cancellation -->
+        <!--                                      -->
         <div class="q-pa-md">
           <q-dialog v-model="dialogreset">
             <q-card class="uxdialog">
@@ -244,7 +245,7 @@ export default {
     return {
       tab: 'send',
       dialog: false,
-      dialogreset: false,
+      dialogreset: false, // If true and proposal already voted display pop-up window. TODO make it faster.
       dialoginfo: false,
       activeProposal: false, // if false - no active proposal
       expiration_timer: 0.0,
@@ -341,7 +342,6 @@ export default {
       this.dialogreset = false
       this.submitData2.secondVoterName = this.secondVoterName // TODO maybe use getter to setup data directly?
       this.submitData2.currentAccountName = this.accountName
-      console.log('@voteraction submitData2=', this.submitData2)
       this.reqVoterAct(this.submitData2) // call request for 2nd voter action
       //
     },

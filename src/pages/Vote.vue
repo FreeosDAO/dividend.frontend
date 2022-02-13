@@ -1,7 +1,7 @@
 <template>
   <div class="q-pa-md">
     <div class="q-gutter-y-md q-mx-auto" style="max-width: 600px">
-      <q-dialog v-model="this.isMessage" persistent transition-show="flip-down" transition-hide="flip-up">
+      <q-dialog v-model="this.isSecondVoter" persistent transition-show="flip-down" transition-hide="flip-up">
         <!-- TODO This pop-up must appear only for second voter -->
         <q-card class="bg-primary text-white">
           <q-card-section class="row items-center q-pb-none">
@@ -197,13 +197,7 @@ export default {
     this.isPropoActive()
     this.setIntervalId = setInterval(() => {
       this.getActionProposal()
-      if (this.isSecondVoter) {
-        // display message from proposer
-        this.isMessage = true
-      } else {
-        this.readPostBox()
-        this.isMessage = false
-      }
+      this.readPostBox() // if something is in postbox?? should be isMessage = false ??
       this.isPropoActive() // set up 'activeProposal' and 'expiration_timer' values
     }, 30000) // call each 30 seconds then
     document.addEventListener('beforeunload', this.handler)
@@ -218,9 +212,9 @@ export default {
   // },
   computed: {
     ...mapState({
-      accountName: state => state.account.accountName,
-      isMessage: state => state.vote.isMessage,
-      eosaccount: state => state.account.proposalInfo.proposalInfo.eosaccount,
+      accountName: state => state.account.accountName, // this is logged in account of the current voter
+      // isMessage: state => state.account.isMessage, // todo too slow??
+      eosaccount: state => state.account.proposalInfo.proposalInfo.eosaccount, // this is account of the new proposal.
       roi_target_cap: state => state.account.proposalInfo.proposalInfo.roi_target_cap,
       proposal_percentage: state => state.account.proposalInfo.proposalInfo.proposal_percentage,
       locked: state => state.account.proposalInfo.proposalInfo.locked,
@@ -233,12 +227,12 @@ export default {
       progressLabel1: state => state.analytics.progressLabel1,
       progressLabel2: state => state.analytics.progressLabel2,
       proposer: state => state.account.proposer,
-      isSecondVoter: state => state.account.isSecondVoter
+      isSecondVoter: state => state.account.isSecondVoter // todo ?? make faster
     })
   },
   methods: {
-    ...mapActions('proposal', ['actionProposalVote']),
-    ...mapActions('account', ['getActionProposal', 'readPostBox', 'callDividendVote']),
+    ...mapActions('proposal', ['actionProposalVote', 'cleanUpMessageTrigger']),
+    ...mapActions('account', ['getActionProposal', 'readPostBox']),
     ...mapActions('analytics', ['getByUserTotal', 'getEwsTable']),
     ...mapMutations('account', ['hideModal']),
     submit () { // only use to send vote cast
@@ -250,9 +244,14 @@ export default {
       this.actionProposalVote(this.submitData)
     },
     byebye () {
-      this.isMessage = false
-      this.callDividendVote(this.accountName)
-      // this.hideModal() // clean up current isMessage dialog pop-up
+      // todo call original dividend action
+      this.submitData.toVote = 2 // Reject current proposal.
+      this.submitData.currentAccountName = this.accountName
+      console.log('bye bye', this.submitData.currentAccountName)
+      this.hideModal()
+      this.cleanUpMessageTrigger(this.accountName)
+      // this.actionProposalVote(this.submitData)
+      // clean up current isMessage dialog pop-up
       // notifyAlert('warning', 'Exiting') // todo notifyAlert should be called from action.js action.
       // Important: Call in 'divpropdel' contract the function called div2ndvote(name voter).
       // The 'div2ndvote' makes remote call (to dividenda contract), voting 'no' for the current proposal

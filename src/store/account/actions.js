@@ -165,28 +165,6 @@ export async function getwhitelistTable (state) {
 
 // Used by '2nd vote solver'
 // === Ref: Called by push2Vote line 345 in proposal.vue
-export async function callDividendVote ({ state }, currentAccountName) {
-  // currentAccountName at this moment should be second voter name what we want
-  console.log(' ----- call remotely the dividend negative vote === ', currentAccountName)
-  try {
-    const actions = [{
-      account: 'divpropdel', // process.env.DIVPROPDEL_APP,
-      name: 'div2ndvote',
-      authorization: [{
-        actor: currentAccountName,
-        permission: 'active'
-      }],
-      data: {
-        voter: currentAccountName
-        // Rejecting vote is already hard wired in divpropdel contract.
-      }
-    }]
-    const result = await ProtonSDK.sendTransaction(actions)
-    return result
-  } catch (e) {
-    console.log(e)
-  }
-}
 
 // Used by '2nd vote solver'
 // === Ref: Called by push2Vote line 345 in proposal.vue

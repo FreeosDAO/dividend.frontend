@@ -9,6 +9,7 @@
         ></q-btn>
         </q-toolbar-title>
         <q-space></q-space>
+        <!--  <div v-if="isAuthenticated">{{this.version}}</div> -->
         <div style="display: flex; align-items: center;">
           <img width="35" src="~assets/decentralised.png"> &nbsp; &nbsp;
           <div v-if="isAuthenticated" style="margin-right: 1rem;">{{accountName}}</div>
@@ -102,6 +103,7 @@ export default {
   created () {
     this.getEwsTable()
     this.getByUserTotal()
+    // this.version = process.env.V_STRING
     // Count current bar values
     this.progress1 = this.value
     this.progress2 = (1.00 - this.value)

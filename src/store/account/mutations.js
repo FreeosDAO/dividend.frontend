@@ -95,8 +95,9 @@ export const showModal = function (state) {
   state.isMessage = true
 }
 
+// todo Note: This should be called from action which clean up message trigger in divpropdel
 export const hideModal = function (state) { // used by '2nd vote solver'
-  state.isMessage = false
+  state.isSecondVoter = false
 }
 
 export const setPostBoxDataVal = function (state, payload) {
@@ -106,7 +107,7 @@ export const setPostBoxDataVal = function (state, payload) {
   // todo setup isSecondVoter here if the secondVoter from a table === currentAccountName
   // todo isSecondVoter = true
   if (extaccount === state.accountName) {
-    state.isSecondVoter = true
+    state.isSecondVoter = true // this is only set if currently is active the correct voter to receive message,
   } else { state.isSecondVoter = false }
   //
 }
