@@ -51,7 +51,7 @@
                 </div>
                 <div class="col-xs-1 col-sm-2"></div>
                 <div class="col-xs-6 col-sm-6 uxblue">
-                    <div v-if = "this.isProposalExpired">{{eosaccount}}</div>
+                    <div v-if = "!this.isProposalExpired">{{eosaccount}}</div>
                     <div v-else> N/A </div>
                 </div>
               </div>
@@ -63,7 +63,7 @@
                 </div>
                 <div class="col-xs-1 col-sm-2"></div>
                 <div class="col-xs-6 col-sm-6 uxblue">
-                  <div v-if = "this.isProposalExpired">{{proposal_percentage}}</div>
+                  <div v-if = "!this.isProposalExpired">{{proposal_percentage}}</div>
                   <div v-else> N/A </div>
                 </div>
               </div>
@@ -75,7 +75,7 @@
                 </div>
                 <div class="col-xs-1 col-sm-2"></div>
                 <div class="col-xs-6 col-sm-6 uxblue">
-                  <div v-if = "this.isProposalExpired">{{threshold}}</div>
+                  <div v-if = "!this.isProposalExpired">{{threshold}}</div>
                   <div v-else> N/A </div>
                 </div>
               </div>
@@ -88,7 +88,7 @@
                 </div>
                 <div class="col-xs-1 col-sm-2"></div>
                 <div class="col-xs-6 col-sm-6 uxblue">
-                  <div v-if = "this.isProposalExpired">{{rates_left}}</div>
+                  <div v-if = "!this.isProposalExpired">{{rates_left}}</div>
                   <div v-else> N/A </div>
                 </div>
               </div>
@@ -186,8 +186,8 @@ export default {
   data () {
     return {
       // Screen Controlling Variables:
-      isProposerMessage: false, // true if message from the proposer - default false
-      isProposalExpired: false, // if true is active proposal - default false
+      // isProposerMessage: false, // todo !!! true if message from the proposer - default false todo isSecondVoter duplicated function
+      isProposalExpired: false, // if true the proposal is expired or canceled - default false
       isProposerActive: false, // you are active proposer  - default false
       isProposalVoted: false, // if true proposal was voted by the current voter - default false
       // end
@@ -266,7 +266,7 @@ export default {
       // (proposal not expired yet) - all should be false to make submit button visible
       const result = ((this.isProposerActive) || (this.isProposalVoted) || (this.isProposalExpired))
       console.log('conditions=', result)
-      console.log('conditions=', this.isProposerActive, '*', this.isProposalVoted, '*', this.isProposalExpired)
+      console.log('conditions=', this.isProposalExpired, this.isProposerActive, this.isProposalVoted)
       return result
       // if return = false - submit button visible
     },
@@ -305,7 +305,7 @@ export default {
           this.isProposalExpired = true // no active proposal
           this.isProposalVoted = false // voting marker cancelled after expiration
           this.expiration_timer = 0.0
-        } else {
+        } else { // proposal is active
           this.isProposalExpired = false // proposal actually active
           this.expiration_timer = (this.expires - timestamp) / 60000 // display in minutes
           this.expiration_timer = this.expiration_timer.toFixed(2)
@@ -314,7 +314,7 @@ export default {
         console.log('timestamp:', this.expires, timestamp)
       } else {
         this.isProposalExpired = true // no active proposal
-        this.isProposalVoted = false
+        this.isProposalVoted = false // voting marker cancelled after expiration
         this.expiration_timer = 0.0
       }
     }
