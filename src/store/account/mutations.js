@@ -29,8 +29,8 @@ export const setPath = function (state, pathe) {
   state.path = pathe
 }
 
-// This function serves "second voter problem" only
-// Do not use for other purposes.
+// This function serves "2nd voter solver" only
+// === Do not use for other purposes. ===
 export const setWhitelistAttrVal = function (state, payload) {
   const attr = payload.key
   const val = payload.value
@@ -66,16 +66,18 @@ export const setWhitelistAttrVal = function (state, payload) {
     ' 1st:', state.firstVoterName, ' 2nd:', state.secondVoterName)
 }
 
+// Places active proposal data from backend to state.
 export const setProposalAttrVal = function (state, payload) {
   const attr = payload.key
   const val = payload.value
-  console.log(val) // test
+  // console.log('proposal', val) // test
   state.proposalInfo[attr] = val
+  const formattedPercentage = val.proposal_percentage
+  let percentage = parseFloat(formattedPercentage)
+  percentage = percentage.toFixed(2)
+  state.proposalInfo.proposalInfo.proposal_percentage = percentage
+  // console.log('proposal percentage %%', percentage) // test
 }
-
-// export const setUserAfterBalance = (state, balance) => { TODO eventually remove
-// state.userAfterBalance = balance
-// }
 
 // Identify the account name of the proposer and store it
 // Compare proposer account with current account - store the result

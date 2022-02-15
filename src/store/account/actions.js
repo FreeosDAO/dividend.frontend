@@ -93,7 +93,7 @@ export function getInfo (state) {
   state.dispatch('getActionProposal')
 }
 
-// retrieve current proposal info
+// retrieve current proposal info from the backend
 export async function getActionProposal (state) {
   const result = await connect({
     json: true,

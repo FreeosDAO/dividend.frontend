@@ -11,7 +11,7 @@
           <q-card-section>
             <h7>The Actual proposal must be cancelled.</h7> <br/>
             Please, press the button bellow to vote 'no' and cancel the current proposal.<br>
-            <!-- TODO put setter. use hideDialog to remove dialog -->
+            <!--  -->
             <q-btn class="alerttext" label="Authorise Current Proposal Removal" no-caps flat style="justify-self: flex-end;" @click="byebye()"></q-btn>
           </q-card-section>
         </q-card>
@@ -23,17 +23,17 @@
       <q-card-section>
         <div class="text-h5 text-center">
           <span>Vote NFT Proposal</span></div>
-        <div class="q-ma-lg uxblue" v-if="true"> Proposal Active &nbsp; {{expiration_timer}}</div>
+        <div class="q-ma-lg uxblue" v-if="true"> Proposal expire in:&nbsp;{{expiration_timer}} min.</div>
             <div>
               <!--  -->
               <div style="align-items: center;" class="row justify-left q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
                 <div class="col-xs-5 col-sm-4 text-left">
-                  Policy cap
+                  <!-- Policy cap -->
                 </div>
                 <div class="col-xs-1 col-sm-2"></div>
                 <div class="col-xs-7 col-sm-7">
                   <q-btn-toggle no-caps flat
-                    toggle-color="blue-4"
+                    toggle-color="white"
                     v-model="roi_target_cap"
                     :options="[
                       {label: 'WayFinder', value: 1},
@@ -51,7 +51,8 @@
                 </div>
                 <div class="col-xs-1 col-sm-2"></div>
                 <div class="col-xs-6 col-sm-6 uxblue">
-                    {{eosaccount}}
+                    <div v-if = "this.isProposalExpired">{{eosaccount}}</div>
+                    <div v-else> N/A </div>
                 </div>
               </div>
 
@@ -62,7 +63,8 @@
                 </div>
                 <div class="col-xs-1 col-sm-2"></div>
                 <div class="col-xs-6 col-sm-6 uxblue">
-                   {{proposal_percentage}}
+                  <div v-if = "this.isProposalExpired">{{proposal_percentage}}</div>
+                  <div v-else> N/A </div>
                 </div>
               </div>
               <!-- Threshold conditional section -->
@@ -73,7 +75,8 @@
                 </div>
                 <div class="col-xs-1 col-sm-2"></div>
                 <div class="col-xs-6 col-sm-6 uxblue">
-                  {{threshold}}
+                  <div v-if = "this.isProposalExpired">{{threshold}}</div>
+                  <div v-else> N/A </div>
                 </div>
               </div>
               </div>
@@ -85,7 +88,8 @@
                 </div>
                 <div class="col-xs-1 col-sm-2"></div>
                 <div class="col-xs-6 col-sm-6 uxblue">
-                  {{rates_left}}
+                  <div v-if = "this.isProposalExpired">{{rates_left}}</div>
+                  <div v-else> N/A </div>
                 </div>
               </div>
               </div>
@@ -107,26 +111,35 @@
               </div>
             </div>
             <div class="flex justify-center">
-                 <q-toggle size="xl"
-                   v-model="voteresult"
-                   checked-icon="check"
-                   color="green"
-                   unchecked-icon="clear"
-                 ></q-toggle>
-                  <div v-if="voteresult" style="color :white;">ACCEPT</div>
-                  <div v-else style="color :red;"><b>REJECT</b></div>
-                  <div v-if="isProposerActive">
-                 <q-btn class="q-ma-lg uxblue" outline disable no-caps label="Submit Vote" />
-                    <q-tooltip transition-show="scale"
-                               transition-hide="scale"
-                    >
-                      <div>
-                        You are the Proposer!
+               <q-toggle size="xl"
+                 v-model="voteresult"
+                 checked-icon="check"
+                 color="green"
+                 unchecked-icon="clear"
+               ></q-toggle>
+               <!-- white or red text above screen switch -->
+               <div v-if="voteresult" style="color :white;">ACCEPT</div>
+               <div v-else style="color :red;"><b>REJECT</b></div>
+               <!-- greyed submit button undern certain conditions -->
+               <div v-if="!this.conditions()">
+                    <q-btn outline class="q-ma-lg uxblue" no-caps @click="submit()" label="Submit Vote" />
+                    conditions:{{this.conditions()}}
+               </div>
+               <div v-else>
+                  <q-btn class="q-ma-lg uxblue" outline disable no-caps label="Submit Vote" />
+                  <q-tooltip transition-show="scale"
+                             transition-hide="scale"
+                             class="q-ma-lg uxblue text-h7"
+                  >
+                      <div id="app">
+                        <h6 v-if="this.isProposalExpired">proposal expired</h6>
+                        <!-- <h6 v-else-if=></h6> -->
+                        <h6 v-else-if="this.isProposerActive">you are active proposer</h6>
+                        <h6 v-else-if="this.isProposalVoted">you already voted</h6>
                       </div>
-                    </q-tooltip>
-                  </div>
-                 <div v-else> <q-btn outline class="q-ma-lg uxblue" no-caps @click="submit()" label="Submit Vote" />
-                 </div>
+                    {{this.isProposalExpired}}/{{this.isProposerActive}}/{{this.isProposalVoted}}
+                  </q-tooltip>
+               </div>
             </div>
       </q-card-section>
       </div>
@@ -172,33 +185,35 @@ export default {
   name: 'Vote',
   data () {
     return {
+      // Screen Controlling Variables:
+      isProposerMessage: false, // true if message from the proposer - default false
+      isProposalExpired: false, // if true is active proposal - default false
+      isProposerActive: false, // you are active proposer  - default false
+      isProposalVoted: false, // if true proposal was voted by the current voter - default false
+      // end
       value: 1,
-      isMessage: false,
       timestamp: '',
       displayed_percentage: 0.0,
       expires: '', // normalised (UTC) expiration time for proposal
       tab: 'send',
-      activeProposal: false, // if false - no active proposal - default false!
       expiration_timer: '',
-      isProposerActive: false, // proposer is logged in currently if true - default false
       submitData: {
-        currentAccountName: '',
-        toVote: 0
+        currentAccountName: '', // used to submit current voter name
+        toVote: 0 // current vote 1 - accepted 2 -refused.
       },
       voteresult: false,
       isShowApprovedDialog: false,
-      // roi_target_cap: 1, // TODO!!! delete this line!!! but Why?
       isShowFailedDialog: false
     }
   },
   created () {
-    this.readPostBox()
-    this.getActionProposal()
-    this.isPropoActive()
+    this.readPostBox() // reads eventual message from proposer
+    this.getActionProposal() // retrieve current proposal info from the backend - actions.js line 96
+    this.isProposalActive()
     this.setIntervalId = setInterval(() => {
       this.getActionProposal()
-      this.readPostBox() // if something is in postbox?? should be isMessage = false ??
-      this.isPropoActive() // set up 'activeProposal' and 'expiration_timer' values
+      this.readPostBox() // if something is in postbox?? should be isProposer Message = false ??
+      this.isProposalActive() // set up 'activeProposal' and 'expiration_timer' values
     }, 30000) // call each 30 seconds then
     document.addEventListener('beforeunload', this.handler)
     this.isProposer()
@@ -213,7 +228,7 @@ export default {
   computed: {
     ...mapState({
       accountName: state => state.account.accountName, // this is logged in account of the current voter
-      // isMessage: state => state.account.isMessage, // todo too slow??
+      // Data displayed from current active proposal to the screen:
       eosaccount: state => state.account.proposalInfo.proposalInfo.eosaccount, // this is account of the new proposal.
       roi_target_cap: state => state.account.proposalInfo.proposalInfo.roi_target_cap,
       proposal_percentage: state => state.account.proposalInfo.proposalInfo.proposal_percentage,
@@ -222,12 +237,14 @@ export default {
       threshold: state => state.account.proposalInfo.proposalInfo.threshold,
       rates_left: state => state.account.proposalInfo.proposalInfo.rates_left,
       accrued: state => state.account.proposalInfo.proposalInfo.accrued,
+      // Other data on Screen: are mostly on data section
       progress1: state => state.analytics.progress1,
       progress2: state => state.analytics.progress2,
       progressLabel1: state => state.analytics.progressLabel1,
       progressLabel2: state => state.analytics.progressLabel2,
-      proposer: state => state.account.proposer,
-      isSecondVoter: state => state.account.isSecondVoter // todo ?? make faster
+      // control variables for pop-ups: are mostly in data section
+      proposer: state => state.account.proposer, // todo better use getter
+      isSecondVoter: state => state.account.isSecondVoter // todo ... may be faster
     })
   },
   methods: {
@@ -241,7 +258,17 @@ export default {
       else this.submitData.toVote = 1
       this.submitData.currentAccountName = this.accountName
       console.log(this.submitData.currentAccountName, this.toVote, this.voteresult)
-      this.actionProposalVote(this.submitData)
+      this.actionProposalVote(this.submitData) // standard voting action (proposal/actions.js)
+      this.isProposalVoted = true // Marker is removed by isProposalActive()
+    },
+    conditions () {
+      // (no proposer message) || (current user different than proposer) || (proposal not voted here) ||
+      // (proposal not expired yet) - all should be false to make submit button visible
+      const result = ((this.isProposerActive) || (this.isProposalVoted) || (this.isProposalExpired))
+      console.log('conditions=', result)
+      console.log('conditions=', this.isProposerActive, '*', this.isProposalVoted, '*', this.isProposalExpired)
+      return result
+      // if return = false - submit button visible
     },
     byebye () {
       // todo call original dividend action
@@ -249,14 +276,9 @@ export default {
       this.submitData.currentAccountName = this.accountName
       console.log('bye bye', this.submitData.currentAccountName)
       this.hideModal()
+      this.isProposalVoted = true // Marker is removed by isProposalActive()
       this.cleanUpMessageTrigger(this.accountName)
-      // this.actionProposalVote(this.submitData)
-      // clean up current isMessage dialog pop-up
-      // notifyAlert('warning', 'Exiting') // todo notifyAlert should be called from action.js action.
-      // Important: Call in 'divpropdel' contract the function called div2ndvote(name voter).
-      // The 'div2ndvote' makes remote call (to dividenda contract), voting 'no' for the current proposal
-      // ... (what's in practice removes the questioned proposal)
-      // ... and reset the 'proposer message indicator'.
+      this.actionProposalVote(this.submitData) // standard voting action (proposal/actions.js)
     },
     getTimestamp: function () {
       return Date.now()
@@ -269,25 +291,30 @@ export default {
     isProposer () {
       if (this.accountName === this.proposer) {
         this.isProposerActive = true
-        console.log(' isProposer:', this.accountName, this.proposer, this.isProposerActive)
+      } else {
+        this.isProposerActive = false
+        console.log(' --- isProposer() --- ', this.accountName, this.proposer, this.isProposerActive)
       }
     },
-    isPropoActive () {
-      if (this.eosaccount !== 'empty') {
+    isProposalActive () { // IS proposal active ? - means not expired ?
+      if ((this.eosaccount !== 'empty') && (this.account !== 'erased')) {
         this.expires = (this.expires_at * 1000) // normalize UTC formats
         // http://jsfiddle.net/JamesFM/bxEJd/
         const timestamp = Date.now()
         if (timestamp > this.expires) {
-          this.activeProposal = false // no active proposal
+          this.isProposalExpired = true // no active proposal
+          this.isProposalVoted = false // voting marker cancelled after expiration
           this.expiration_timer = 0.0
         } else {
-          this.activeProposal = true
+          this.isProposalExpired = false // proposal actually active
           this.expiration_timer = (this.expires - timestamp) / 60000 // display in minutes
           this.expiration_timer = this.expiration_timer.toFixed(2)
+          this.expiration_timer = this.expiration_timer.replace('.', ' : ')
         }
         console.log('timestamp:', this.expires, timestamp)
       } else {
-        this.activeProposal = false // no active proposal
+        this.isProposalExpired = true // no active proposal
+        this.isProposalVoted = false
         this.expiration_timer = 0.0
       }
     }
