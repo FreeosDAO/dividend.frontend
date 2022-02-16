@@ -81,6 +81,12 @@ const menuList = [
     label: 'Analytics',
     separator: true,
     route: '/analytics'
+  },
+  {
+    image: [require('../assets/Analytics.png')],
+    label: 'Test',
+    separator: true,
+    route: '/test'
   }
 ]
 export default {

@@ -155,10 +155,11 @@ export async function actionUnlockNFT ({ state }, data) {
   }
 }
 
-export function setProposalActive ({ commit }, active) { // TODO
+export function setProposalActive ({ commit }, active) { // TODO verify purpose
   commit('setProposalAct', active)
 }
 
+// cleanup postbox trigger in 'divpropdel'. Used by '2nd voter solver' only.
 export async function cleanUpMessageTrigger ({ state }, currentAccountName) {
   // currentAccountName at this moment should be second voter name what we want
   console.log(' ----- clean up message trigger === ', currentAccountName)

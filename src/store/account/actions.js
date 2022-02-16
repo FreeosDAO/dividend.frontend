@@ -147,7 +147,6 @@ export async function getVersionQuery ({ state }, accountName) {
 }
 
 // retrieve whitelist
-// retrieve ews info
 export async function getwhitelistTable (state) {
   const result = await connect({
     json: true,
@@ -229,4 +228,19 @@ export async function getVoteStatus (state) {
   console.log('WhitelistAttrVal', JSON.stringify(val))
   state.commit('setWhitelistAttrVal', val)
 }
-// TODO
+//
+// retrieve whitelist to find it was voted (for screen functions)
+export async function refreshWhitelist (state) {
+  const result = await connect({
+    json: true,
+    code: process.env.APP_NAME,
+    scope: process.env.APP_NAME,
+    table: 'whitelist',
+    limit: 3
+  })
+  const val = {
+    // key: accountName,
+    value: result.rows
+  }
+  state.commit('WhitelistAttr', val)
+}

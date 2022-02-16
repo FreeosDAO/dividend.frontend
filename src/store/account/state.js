@@ -1,8 +1,9 @@
 export default () => ({
-  isMessage: false, // used by '2nd voter solver'
+  // isMessage: false, // used by '2nd voter solver'
   isVoted: false, // '2nd voter solver' problem indicator
-  isSecondVoter: false, // '2nd voter solver' todo what is the purpose of this again?
+  isSecondVoter: false, // '2nd voter solver' used instead of 'isMessage' above
   secondVoterName: null,
+  isProposalVoted: false, // Proposal was already voted for the current (logged in) voter.
   //
   Whitelist: {
     whitelistInfo: [
@@ -20,7 +21,7 @@ export default () => ({
   path: '/',
   active: true,
   proposer: '', // proposer account name
-  isProposer: false,
+  isProposer: false, // does current account belongs to proposer?
   // postBoxData: {
   // postBoxData: {
   // key: 0,

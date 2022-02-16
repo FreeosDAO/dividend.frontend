@@ -1,7 +1,7 @@
 <template>
   <div class="fullscreen text-white text-center q-pa-md flex flex-center">
     <div>
-      <div>Current Configuration .env
+      <div>Current Configuration .env <br>
         <table left>
           <tr><td>APP_NAME:</td><td>{{this.app_name}}</td></tr>
           <tr><td>NETWORK_HOST:</td><td>{{this.network_host}}</td></tr>
@@ -14,7 +14,10 @@
           <tr><td>V_STRING:</td><td>{{this.v_string}}</td></tr>
         </table>
       </div>
-
+      <div>
+        {{this.v_string}} '2nd voter solver' and shading of Submit button in Vote.vue for new events.<br>
+        v0.93 - the last working version before adding '2nd voter solver'. <br>
+      </div>
       <div class="text-h2" style="opacity:.4">
       </div>
 

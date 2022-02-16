@@ -1,8 +1,12 @@
 <template>
   <div class="q-pa-md">
     <div class="q-gutter-y-md q-mx-auto" style="max-width: 600px">
-      <q-dialog v-model="this.isSecondVoter" persistent transition-show="flip-down" transition-hide="flip-up">
-        <!-- TODO This pop-up must appear only for second voter -->
+      <q-dialog v-model="this.isSecondVoter"
+                persistent
+                transition-show="flip-down"
+                transition-hide="flip-up"
+      >
+      <!-- TODO This pop-up must appear only for second voter -->
         <q-card class="bg-primary text-white">
           <q-card-section class="row items-center q-pb-none">
             <div class="text-h6 alerttext">Important Message from the Proposer</div>
@@ -129,12 +133,13 @@
                   <q-btn class="q-ma-lg uxblue" outline disable no-caps label="Submit Vote" />
                   <q-tooltip transition-show="scale"
                              transition-hide="scale"
-                             class="q-ma-lg uxblue text-h7"
+                             content-class="uxdialog"
+                             class="q-ma-lg text-h7"
                   >
                       <div id="app">
                         <h6 v-if="this.isProposalExpired">proposal expired</h6>
                         <!-- <h6 v-else-if=></h6> -->
-                        <h6 v-else-if="this.isProposerActive">you are active proposer</h6>
+                        <h6 v-if="this.isProposerActive">you are active proposer</h6>
                         <h6 v-else-if="this.isProposalVoted">you already voted</h6>
                       </div>
                     {{this.isProposalExpired}}/{{this.isProposerActive}}/{{this.isProposalVoted}}
@@ -189,7 +194,6 @@ export default {
       // isProposerMessage: false, // todo !!! true if message from the proposer - default false todo isSecondVoter duplicated function
       isProposalExpired: false, // if true the proposal is expired or canceled - default false
       isProposerActive: false, // you are active proposer  - default false
-      isProposalVoted: false, // if true proposal was voted by the current voter - default false
       // end
       value: 1,
       timestamp: '',
@@ -209,11 +213,13 @@ export default {
   created () {
     this.readPostBox() // reads eventual message from proposer
     this.getActionProposal() // retrieve current proposal info from the backend - actions.js line 96
-    this.isProposalActive()
+    this.isProposalActive() // local call in methods
+    this.refreshWhitelist() // refresh isProposalVoted status.
     this.setIntervalId = setInterval(() => {
-      this.getActionProposal()
+      this.getActionProposal() // set up 'activeProposal' and 'expiration_timer' values
+      this.refreshWhitelist() // refresh isProposalVoted status.
       this.readPostBox() // if something is in postbox?? should be isProposer Message = false ??
-      this.isProposalActive() // set up 'activeProposal' and 'expiration_timer' values
+      this.isProposalActive() //
     }, 30000) // call each 30 seconds then
     document.addEventListener('beforeunload', this.handler)
     this.isProposer()
@@ -243,15 +249,16 @@ export default {
       progressLabel1: state => state.analytics.progressLabel1,
       progressLabel2: state => state.analytics.progressLabel2,
       // control variables for pop-ups: are mostly in data section
-      proposer: state => state.account.proposer, // todo better use getter
-      isSecondVoter: state => state.account.isSecondVoter // todo ... may be faster
+      proposer: state => state.account.proposer, // todo better use getter todo
+      isSecondVoter: state => state.account.isSecondVoter, // todo ... may be faster
+      isProposalVoted: state => state.account.isProposalVoted // if true proposal was voted by the current voter - default false
     })
   },
   methods: {
     ...mapActions('proposal', ['actionProposalVote', 'cleanUpMessageTrigger']),
-    ...mapActions('account', ['getActionProposal', 'readPostBox']),
+    ...mapActions('account', ['getActionProposal', 'readPostBox', 'refreshWhitelist']),
     ...mapActions('analytics', ['getByUserTotal', 'getEwsTable']),
-    ...mapMutations('account', ['hideModal']),
+    ...mapMutations('account', ['hideModal']), // todo what hideModal is doing?
     submit () { // only use to send vote cast
       // const self = this
       if (this.voteresult === true) this.submitData.toVote = 2
@@ -259,10 +266,11 @@ export default {
       this.submitData.currentAccountName = this.accountName
       console.log(this.submitData.currentAccountName, this.toVote, this.voteresult)
       this.actionProposalVote(this.submitData) // standard voting action (proposal/actions.js)
-      this.isProposalVoted = true // Marker is removed by isProposalActive()
+      this.refreshWhitelist() // refresh isProposalVoted status.
+      // this.isProposalVoted = true // Marker is removed by isProposalActive()
     },
     conditions () {
-      // (no proposer message) || (current user different than proposer) || (proposal not voted here) ||
+      // (current user different than proposer) || (proposal not voted here) ||
       // (proposal not expired yet) - all should be false to make submit button visible
       const result = ((this.isProposerActive) || (this.isProposalVoted) || (this.isProposalExpired))
       console.log('conditions=', result)
@@ -276,8 +284,9 @@ export default {
       this.submitData.currentAccountName = this.accountName
       console.log('bye bye', this.submitData.currentAccountName)
       this.hideModal()
-      this.isProposalVoted = true // Marker is removed by isProposalActive()
-      this.cleanUpMessageTrigger(this.accountName)
+      // this.isProposalVoted = true // Marker is removed by isProposalActive()
+      this.refreshWhitelist() // refresh isProposalVoted status.
+      this.cleanUpMessageTrigger(this.accountName) // make postbox clean
       this.actionProposalVote(this.submitData) // standard voting action (proposal/actions.js)
     },
     getTimestamp: function () {
@@ -296,14 +305,15 @@ export default {
         console.log(' --- isProposer() --- ', this.accountName, this.proposer, this.isProposerActive)
       }
     },
-    isProposalActive () { // IS proposal active ? - means not expired ?
+    isProposalActive () { // Is proposal active ? - it means not expired ?
       if ((this.eosaccount !== 'empty') && (this.account !== 'erased')) {
         this.expires = (this.expires_at * 1000) // normalize UTC formats
         // http://jsfiddle.net/JamesFM/bxEJd/
         const timestamp = Date.now()
         if (timestamp > this.expires) {
           this.isProposalExpired = true // no active proposal
-          this.isProposalVoted = false // voting marker cancelled after expiration
+          // this.isProposalVoted = false // voting marker cancelled after expiration
+          this.refreshWhitelist() // refresh isProposalVoted status.
           this.expiration_timer = 0.0
         } else { // proposal is active
           this.isProposalExpired = false // proposal actually active
@@ -314,7 +324,8 @@ export default {
         console.log('timestamp:', this.expires, timestamp)
       } else {
         this.isProposalExpired = true // no active proposal
-        this.isProposalVoted = false // voting marker cancelled after expiration
+        // this.isProposalVoted = false // voting marker cancelled after expiration
+        this.refreshWhitelist() // refresh isProposalVoted status.
         this.expiration_timer = 0.0
       }
     }
@@ -326,6 +337,13 @@ export default {
 .uxblue {
   background-color: #1D2C39;
   color:#00ADEE;
+}
+.uxdialog {
+  background-color: rgb(28, 44, 56);
+  color: rgb(0,172,239);
+  border-radius: 1.25rem;
+  border-color: #00ADEE;
+  border-style: solid;
 }
 .infotext {
   color: #00ADEE;

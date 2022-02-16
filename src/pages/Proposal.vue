@@ -329,6 +329,28 @@ export default {
       this.getActionProposal() // updates info on proposal
       self.resetForm()
     },
+    // Serves only for proposal information tip.
+    isProposalActive () { // IS proposal active ? - means not expired ?
+      if ((this.eosaccount !== 'empty') && (this.account !== 'erased')) {
+        this.expires = (this.expires_at * 1000) // normalize UTC formats
+        // http://jsfiddle.net/JamesFM/bxEJd/
+        const timestamp = Date.now()
+        if (timestamp > this.expires) {
+          this.isProposalExpired = true // no active proposal
+          this.expiration_timer = 0.0
+        } else { // proposal is active
+          this.isProposalExpired = false // proposal actually active
+          this.expiration_timer = (this.expires - timestamp) / 60000 // display in minutes
+          this.expiration_timer = this.expiration_timer.toFixed(2)
+          this.expiration_timer = this.expiration_timer.replace('.', ' : ')
+        }
+        console.log('timestamp:', this.expires, timestamp)
+      } else {
+        this.isProposalExpired = true // no active proposal
+        this.isProposalVoted = false // voting marker cancelled after expiration
+        this.expiration_timer = 0.0
+      }
+    }, // ===
     submit1 () {
       this.submitData1.NFTAccountName = this.accountName
       console.log('submitData1 = ', this.submitData1)

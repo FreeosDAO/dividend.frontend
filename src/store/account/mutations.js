@@ -29,7 +29,8 @@ export const setPath = function (state, pathe) {
   state.path = pathe
 }
 
-// This function serves "2nd voter solver" only
+// This function serves "2nd voter solver" exclusively.
+// Second voter is someone who not voted yet so still may reject the proposal.
 // === Do not use for other purposes. ===
 export const setWhitelistAttrVal = function (state, payload) {
   const attr = payload.key
@@ -75,7 +76,7 @@ export const setProposalAttrVal = function (state, payload) {
   const formattedPercentage = val.proposal_percentage
   let percentage = parseFloat(formattedPercentage)
   percentage = percentage.toFixed(2)
-  state.proposalInfo.proposalInfo.proposal_percentage = percentage
+  state.proposalInfo.proposalInfo.proposal_percentage = percentage // Vuex store keeps formatted percentage value.
   // console.log('proposal percentage %%', percentage) // test
 }
 
@@ -97,19 +98,32 @@ export const showModal = function (state) {
   state.isMessage = true
 }
 
-// todo Note: This should be called from action which clean up message trigger in divpropdel
+// todo Note: This should be called from action which clean up message trigger in divpropdel Verify is necessary?
 export const hideModal = function (state) { // used by '2nd vote solver'
   state.isSecondVoter = false
 }
 
-export const setPostBoxDataVal = function (state, payload) {
+export const setPostBoxDataVal = function (state, payload) { // '2nd voter solver' only. Set-up postbox.
   const val = payload.value
   console.log('postBox', val[0].eosaccount) // test
   const extaccount = val[0].eosaccount
-  // todo setup isSecondVoter here if the secondVoter from a table === currentAccountName
-  // todo isSecondVoter = true
   if (extaccount === state.accountName) {
-    state.isSecondVoter = true // this is only set if currently is active the correct voter to receive message,
-  } else { state.isSecondVoter = false }
+    state.isSecondVoter = true // this is only set-up if current voter should receive message,
+  } else { state.isSecondVoter = false }// ... current voter is this who not voted yet.
   //
+}
+
+// Finding who voted yet for proposal. It should be one voter as second voter accept or reject current
+// proposal. Used for shade displays when it was already voted.
+export const WhitelistAttr = function (state, payload) {
+  // const attr = payload.key
+  const val = payload.value
+  // state.Whitelist[attr] = val // not used for this function
+  state.isProposalVoted = false
+  for (let i = 0; i < 3; i++) {
+    if (val[i].vote !== 0) { // Find who voted for proposal
+      state.isProposalVoted = true
+    }
+  }
+  console.log('after for', state.isVoted)
 }
