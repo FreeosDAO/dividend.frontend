@@ -16,7 +16,6 @@
           <q-card-section>
             <h7>The Actual proposal must be cancelled.</h7> <br/>
             Please, press the button bellow to vote 'no' and cancel the current proposal.<br>
-
             <q-btn class="alerttext" label="Authorise Current Proposal Removal" no-caps flat style="justify-self: flex-end;" @click="byebye()"></q-btn>
           </q-card-section>
         </q-card>
@@ -24,7 +23,7 @@
       <q-card flat class="uxblue"
     >
       <!-- This part is displayed conditionally -->
-      <div class="flex justify-center" v-if="true"> <!-- now is displayed unconditionally all the time -->
+      <div class="flex justify-center"> <!-- v-if="true"> now is displayed unconditionally all the time -->
       <q-card-section>
         <div class="text-h5 text-center">
           <span>Vote NFT Proposal</span></div>
@@ -125,7 +124,7 @@
                <!-- white or red text above screen switch -->
                <div v-if="voteresult" style="color :white;">ACCEPT</div>
                <div v-else style="color :red;"><b>REJECT</b></div>
-               <!-- greyed submit button undern certain conditions -->
+               <!-- greyed submit button under certain conditions -->
                <div v-if="!this.conditions()">
                     <q-btn outline class="q-ma-lg uxblue" no-caps @click="submit()" label="Submit Vote" />
                     conditions:{{this.conditions()}}
@@ -149,7 +148,7 @@
             </div>
       </q-card-section>
       </div>
-      <div v-else>NOTHING TO VOTE <br> NO ACTIVE PROPOSAL</div>
+      <!-- <div v-else>NOTHING TO VOTE <br> NO ACTIVE PROPOSAL</div> -->
     </q-card>
         <!--  -->
         <div id="q-app" style="min-height: 100vh;">
@@ -166,7 +165,7 @@
                 <q-badge class="uxbadge" :label="progressLabel1"></q-badge>
               </div>
             </q-linear-progress>
-            <span class="infotext">DAO</span>
+            <span class="infotext">FreeDAO</span>
             <q-linear-progress style="border-radius: 25px;" round size="25px" :value="progress2"
                                track-color="black"
                                class="uxblue q-mt-sm">

@@ -52,8 +52,8 @@
               <!-- Select correct roi cap -->
               <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
                 <div class="col-xs-6 col-sm-6">
-                  Select Policy:
-                  <q-btn-toggle no-caps flat
+                  <!-- Select Policy: -->
+                  <q-btn-toggle no-caps
                     spread
                     v-model="submitData.cap"
                     push
@@ -147,22 +147,40 @@
             </div>
             <div class="flex justify-center">
               <q-btn outline class="q-ma-lg uxblue" no-caps @click="resetForm()" label="Clear Form"/>
-              <q-btn outline class="q-ma-lg uxblue" no-caps @click="submit()" label="Submit" :disable="!isFormFilled"/>
-              <q-btn outline class="q-ma-lg uxblue" no-caps label="Info">
+              <!-- todo remove <q-btn outline class="q-ma-lg uxblue" no-caps @click="submit()" label="Submit" :disable="!isFormFilled"/> todo -->
+              <!-- Submit Button Service -->
+              <div v-if="!this.conditions()"> <!-- Process Submit further -->
+                <q-btn outline class="q-ma-lg uxblue" no-caps @click="submit()" label="Submit" :disable="!isFormFilled" />
+                conditions:{{this.conditions()}}
+              </div>
+              <div v-else>
+                <q-btn class="q-ma-lg uxblue" outline disable no-caps label="Submit" />
+                <q-tooltip transition-show="scale"
+                           transition-hide="scale"
+                           content-class="uxdialog"
+                           class="q-ma-lg text-h7"
+                >
+                  <div id="app">
+                    <h6 v-if="!this.isProposerActive">you are not the proposer</h6>
+                  </div>
+                </q-tooltip>
+              </div>
+              <!-- end of Submit Button service -->
+              <!-- <q-btn outline class="q-ma-lg uxblue" no-caps label="Info">
                  <q-tooltip
                      content-class="uxdialog"
                      transition-show="scale"
                      transition-hide="scale"
                  >
-                     <p style="font-size: 0.8rem;">Proposal Information <br>
+                      <h7 v-if="!activeProposal">No ActivProposal Expired</h7><br>
                       Proposal (acct) {{propaccount}}<br>
                       Percentage {{proposal_percentage}}<br>
-                      Expiration {{expires_at}}</p>
+                      Expiration {{expires_at}}
                  </q-tooltip>
-              </q-btn>
+              </q-btn> todo for consideration -->
             </div>
       </q-card-section>
-      <div class="q-ma-lg" v-if="activeProposal"> Proposal Active &nbsp; {{expiration_timer}}</div>
+      <div class="q-ma-lg" v-if="activeProposal"> Active Proposal expire in: &nbsp; &nbsp; {{expiration_timer}}</div>
       <div class="q-ma-lg" v-else> No Active Proposal </div>
     </q-card>
     <!-- </q-card> -->
@@ -181,7 +199,7 @@
               <q-badge class="uxbadge" :label="progressLabel1"></q-badge>
             </div>
           </q-linear-progress>
-          <span class="infotext">DAO</span>
+          <span class="infotext">FreeDAO</span>
           <q-linear-progress style="border-radius: 25px;" round size="25px" :value="progress2"
                              track-color="black"
                              class="uxblue q-mt-sm">
@@ -328,6 +346,14 @@ export default {
       // this.setProposalActive(1) // TODO ?? remove it
       this.getActionProposal() // updates info on proposal
       self.resetForm()
+    },
+    conditions () {
+      // (current user not proposer)
+      const result = !this.isProposerActive
+      console.log('conditions=', result)
+      console.log('conditions=', this.isProposerActive)
+      return result
+      // if return = false - submit button visible
     },
     // Serves only for proposal information tip.
     isProposalActive () { // IS proposal active ? - means not expired ?

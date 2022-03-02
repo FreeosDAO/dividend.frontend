@@ -13,7 +13,7 @@
         >
           <div class="text-h5 text-center">
             <span id="text">Dividend Analytics</span> &nbsp;
-            <q-btn outline no-caps label="Data Update" style="color:#00ADEE" @click="submit()">
+            <q-btn outline no-caps label="Update Data" style="color:#00ADEE" @click="submit()">
              <q-tooltip anchor="top middle" round self="bottom middle" :offset="[10, 10]">
                <strong>Updates dryrun data. <br> Require transaction acceptance</strong>
              </q-tooltip>
@@ -51,7 +51,7 @@
               </div>
             </q-linear-progress>
             <div class="q-gutter-sm">
-              <span class="infotext">DAO</span>
+              <span class="infotext">FreeDAO</span>
             </div>
             <q-linear-progress style="border-radius: 25px;" size="25px" :value="progress2"
                                track-color="black"
