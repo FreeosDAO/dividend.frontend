@@ -162,72 +162,72 @@ export async function getwhitelistTable (state) {
   state.commit('setwhitelistTableAttrVal', val)
 }
 
-// Used by '2nd vote solver'
+// Used by '2nd vote solver' - no longer needed
 // === Ref: Called by push2Vote line 345 in proposal.vue
-
-// Used by '2nd vote solver'
+//
+// Used by '2nd vote solver' - no longer needed
 // === Ref: Called by push2Vote line 345 in proposal.vue
-export async function reqVoterAct ({ state }, data) {
-  const { currentAccountName, secondVoterName } = data
-  console.log(' ----- request 2nd voter action ----- ', data)
-  try {
-    const actions = [{
-      account: 'divpropdel', // lprocess.env.DIVPROPDEL_APP, // 'divpropdel',
-      name: 'dropmessage',
-      authorization: [{
-        actor: currentAccountName,
-        permission: 'active'
-      }],
-      data: {
-        proposer: currentAccountName,
-        second_voter: secondVoterName
-      }
-    }]
-    const result = await ProtonSDK.sendTransaction(actions)
-    return result
-  } catch (e) {
-    console.log(e)
-  }
-}
+// export async function reqVoterAct ({ state }, data) {
+//  const { currentAccountName, secondVoterName } = data
+//  console.log(' ----- request 2nd voter action ----- ', data)
+//  try {
+//    const actions = [{
+//      account: 'divpropdel', // lprocess.env.DIVPROPDEL_APP, // 'divpropdel',
+//      name: 'dropmessage',
+//      authorization: [{
+//        actor: currentAccountName,
+//        permission: 'active'
+//      }],
+//      data: {
+//        proposer: currentAccountName,
+//        second_voter: secondVoterName
+//      }
+//    }]
+//    const result = await ProtonSDK.sendTransaction(actions)
+//    return result
+//  } catch (e) {
+//    console.log(e)
+//  }
+// }
 
-// TODO readPostBox()
+// readPostBox() for 2nd voter solver - no longer needed
 // read the table from backend contract divpropdel. If name of current
 // voter is equal to the name in the table, the pop-up box with the message will be opened.
 // === g e t S y s t e m T a b l e ===
 // Where called: MainLayout.vue
-export async function readPostBox (state) {
-  const result = await connect({
-    json: true,
-    code: 'divpropdel',
-    scope: 'divpropdel',
-    table: 'postboxs',
-    limit: 1
-  })
-  const val = {
-    key: 'postBoxData',
-    value: result.rows
-  }
-  console.log('postBoxData', JSON.stringify(val))
-  state.commit('setPostBoxDataVal', val)
-}
+// export async function readPostBox (state) {
+//  const result = await connect({
+//    json: true,
+//    code: 'divpropdel',
+//    scope: 'divpropdel',
+//    table: 'postboxs',
+//    limit: 1
+//  })
+//  const val = {
+//    key: 'postBoxData',
+//    value: result.rows
+//  }
+//  console.log('postBoxData', JSON.stringify(val))
+//  state.commit('setPostBoxDataVal', val)
+// }
 
-// TODO Action getVoteStatus for use with solution of "2nd voter solver"
+// "2nd voter solver" - no longer needed
 // retrieve current proposal info
-export async function getVoteStatus (state) {
-  const result = await connect({
-    json: true,
-    code: process.env.APP_NAME,
-    scope: process.env.APP_NAME,
-    table: 'whitelist',
-    limit: 3
-  })
-  const val = {
-    key: 'whitelistInfo',
-    value: result.rows
-  }
-  console.log('WhitelistAttrVal', JSON.stringify(val))
-  state.commit('setWhitelistAttrVal', val)
-}
+// export async function getVoteStatus (state) {
+//  const result = await connect({
+//    json: true,
+//    code: process.env.APP_NAME,
+//    scope: process.env.APP_NAME,
+//    table: 'whitelist',
+//    limit: 3
+//  })
+//  const val = {
+//    key: 'whitelistInfo',
+//    value: result.rows
+//  }
+//  console.log('WhitelistAttrVal', JSON.stringify(val))
+//  state.commit('setWhitelistAttrVal', val)
+// }
 //
 // retrieve whitelist to find it was voted (for screen functions)
 export async function refreshWhitelist (state) {

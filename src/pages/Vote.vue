@@ -1,12 +1,13 @@
 <template>
+  <div>
   <div class="q-pa-md">
     <div class="q-gutter-y-md q-mx-auto" style="max-width: 600px">
-      <q-dialog v-model="this.isSecondVoter"
+      <!-- <q-dialog v-model="this.isSecondVoter"
                 persistent
                 transition-show="flip-down"
                 transition-hide="flip-up"
       >
-      <!-- TODO This pop-up must appear only for second voter -->
+      2nd voter problem solver - This pop-up must appear only for second voter
         <q-card class="bg-primary text-white">
           <q-card-section class="row items-center q-pb-none">
             <div class="text-h6 alerttext">Important Message from the Proposer</div>
@@ -15,15 +16,15 @@
           <q-card-section>
             <h7>The Actual proposal must be cancelled.</h7> <br/>
             Please, press the button bellow to vote 'no' and cancel the current proposal.<br>
-            <!--  -->
+
             <q-btn class="alerttext" label="Authorise Current Proposal Removal" no-caps flat style="justify-self: flex-end;" @click="byebye()"></q-btn>
           </q-card-section>
         </q-card>
-      </q-dialog>
+      </q-dialog> -->
       <q-card flat class="uxblue"
     >
       <!-- This part is displayed conditionally -->
-      <div class="flex justify-center" v-if="true"> <!-- todo ??? -->
+      <div class="flex justify-center" v-if="true"> <!-- now is displayed unconditionally all the time -->
       <q-card-section>
         <div class="text-h5 text-center">
           <span>Vote NFT Proposal</span></div>
@@ -180,10 +181,11 @@
       </div>
     </div>
   </div>
+  </div>
 </template>
 
 <script>
-import { mapState, mapActions, mapMutations } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 // import state from 'src/store/account/state'
 
 export default {
@@ -211,14 +213,14 @@ export default {
     }
   },
   created () {
-    this.readPostBox() // reads eventual message from proposer
+    // this.readPostBox() // reads eventual message from proposer - 2nd voter solver - not longer needed
     this.getActionProposal() // retrieve current proposal info from the backend - actions.js line 96
     this.isProposalActive() // local call in methods
     this.refreshWhitelist() // refresh isProposalVoted status.
     this.setIntervalId = setInterval(() => {
       this.getActionProposal() // set up 'activeProposal' and 'expiration_timer' values
       this.refreshWhitelist() // refresh isProposalVoted status.
-      this.readPostBox() // if something is in postbox?? should be isProposer Message = false ??
+      // this.readPostBox() // if something is in postbox??  2nd voter solver - no longer needed
       this.isProposalActive() //
     }, 30000) // call each 30 seconds then
     document.addEventListener('beforeunload', this.handler)
@@ -256,9 +258,9 @@ export default {
   },
   methods: {
     ...mapActions('proposal', ['actionProposalVote', 'cleanUpMessageTrigger']),
-    ...mapActions('account', ['getActionProposal', 'readPostBox', 'refreshWhitelist']),
+    ...mapActions('account', ['getActionProposal', 'refreshWhitelist']), // todo refresh whitelist may be not required
     ...mapActions('analytics', ['getByUserTotal', 'getEwsTable']),
-    ...mapMutations('account', ['hideModal']), // todo what hideModal is doing?
+    // ...mapMutations('account', ['hideModal']), // todo what hideModal is doing?
     submit () { // only use to send vote cast
       // const self = this
       if (this.voteresult === true) this.submitData.toVote = 2
@@ -278,17 +280,17 @@ export default {
       return result
       // if return = false - submit button visible
     },
-    byebye () {
-      // todo call original dividend action
-      this.submitData.toVote = 2 // Reject current proposal.
-      this.submitData.currentAccountName = this.accountName
-      console.log('bye bye', this.submitData.currentAccountName)
-      this.hideModal()
-      // this.isProposalVoted = true // Marker is removed by isProposalActive()
-      this.refreshWhitelist() // refresh isProposalVoted status.
-      this.cleanUpMessageTrigger(this.accountName) // make postbox clean
-      this.actionProposalVote(this.submitData) // standard voting action (proposal/actions.js)
-    },
+    // byebye () {
+    //  2nd voter solver - no longer needed
+    //  this.submitData.toVote = 2 // Reject current proposal.
+    //  this.submitData.currentAccountName = this.accountName
+    //  console.log('bye bye', this.submitData.currentAccountName)
+    //  this.hideModal()
+    //  // this.isProposalVoted = true // Marker is removed by isProposalActive()
+    //  this.refreshWhitelist() // refresh isProposalVoted status.
+    //  this.cleanUpMessageTrigger(this.accountName) // make postbox clean
+    //  this.actionProposalVote(this.submitData) // standard voting action (proposal/actions.js)
+    // },
     getTimestamp: function () {
       return Date.now()
     },

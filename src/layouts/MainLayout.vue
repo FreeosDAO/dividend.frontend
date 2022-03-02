@@ -11,6 +11,7 @@
         <q-space></q-space>
         <!--  <div v-if="isAuthenticated">{{this.version}}</div> -->
         <div style="display: flex; align-items: center;">
+          {{version}}&nbsp;&nbsp;&nbsp;&nbsp;
           <img width="35" src="~assets/decentralised.png"> &nbsp; &nbsp;
           <div v-if="isAuthenticated" style="margin-right: 1rem;">{{accountName}}</div>
           <q-btn color="primary" label="Login" v-if="!isAuthenticated" @click="() => connectWallet('anchor')">
@@ -44,13 +45,14 @@
         </q-list>
       </q-scroll-area>
     </q-drawer>
-    <q-page-container>
+    <q-page-container v-if="isAuthenticated">
       <router-view />
     </q-page-container>
   </q-layout>
 </template>
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
+// import { isAuthenticated } from 'src/store/account/getters'
 const menuList = [
   {
     image: [require('../assets/Home.png')],
@@ -109,8 +111,9 @@ export default {
   created () {
     this.getEwsTable()
     this.getByUserTotal()
+    this.checkIfLoggedIn()
     // this.version = process.env.V_STRING
-    // Count current bar values
+    // Count current bar values - note that are not displayed on this page.
     this.progress1 = this.value
     this.progress2 = (1.00 - this.value)
     this.working = this.value * 100
@@ -125,10 +128,11 @@ export default {
     this.dataload.progressLabel1 = this.progressLabel1
     this.dataload.progressLabel2 = this.progressLabel2
     this.updateLoading(this.dataload)
-    // set interval - other TODO
+    //
     this.setIntervalId1 = setInterval(() => {
       this.getEwsTable()
       this.getByUserTotal()
+      this.checkIfLoggedIn()
       // Count current bar values
       this.progress1 = this.value
       this.progress2 = (1.00 - this.value)

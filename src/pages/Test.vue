@@ -15,7 +15,8 @@
         </table>
       </div>
       <div>
-        {{this.v_string}} '2nd voter solver' and shading of Submit button in Vote.vue for new events.<br>
+        {{this.v_string}} - removed '2nd voter solver' solution, acknowledge functionality of all pages.<br>
+        v0.94 - '2nd voter solver' and shading of Submit button in Vote.vue for new events.<br>
         v0.93 - the last working version before adding '2nd voter solver'. <br>
       </div>
       <div class="text-h2" style="opacity:.4">
