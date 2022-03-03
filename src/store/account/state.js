@@ -2,10 +2,11 @@ export default () => ({
   // // isMessage: false, // used by '2nd voter solver'
   // isVoted: false, // '2nd voter solver' problem indicator
   // isSecondVoter: false, // '2nd voter solver' used instead of 'isMessage' above
-  secondVoterName: null,
-  isProposalVoted: false, // Proposal was already voted for the current (logged in) voter.
+  // secondVoterName: null, // todo is it used anymore.
+  isProposalVoted: false, // Proposal was already voted by one voter ...
+  alreadyVoted: '', // ... this is name who already voted.
   //
-  Whitelist: { // todo is it used anymore ?
+  Whitelist: { // todo take care is it used anymore ?
     whitelistInfo: [
       { idno: 1, user: '', vote: 0 },
       { idno: 1, user: '', vote: 0 },

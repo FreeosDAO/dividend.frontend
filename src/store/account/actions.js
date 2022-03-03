@@ -242,5 +242,5 @@ export async function refreshWhitelist (state) {
     // key: accountName,
     value: result.rows
   }
-  state.commit('WhitelistAttr', val)
+  state.commit('WhitelistAttr', val) // (Ref. see mutations line 117)
 }

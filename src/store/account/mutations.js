@@ -114,17 +114,17 @@ export const showModal = function (state) {
 //
 // }
 
-// Finding who voted yet for proposal. It should be one voter as second voter accept or reject current
-// proposal. Used for shade displays when it was already voted.
+// Finding who voted yet for proposal. Used for block voting if user already voted.
 export const WhitelistAttr = function (state, payload) {
   // const attr = payload.key
   const val = payload.value
   // state.Whitelist[attr] = val // not used for this function
   state.isProposalVoted = false
   for (let i = 0; i < 3; i++) {
-    if (val[i].vote !== 0) { // Find who voted for proposal
+    if (val[i].vote !== 0) { // This should happen only once in a whole loop.
       state.isProposalVoted = true
+      state.alreadyVoted = val[i].user // Find who voted for proposal
     }
   }
-  console.log('after for', state.isVoted)
+  console.log('after for', state.isVoted, 'already voted', state.alreadyVoted)
 }

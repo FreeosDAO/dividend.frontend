@@ -155,29 +155,29 @@ export async function actionUnlockNFT ({ state }, data) {
   }
 }
 
-export function setProposalActive ({ commit }, active) { // TODO verify purpose
-  commit('setProposalAct', active)
-}
+// export function setProposalActive ({ commit }, active) { // TODO purpose?
+//  commit('setProposalAct', active)
+// }
 
-// cleanup postbox trigger in 'divpropdel'. Used by '2nd voter solver' only.
-export async function cleanUpMessageTrigger ({ state }, currentAccountName) {
-  // currentAccountName at this moment should be second voter name what we want
-  console.log(' ----- clean up message trigger === ', currentAccountName)
-  try {
-    const actions = [{
-      account: 'divpropdel', // process.env.DIVPROPDEL_APP,
-      name: 'remove',
-      authorization: [{
-        actor: currentAccountName,
-        permission: 'active'
-      }],
-      data: {
-        vip: currentAccountName
-      }
-    }]
-    const result = await ProtonSDK.sendTransaction(actions)
-    return result
-  } catch (e) {
-    console.log(e)
-  }
-}
+// // cleanup postbox trigger in 'divpropdel'. Used by '2nd voter solver' only.
+// export async function cleanUpMessageTrigger ({ state }, currentAccountName) {
+// // currentAccountName at this moment should be second voter name what we want
+//  console.log(' ----- clean up message trigger === ', currentAccountName)
+//  try {
+//    const actions = [{
+//      account: 'divpropdel', // process.env.DIVPROPDEL_APP,
+//      name: 'remove',
+//      authorization: [{
+//        actor: currentAccountName,
+//        permission: 'active'
+//      }],
+//      data: {
+//        vip: currentAccountName
+//      }
+//    }]
+//    const result = await ProtonSDK.sendTransaction(actions)
+//    return result
+//  } catch (e) {
+//    console.log(e)
+//  }
+// }

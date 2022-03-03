@@ -140,9 +140,9 @@
                         <h6 v-if="this.isProposalExpired">proposal expired</h6>
                         <!-- <h6 v-else-if=></h6> -->
                         <h6 v-if="this.isProposerActive">you are active proposer</h6>
-                        <h6 v-else-if="this.isProposalVoted">you already voted</h6>
+                        <h6 v-else-if="this.meVoted">you already voted</h6>
                       </div>
-                    {{this.isProposalExpired}}/{{this.isProposerActive}}/{{this.isProposalVoted}}
+                    {{this.isProposalExpired}}/{{this.isProposerActive}}/{{this.meVoted}}
                   </q-tooltip>
                </div>
             </div>
@@ -193,10 +193,11 @@ export default {
     return {
       // Screen Controlling Variables:
       // isProposerMessage: false, // todo !!! true if message from the proposer - default false todo isSecondVoter duplicated function
-      isProposalExpired: false, // if true the proposal is expired or canceled - default false
-      isProposerActive: false, // you are active proposer  - default false
+      isProposalExpired: false, // if true the proposal is expired or canceled - (Setup by local function)
+      isProposerActive: false, // you are active proposer  - (setup by local function)
       // end
       value: 1,
+      meVoted: false,
       timestamp: '',
       displayed_percentage: 0.0,
       expires: '', // normalised (UTC) expiration time for proposal
@@ -217,9 +218,8 @@ export default {
     this.isProposalActive() // local call in methods
     this.refreshWhitelist() // refresh isProposalVoted status.
     this.setIntervalId = setInterval(() => {
-      this.getActionProposal() // set up 'activeProposal' and 'expiration_timer' values
-      this.refreshWhitelist() // refresh isProposalVoted status.
-      // this.readPostBox() // if something is in postbox??  2nd voter solver - no longer needed
+      this.getActionProposal() // this set up 'activeProposal' and 'expiration_timer' values
+      this.refreshWhitelist() // refresh isProposalVoted.
       this.isProposalActive() //
     }, 30000) // call each 30 seconds then
     document.addEventListener('beforeunload', this.handler)
@@ -249,14 +249,15 @@ export default {
       progress2: state => state.analytics.progress2,
       progressLabel1: state => state.analytics.progressLabel1,
       progressLabel2: state => state.analytics.progressLabel2,
-      // control variables for pop-ups: are mostly in data section
       proposer: state => state.account.proposer, // todo better use getter todo
-      isSecondVoter: state => state.account.isSecondVoter, // todo ... may be faster
-      isProposalVoted: state => state.account.isProposalVoted // if true proposal was voted by the current voter - default false
+      // isSecondVoter: state => state.account.isSecondVoter, // todo seems to be unusable
+      // Does anybody already voted?
+      alreadyVotedName: state => state.account.alreadyVoted, // name who already voted
+      isProposalVoted: state => state.account.isProposalVoted // if true proposal was voted one voter with name above
     })
   },
   methods: {
-    ...mapActions('proposal', ['actionProposalVote', 'cleanUpMessageTrigger']),
+    ...mapActions('proposal', ['actionProposalVote']),
     ...mapActions('account', ['getActionProposal', 'refreshWhitelist']), // todo refresh whitelist may be not required
     ...mapActions('analytics', ['getByUserTotal', 'getEwsTable']),
     // ...mapMutations('account', ['hideModal']), // todo what hideModal is doing?
@@ -273,7 +274,10 @@ export default {
     conditions () {
       // (current user different than proposer) || (proposal not voted here) ||
       // (proposal not expired yet) - all should be false to make submit button visible
-      const result = ((this.isProposerActive) || (this.isProposalVoted) || (this.isProposalExpired))
+      // this.meVoted = this.isProposalVoted && (this.alreadyVotedName === this.accountName)
+      this.meVoted = false
+      console.log('this.alreadyVotedName', this.alreadyVotedName, 'this.accountName', this.accountName, 'meVoted', this.meVoted)
+      const result = ((this.isProposerActive) || (this.meVoted) || (this.isProposalExpired))
       console.log('conditions=', result)
       console.log('conditions=', this.isProposalExpired, this.isProposerActive, this.isProposalVoted)
       return result
@@ -303,8 +307,8 @@ export default {
         this.isProposerActive = true
       } else {
         this.isProposerActive = false
-        console.log(' --- isProposer() --- ', this.accountName, this.proposer, this.isProposerActive)
       }
+      console.log(' conditions isProposer() --- ', this.accountName, this.proposer, this.isProposerActive)
     },
     isProposalActive () { // Is proposal active ? - it means not expired ?
       if ((this.eosaccount !== 'empty') && (this.account !== 'erased')) {

@@ -268,7 +268,7 @@ export default {
       dialoginfo: false,
       activeProposal: false, // if false - no active proposal
       expiration_timer: 0.0,
-      isProposerActive: false,
+      isProposerActive: false, // is set up by local function (not Vuex)
       submitData: {
         currentAccountName: '',
         eosaccount: null,
@@ -292,14 +292,13 @@ export default {
   },
   created () {
     this.isProActive()
-    this.getVoteStatus() // new
     this.setIntervalId = setInterval(() => {
       this.getActionProposal()
       this.isProActive()
-      this.getVoteStatus() // new
       console.log('in Proposal')
     }, 30000) // call each 30 sec after the tests
     document.addEventListener('beforeunload', this.handler)
+    this.isProposer()
   },
   beforeDestroy () {
     clearInterval(this.setIntervalId)
@@ -307,14 +306,14 @@ export default {
   computed: {
     ...mapState({
       accountName: state => state.account.accountName,
-      secondVoterName: state => state.account.secondVoterName,
+      secondVoterName: state => state.account.secondVoterName, // todo ???
       propaccount: state => state.account.proposalInfo.proposalInfo.eosaccount,
       value: state => state.analytics.circInfo,
       progress1: state => state.analytics.progress1,
       progress2: state => state.analytics.progress2,
       progressLabel1: state => state.analytics.progressLabel1,
       progressLabel2: state => state.analytics.progressLabel2,
-      isProposalActive: state => state.proposal.isproposalactive,
+      // isProposalActive: state => state.proposal.isproposalactive, // todo not the same like vote ??
       roi_target_cap: state => state.account.proposalInfo.proposalInfo.roi_target_cap,
       proposal_percentage: state => state.account.proposalInfo.proposalInfo.proposal_percentage,
       locked: state => state.account.proposalInfo.proposalInfo.locked,
@@ -322,7 +321,8 @@ export default {
       threshold: state => state.account.proposalInfo.proposalInfo.threshold,
       rates_left: state => state.account.proposalInfo.proposalInfo.rates_left,
       accrued: state => state.account.proposalInfo.proposalInfo.accrued,
-      isVoted: state => state.account.isVoted // '2nd Voter solver'
+      isVoted: state => state.account.isVoted, // '2nd Voter solver'
+      proposer: state => state.account.proposer
     }),
     isFormFilled () {
       let a = false
@@ -350,13 +350,13 @@ export default {
     conditions () {
       // (current user not proposer)
       const result = !this.isProposerActive
-      console.log('conditions=', result)
-      console.log('conditions=', this.isProposerActive)
+      console.log('conditions results=', result)
+      console.log('conditions isProposerActive=', this.isProposerActive)
       return result
       // if return = false - submit button visible
     },
     // Serves only for proposal information tip.
-    isProposalActive () { // IS proposal active ? - means not expired ?
+    isProposalActive () { // IS proposal active ? - means not expired ? todo See isProActive
       if ((this.eosaccount !== 'empty') && (this.account !== 'erased')) {
         this.expires = (this.expires_at * 1000) // normalize UTC formats
         // http://jsfiddle.net/JamesFM/bxEJd/
@@ -373,7 +373,7 @@ export default {
         console.log('timestamp:', this.expires, timestamp)
       } else {
         this.isProposalExpired = true // no active proposal
-        this.isProposalVoted = false // voting marker cancelled after expiration
+        this.isProposalVoted = false // voting marker cancelled after expiration // todo ??
         this.expiration_timer = 0.0
       }
     }, // ===
@@ -386,16 +386,16 @@ export default {
           this.submitData1.NFTAccountName = '' // reset mini-form
         })
     },
-    pushToVoter () { // sends message to not-voting voter through trigger contract
-      console.log('pushToVoter()')
-      this.dialogreset = false
-      this.submitData2.secondVoterName = this.secondVoterName // TODO maybe use getter to setup data directly?
-      this.submitData2.currentAccountName = this.accountName
-      this.reqVoterAct(this.submitData2) // call request for 2nd voter action
-      //
-    },
-    isProActive () {
-      if ((this.eosaccount !== 'empty') && (this.eosaccount !== 'erased')) {
+    // pushToVoter () { // sends message to not-voting voter through trigger contract
+    //  console.log('pushToVoter()')
+    //  this.dialogreset = false // TODO REMOVE
+    //  this.submitData2.secondVoterName = this.secondVoterName
+    //  this.submitData2.currentAccountName = this.accountName
+    //  this.reqVoterAct(this.submitData2) // call request for 2nd voter action
+    //  //
+    // },
+    isProActive () { // TODO compare with isProposalActive - remove one of them
+      if ((this.eosaccount !== 'empty') && (this.eosaccount !== 'erased')) { // important to be that way
         this.expires = (this.expires_at * 1000) // normalize UTC formats
         // http://jsfiddle.net/JamesFM/bxEJd/
         const timestamp = Date.now()
@@ -413,10 +413,18 @@ export default {
         this.expiration_timer = 0.0
       }
     },
+    isProposer () {
+      if (this.accountName === this.proposer) {
+        this.isProposerActive = true
+      } else {
+        this.isProposerActive = false
+        console.log(' conditions isProposer() --- ', this.accountName, this.proposer, this.isProposerActive)
+      }
+    },
     breset () { // safely removes active proposal
       this.submitData.currentAccountName = this.accountName
       this.proposalRemove(this.accountName)
-      this.setProposalActive(0)
+      // this.setProposalActive(0) // todo ??
       this.getActionProposal() // todo verify - does it exists
       // .then(response => {
       // this.isProposalActive()

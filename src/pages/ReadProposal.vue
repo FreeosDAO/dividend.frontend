@@ -1,4 +1,5 @@
 <template>
+  <!-- This page is not used -->
 <q-page>
   {{eosaccount}}<br>
   {{roi_target_cap}}<br>
