@@ -1,7 +1,6 @@
 export default () => ({
-  // // isMessage: false, // used by '2nd voter solver'
-  // isVoted: false, // '2nd voter solver' problem indicator
-  // isSecondVoter: false, // '2nd voter solver' used instead of 'isMessage' above
+  isVoted: false,
+  // isSecondVoter: false, // '2nd voter solver'
   // secondVoterName: null, // todo is it used anymore.
   isProposalVoted: false, // Proposal was already voted by one voter ...
   alreadyVoted: '', // ... this is name who already voted.
@@ -23,10 +22,6 @@ export default () => ({
   active: true,
   proposer: '', // proposer account name
   isProposer: false, // does current account belongs to proposer?
-  // postBoxData: {
-  // postBoxData: {
-  // key: 0,
-  // eosaccount: ''
   // }
   // },
   //
@@ -35,7 +30,7 @@ export default () => ({
   proposalInfo: {
     proposalInfo: {
       key: '',
-      eosaccount: 'empty account', // TODO verify text or just null!!!
+      eosaccount: 'empty', // TODO verify text or just null!!!
       roi_target_cap: '',
       proposal_percentage: '',
       locked: '',

@@ -133,6 +133,7 @@ export default {
       this.getEwsTable()
       this.getByUserTotal()
       this.checkIfLoggedIn()
+      this.getActionProposal() // todo test
       // Count current bar values
       this.progress1 = this.value
       this.progress2 = (1.00 - this.value)
@@ -165,7 +166,11 @@ export default {
     ...mapGetters('account', ['isAuthenticated', 'connecting'])
   },
   methods: {
-    ...mapActions('analytics', ['getEwsTable', 'getByUserTotal']),
+    ...mapActions('account', ['checkIfLoggedIn', 'connectWallet', 'logout', 'getActionProposal']),
+    ...mapActions('analytics', ['actionDividendCompute']),
+    ...mapActions('analytics', ['getByUserTotal', 'getEwsTable']),
+    ...mapActions('account', ['getwhitelistTable']),
+    // ...mapActions('analytics', ['getEwsTable', 'getByUserTotal']),
     ...mapActions('analytics', ['updateLoading']),
     onSigninFinish (event) {
       if (event.isFinished) {
@@ -182,10 +187,6 @@ export default {
       (this.$route.path !== menuItem.route) && this.$router.push(menuItem.route)
       this.selectedItemLabel = menuItem.label
     },
-    ...mapActions('account', ['checkIfLoggedIn', 'connectWallet', 'logout', 'getActionProposal']),
-    ...mapActions('analytics', ['actionDividendCompute']),
-    ...mapActions('analytics', ['getByUserTotal', 'getEwsTable']),
-    ...mapActions('account', ['getwhitelistTable']),
     DividendCompute () {
       this.actionDividendCompute(this.accountName)
     }

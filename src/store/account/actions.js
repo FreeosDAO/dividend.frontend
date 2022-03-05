@@ -107,6 +107,7 @@ export async function getActionProposal (state) {
     value: result.rows[0]
   }
   state.commit('setProposalAttrVal', val)
+  console.log('getActionProposal inside actions.js')
 }
 
 export const setpath = function ({ commit }, pathe) {
@@ -211,23 +212,6 @@ export async function getwhitelistTable (state) {
 //  state.commit('setPostBoxDataVal', val)
 // }
 
-// "2nd voter solver" - no longer needed
-// retrieve current proposal info
-// export async function getVoteStatus (state) {
-//  const result = await connect({
-//    json: true,
-//    code: process.env.APP_NAME,
-//    scope: process.env.APP_NAME,
-//    table: 'whitelist',
-//    limit: 3
-//  })
-//  const val = {
-//    key: 'whitelistInfo',
-//    value: result.rows
-//  }
-//  console.log('WhitelistAttrVal', JSON.stringify(val))
-//  state.commit('setWhitelistAttrVal', val)
-// }
 //
 // retrieve whitelist to find it was voted (for screen functions)
 export async function refreshWhitelist (state) {

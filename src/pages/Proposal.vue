@@ -5,35 +5,28 @@
       class="uxblue"
     >
       <q-card-section>
-            <!-- <div id="nav" class="text-h6 text-center q-ma-lg"> -->
-              <div class="text-h5 text-center">
-              <span id="text">Create NFT Proposal</span></div>
+        <!-- <div id="nav" class="text-h6 text-center q-ma-lg"> -->
+        <div class="text-h5 text-center">
+        <span id="text">Create NFT Proposal</span></div>
         <!-- Dialog --- for proposal cancellation -->
-        <!--                                      -->
         <div class="q-pa-md">
-          <q-dialog v-model="dialogreset">
+          <q-dialog v-model="this.dialogreset">
             <q-card class="uxdialog">
               <q-card-section class="row items-center q-gutter-sm">
-          <q-toolbar>
-            <q-toolbar-title>Remove Active Blockchain Proposal</q-toolbar-title>
-            <q-btn flat v-close-popup round dense icon="close"></q-btn>
-          </q-toolbar>
-              </q-card-section>
-              <!-- Removal of proposal is fully allowed - no special condition: -->
-              <q-card-section v-if="!isVoted" class="row items-center q-gutter-sm">
-                <q-btn outline class="q-ma-lg" style="color:#4fa9e9" no-caps @click="breset()" label="Cancel Active Proposal"/>
-                <!-- <q-btn outline label="Close Dialog" style="color:#4fa9e9" no-caps v-close-popup></q-btn> -->
-              </q-card-section>
-              <!-- 2nd voter solver --- Special case of proposal removal - actions to avoid software glitch: -->
-              <q-card-section v-else>
-                <q-btn outline class="q-ma-lg" style="color:#4fa9e9" no-caps @click="dialogreset = false" label="Abort proposal cancellation"/>
-                <q-btn outline class="q-ma-lg" style="color:#4fa9e9" no-caps @click="pushToVoter()" label="Push to the second voter"/>
+                <q-toolbar>
+                  <q-toolbar-title>Remove Active Blockchain Proposal</q-toolbar-title>
+                    <q-btn flat v-close-popup round dense icon="close"></q-btn>
+                </q-toolbar>
+                <q-card-section class="row items-center q-gutter-sm">
+                  <q-btn outline class="q-ma-lg" style="color:#4fa9e9" no-caps @click="breset()" label="Cancel Active Proposal"/>
+                  <q-btn outline label="Close Dialog" style="color:#4fa9e9" no-caps v-close-popup></q-btn>
+                </q-card-section>
               </q-card-section>
             </q-card>
-          </q-dialog>
-        </div>
-<!-- end of DIALOG -->
-<!-- Dialog Info Content -->
+          </q-dialog> <!-- end of dialog reset -->
+        </div> <!-- end for dialog -->
+        <!-- end of DIALOG -->
+        <!-- Dialog Info Content -->
         <div class="q-pa-md">
           <q-dialog v-model="dialoginfo">
             <q-card style="uxdialog">
@@ -47,8 +40,10 @@
             </q-card>
           </q-dialog>
         </div>
-  <!-- end of DIALOG Info Content-->
-            <div style="max-width: 500px; margin: 0 auto;">
+        <!-- end of Dialog Info Content -->
+            <!-- === START OF EDITING PART === This is only used to enter new proposal and this part should be
+            invisible if proposal is active -->
+            <div v-if="!this.activeProposal" style="max-width: 500px; margin: 0 auto;">
               <!-- Select correct roi cap -->
               <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
                 <div class="col-xs-6 col-sm-6">
@@ -145,6 +140,7 @@
               </div>
               </div>
             </div>
+            <!-- === END OF EDITING PART === -->
             <div class="flex justify-center">
               <q-btn outline class="q-ma-lg uxblue" no-caps @click="resetForm()" label="Clear Form"/>
               <!-- todo remove <q-btn outline class="q-ma-lg uxblue" no-caps @click="submit()" label="Submit" :disable="!isFormFilled"/> todo -->
@@ -256,7 +252,7 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapMutations } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'Proposal',
@@ -264,14 +260,14 @@ export default {
     return {
       tab: 'send',
       dialog: false,
-      dialogreset: false, // If true and proposal already voted display pop-up window. TODO make it faster.
-      dialoginfo: false,
+      dialogreset: false,
+      dialoginfo: false, // todo  remove
       activeProposal: false, // if false - no active proposal
-      expiration_timer: 0.0,
+      expiration_timer: 0.0, // clock
       isProposerActive: false, // is set up by local function (not Vuex)
       submitData: {
         currentAccountName: '',
-        eosaccount: null,
+        eosaccount: null, // todo wtf ??? compare usage with propaccount - may be not needed
         cap: 1,
         percentage: 0.0,
         threshold: 0,
@@ -293,7 +289,7 @@ export default {
   created () {
     this.isProActive()
     this.setIntervalId = setInterval(() => {
-      this.getActionProposal()
+      // this.getActionProposal() // call in layout is enough
       this.isProActive()
       console.log('in Proposal')
     }, 30000) // call each 30 sec after the tests
@@ -306,14 +302,12 @@ export default {
   computed: {
     ...mapState({
       accountName: state => state.account.accountName,
-      secondVoterName: state => state.account.secondVoterName, // todo ???
-      propaccount: state => state.account.proposalInfo.proposalInfo.eosaccount,
+      propaccount: state => state.account.proposalInfo.proposalInfo.eosaccount, // 'in proposal' account
       value: state => state.analytics.circInfo,
       progress1: state => state.analytics.progress1,
       progress2: state => state.analytics.progress2,
       progressLabel1: state => state.analytics.progressLabel1,
       progressLabel2: state => state.analytics.progressLabel2,
-      // isProposalActive: state => state.proposal.isproposalactive, // todo not the same like vote ??
       roi_target_cap: state => state.account.proposalInfo.proposalInfo.roi_target_cap,
       proposal_percentage: state => state.account.proposalInfo.proposalInfo.proposal_percentage,
       locked: state => state.account.proposalInfo.proposalInfo.locked,
@@ -321,7 +315,6 @@ export default {
       threshold: state => state.account.proposalInfo.proposalInfo.threshold,
       rates_left: state => state.account.proposalInfo.proposalInfo.rates_left,
       accrued: state => state.account.proposalInfo.proposalInfo.accrued,
-      isVoted: state => state.account.isVoted, // '2nd Voter solver'
       proposer: state => state.account.proposer
     }),
     isFormFilled () {
@@ -332,20 +325,17 @@ export default {
     }
   },
   methods: {
-    ...mapActions('proposal', ['proposalNew', 'proposalRemove', 'actionUnlockNFT', 'setProposalActive']),
-    ...mapActions('account', ['reqVoterAct']), // '2nd voter problem' solving
-    ...mapActions('account', ['getActionProposal', 'getVoteStatus']),
-    ...mapMutations('account', ['hideModal']),
+    ...mapActions('proposal', ['proposalNew', 'proposalRemove', 'actionUnlockNFT']),
+    ...mapActions('account', ['getActionProposal']),
     submit () {
       const self = this
       console.log('TOKEN: ', `${parseFloat(this.submitData.threshold).toFixed(process.env.TOKEN_PRECISION)} ${process.env.TOKEN_NAME}`)
       this.submitData.currentAccountName = this.accountName
       console.log('PROPOSAL DATA=', this.submitData)
       this.proposalNew(this.submitData)
-      // .then(response => { // TODO remove it
-      // this.setProposalActive(1) // TODO ?? remove it
-      this.getActionProposal() // updates info on proposal
+      // this.getActionProposal() // updates info on proposal
       self.resetForm()
+      this.activeProposal = true // temporary update activeProposal before be updated by backend reading each 30s.
     },
     conditions () {
       // (current user not proposer)
@@ -355,63 +345,47 @@ export default {
       return result
       // if return = false - submit button visible
     },
-    // Serves only for proposal information tip.
-    isProposalActive () { // IS proposal active ? - means not expired ? todo See isProActive
-      if ((this.eosaccount !== 'empty') && (this.account !== 'erased')) {
-        this.expires = (this.expires_at * 1000) // normalize UTC formats
-        // http://jsfiddle.net/JamesFM/bxEJd/
-        const timestamp = Date.now()
-        if (timestamp > this.expires) {
-          this.isProposalExpired = true // no active proposal
-          this.expiration_timer = 0.0
-        } else { // proposal is active
-          this.isProposalExpired = false // proposal actually active
-          this.expiration_timer = (this.expires - timestamp) / 60000 // display in minutes
-          this.expiration_timer = this.expiration_timer.toFixed(2)
-          this.expiration_timer = this.expiration_timer.replace('.', ' : ')
-        }
-        console.log('timestamp:', this.expires, timestamp)
-      } else {
-        this.isProposalExpired = true // no active proposal
-        this.isProposalVoted = false // voting marker cancelled after expiration // todo ??
-        this.expiration_timer = 0.0
-      }
-    }, // ===
+    // ===
     submit1 () {
       this.submitData1.NFTAccountName = this.accountName
       console.log('submitData1 = ', this.submitData1)
       this.actionUnlockNFT(this.submitData1)
-        .then(response => {
-          // self.getAccountInfo()
-          this.submitData1.NFTAccountName = '' // reset mini-form
-        })
+      this.submitData1.NFTAccountName = '' // reset mini-form
     },
-    // pushToVoter () { // sends message to not-voting voter through trigger contract
-    //  console.log('pushToVoter()')
-    //  this.dialogreset = false // TODO REMOVE
-    //  this.submitData2.secondVoterName = this.secondVoterName
-    //  this.submitData2.currentAccountName = this.accountName
-    //  this.reqVoterAct(this.submitData2) // call request for 2nd voter action
-    //  //
-    // },
-    isProActive () { // TODO compare with isProposalActive - remove one of them
-      if ((this.eosaccount !== 'empty') && (this.eosaccount !== 'erased')) { // important to be that way
-        this.expires = (this.expires_at * 1000) // normalize UTC formats
-        // http://jsfiddle.net/JamesFM/bxEJd/
-        const timestamp = Date.now()
-        if (timestamp > this.expires) {
-          this.activeProposal = false // no active proposal
-          this.expiration_timer = 0.0
-        } else {
-          this.activeProposal = true // active proposal
-          this.expiration_timer = (this.expires - timestamp) / 60000 // display in minutes
-          this.expiration_timer = this.expiration_timer.toFixed(2)
-        }
-        console.log('timestamp:', this.expires, timestamp)
-      } else { // proposal 'empty' or 'erased'
+    isProActive () {
+      // Note: Only expiration is enough to be tested. 'erase' or 'empty' conditions are always reflected by expiration.
+      this.expires = (this.expires_at * 1000) // normalize UTC formats todo expires at make faster
+      // http://jsfiddle.net/JamesFM/bxEJd/
+      const timestamp = Date.now()
+      if (timestamp > this.expires) {
         this.activeProposal = false // no active proposal
         this.expiration_timer = 0.0
+        console.log('isProActive expired_at', this.expires_at)
+      } else {
+        this.activeProposal = true // active proposal
+        this.expiration_timer = (this.expires - timestamp) / 60000 // display in minutes and parts of minutes todo change to seconds
+        this.expiration_timer = this.expiration_timer.toFixed(2) // todo change to seconds
       }
+      // if ((this.propaccount !== 'empty') && (this.propaccount !== 'erased')) { // important to be that way todo verify in vote!
+      //  console.log('isProActive this.propaccount', this.propaccount)
+      //  this.expires = (this.expires_at * 1000) // normalize UTC formats
+      //  // http://jsfiddle.net/JamesFM/bxEJd/
+      //  const timestamp = Date.now()
+      //  if (timestamp > this.expires) {
+      //    this.activeProposal = false // no active proposal
+      //    this.expiration_timer = 0.0
+      //    console.log('isProActive expired_at')
+      //  } else {
+      //    this.activeProposal = true // active proposal
+      //    this.expiration_timer = (this.expires - timestamp) / 60000 // display in minutes
+      //    this.expiration_timer = this.expiration_timer.toFixed(2)
+      //  }
+      //  console.log('timestamp:', this.expires, timestamp)
+      // } else { // proposal 'empty' or 'erased'
+      //  this.activeProposal = false // no active proposal
+      //  this.expiration_timer = 0.0
+      //  console.log('isProActive this.propaccount', this.propaccount)
+      // }
     },
     isProposer () {
       if (this.accountName === this.proposer) {
@@ -421,14 +395,12 @@ export default {
         console.log(' conditions isProposer() --- ', this.accountName, this.proposer, this.isProposerActive)
       }
     },
-    breset () { // safely removes active proposal
+    breset () { // safely removes active proposal from backend
       this.submitData.currentAccountName = this.accountName
       this.proposalRemove(this.accountName)
-      // this.setProposalActive(0) // todo ??
-      this.getActionProposal() // todo verify - does it exists
-      // .then(response => {
-      // this.isProposalActive()
-      // })
+      // this.getActionProposal() // todo verify
+      this.activeProposal = false // temporary update activeProposal before be updated from backend each 30s.
+      this.dialogreset = false
     },
     resetForm () {
       this.submitData = {
