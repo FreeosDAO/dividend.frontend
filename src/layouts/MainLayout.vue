@@ -133,7 +133,8 @@ export default {
       this.getEwsTable()
       this.getByUserTotal()
       this.checkIfLoggedIn()
-      this.getActionProposal() // todo test
+      this.getActionProposal()
+      this.refreshWhitelist() // refresh isProposalVoted status.
       // Count current bar values
       this.progress1 = this.value
       this.progress2 = (1.00 - this.value)
@@ -169,7 +170,7 @@ export default {
     ...mapActions('account', ['checkIfLoggedIn', 'connectWallet', 'logout', 'getActionProposal']),
     ...mapActions('analytics', ['actionDividendCompute']),
     ...mapActions('analytics', ['getByUserTotal', 'getEwsTable']),
-    ...mapActions('account', ['getwhitelistTable']),
+    ...mapActions('account', ['getwhitelistTable', 'refreshWhitelist']),
     // ...mapActions('analytics', ['getEwsTable', 'getByUserTotal']),
     ...mapActions('analytics', ['updateLoading']),
     onSigninFinish (event) {

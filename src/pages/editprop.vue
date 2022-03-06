@@ -1,4 +1,5 @@
 <template>
+  <!-- NOT USED ANYWHERE -->
   <div style="max-width: 500px; margin: 0 auto;">
     <!-- Select correct roi cap -->
     <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">

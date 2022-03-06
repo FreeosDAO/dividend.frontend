@@ -2,24 +2,6 @@
   <div>
   <div class="q-pa-md">
     <div class="q-gutter-y-md q-mx-auto" style="max-width: 600px">
-      <!-- <q-dialog v-model="this.isSecondVoter"
-                persistent
-                transition-show="flip-down"
-                transition-hide="flip-up"
-      >
-      2nd voter problem solver - This pop-up must appear only for second voter
-        <q-card class="bg-primary text-white">
-          <q-card-section class="row items-center q-pb-none">
-            <div class="text-h6 alerttext">Important Message from the Proposer</div>
-            <q-space></q-space>
-          </q-card-section>
-          <q-card-section>
-            <h7>The Actual proposal must be cancelled.</h7> <br/>
-            Please, press the button bellow to vote 'no' and cancel the current proposal.<br>
-            <q-btn class="alerttext" label="Authorise Current Proposal Removal" no-caps flat style="justify-self: flex-end;" @click="byebye()"></q-btn>
-          </q-card-section>
-        </q-card>
-      </q-dialog> -->
       <q-card flat class="uxblue"
     >
       <!-- This part is displayed conditionally -->
@@ -47,7 +29,6 @@
                   ></q-btn-toggle>
                 </div>
               </div>
-
               <!-- eosaccount section -->
               <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
                 <div class="col-xs-5 col-sm-4 text-left">
@@ -214,12 +195,12 @@ export default {
   },
   created () {
     // this.readPostBox() // reads eventual message from proposer - 2nd voter solver - not longer needed
-    this.getActionProposal() // retrieve current proposal info from the backend - actions.js line 96
+    // this.getActionProposal() // retrieve current proposal info from the backend - actions.js line 96
     this.isProposalActive() // local call in methods
-    this.refreshWhitelist() // refresh isProposalVoted status.
+    // this.refreshWhitelist() // refresh isProposalVoted status.
     this.setIntervalId = setInterval(() => {
-      this.getActionProposal() // this set up 'activeProposal' and 'expiration_timer' values
-      this.refreshWhitelist() // refresh isProposalVoted.
+      // this.getActionProposal() // this set up 'activeProposal' and 'expiration_timer' values
+      // this.refreshWhitelist() // refresh isProposalVoted.
       this.isProposalActive() //
     }, 30000) // call each 30 seconds then
     document.addEventListener('beforeunload', this.handler)
@@ -283,17 +264,6 @@ export default {
       return result
       // if return = false - submit button visible
     },
-    // byebye () {
-    //  2nd voter solver - no longer needed
-    //  this.submitData.toVote = 2 // Reject current proposal.
-    //  this.submitData.currentAccountName = this.accountName
-    //  console.log('bye bye', this.submitData.currentAccountName)
-    //  this.hideModal()
-    //  // this.isProposalVoted = true // Marker is removed by isProposalActive()
-    //  this.refreshWhitelist() // refresh isProposalVoted status.
-    //  this.cleanUpMessageTrigger(this.accountName) // make postbox clean
-    //  this.actionProposalVote(this.submitData) // standard voting action (proposal/actions.js)
-    // },
     getTimestamp: function () {
       return Date.now()
     },

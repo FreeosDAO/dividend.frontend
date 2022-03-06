@@ -26,7 +26,7 @@
           </q-dialog> <!-- end of dialog reset -->
         </div> <!-- end for dialog -->
         <!-- end of DIALOG -->
-        <!-- Dialog Info Content -->
+        <!-- Dialog Info Content
         <div class="q-pa-md">
           <q-dialog v-model="dialoginfo">
             <q-card style="uxdialog">
@@ -40,20 +40,34 @@
             </q-card>
           </q-dialog>
         </div>
-        <!-- end of Dialog Info Content -->
+        end of Dialog Info Content -->
             <!-- === START OF EDITING PART === This is only used to enter new proposal and this part should be
             invisible if proposal is active -->
-            <div v-if="!this.activeProposal" style="max-width: 500px; margin: 0 auto;">
+            <div style="max-width: 500px; margin: 0 auto;">
               <!-- Select correct roi cap -->
               <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
                 <div class="col-xs-6 col-sm-6">
                   <!-- Select Policy: -->
-                  <q-btn-toggle no-caps
+                  <q-btn-toggle v-if="!this.activeProposal"
+                    no-caps
                     spread
+                    flat
                     v-model="submitData.cap"
                     push
                     toggle-color="white"
                     :options="[
+                      {label: 'WayFinder', value: 1},
+                      {label: 'WayFarer', value: 2},
+                      {label: 'WayFounder', value: 3}
+                    ]"
+                  ></q-btn-toggle>
+                  <q-btn-toggle v-else
+                      no-caps
+                      flat
+                      disable: true
+                      toggle-color="white"
+                      v-model="roi_target_cap"
+                      :options="[
                       {label: 'WayFinder', value: 1},
                       {label: 'WayFarer', value: 2},
                       {label: 'WayFounder', value: 3}
@@ -67,13 +81,14 @@
                   Account (Name)
                 </div>
                 <div class="col-xs-7 col-sm-7">
-                  <q-input
+                  <q-input v-if="!this.activeProposal"
                     input-style="color: #00ADEE"
                     v-model="submitData.eosaccount"
                     type="text"
                     outlined
                     dense
                   />
+                  <div v-else>{{this.propaccount}}</div>
                 </div>
               </div>
               <!-- Percentage Section -->
@@ -83,10 +98,11 @@
                   % for the Account
                 </div>
                 <div class="col-xs-7 col-sm-7">
-                  <q-input
+                  <q-input v-if="!this.activeProposal"
                   input-style="color: #00ADEE"
                   dense
                   outlined v-model="submitData.percentage" />
+                  <div v-else>{{this.proposal_percentage}}</div>
                 </div>
               </div>
               <!-- Threshold conditional section -->
@@ -96,11 +112,12 @@
                   Threshold Point
                 </div>
                 <div class="col-xs-7 col-sm-7">
-                  <q-input outlined
+                  <q-input outlined v-if="!this.activeProposal"
                     input-style="color: #00ADEE"
                     v-model="submitData.threshold" label="POINT"
                     placeholder='0.0000' dense >
                   </q-input>
+                  <div v-else>{{this.threshold}}</div>
                 </div>
               </div>
               </div>
@@ -111,7 +128,7 @@
                   Iterations to pay
                 </div>
                 <div class="col-xs-7 col-sm-7">
-                  <q-input
+                  <q-input v-if="!this.activeProposal"
                     input-style="color: #00ADEE"
                     class="form-control"
                     v-model="submitData.ratesleft"
@@ -119,6 +136,7 @@
                     outlined
                     dense
                   />
+                  <div v-else>{{this.rates_left}}</div>
                 </div>
               </div>
               </div>
@@ -147,17 +165,30 @@
               <!-- Submit Button Service -->
               <div v-if="!this.conditions()"> <!-- Process Submit further -->
                 <q-btn outline class="q-ma-lg uxblue" no-caps @click="submit()" label="Submit" :disable="!isFormFilled" />
-                conditions:{{this.conditions()}}
-              </div>
-              <div v-else>
-                <q-btn class="q-ma-lg uxblue" outline disable no-caps label="Submit" />
-                <q-tooltip transition-show="scale"
+                <q-tooltip
+                           transition-show="scale"
                            transition-hide="scale"
                            content-class="uxdialog"
-                           class="q-ma-lg text-h7"
+                           class="q-ma-sm text-subtitle2"
+                >
+                  <div>
+                    <h6 v-if="!isFormFilled">The proposal is not filled up.</h6>
+                  </div>
+                </q-tooltip>
+                conditions:{{this.conditions()}}
+              </div>
+              <div v-else> <!-- inactivate submit due to different reasons - Conditions ON-->
+                <q-btn class="q-ma-lg uxblue" outline disable no-caps label="Submit" />
+                <q-tooltip
+                           transition-show="scale"
+                           transition-hide="scale"
+                           content-class="uxdialog"
+                           class="q-ma-sm text-subtitle2"
                 >
                   <div id="app">
                     <h6 v-if="!this.isProposerActive">you are not the proposer</h6>
+                    <h6 v-if="activeProposal"> Proposal is Active. Before changes consider to
+                      remove the current proposal.</h6>
                   </div>
                 </q-tooltip>
               </div>
@@ -278,10 +309,10 @@ export default {
         NFTAccountName: '',
         nftKey: null
       },
-      submitData2: { // used for so called '2nd voter problem'.
-        currentAccountName: '',
-        secondVoterName: ''
-      },
+      // submitData2: { // used for so called '2nd voter problem'.
+      //  currentAccountName: '',
+      //  secondVoterName: ''
+      // },
       isShowApprovedDialog: false,
       isShowFailedDialog: false
     }
@@ -336,10 +367,11 @@ export default {
       // this.getActionProposal() // updates info on proposal
       self.resetForm()
       this.activeProposal = true // temporary update activeProposal before be updated by backend reading each 30s.
+      this.submitData.cap = this.roi_target_cap // Necessary for passive screen display when in non-edit mode.
     },
     conditions () {
-      // (current user not proposer)
-      const result = !this.isProposerActive
+      // (current user not proposer) or (exists active proposal on backend)
+      const result = ((!this.isProposerActive) || (this.activeProposal))
       console.log('conditions results=', result)
       console.log('conditions isProposerActive=', this.isProposerActive)
       return result
@@ -363,6 +395,7 @@ export default {
         console.log('isProActive expired_at', this.expires_at)
       } else {
         this.activeProposal = true // active proposal
+        this.submitData.cap = this.roi_target_cap // Necessary for passive screen display when in non-edit mode.
         this.expiration_timer = (this.expires - timestamp) / 60000 // display in minutes and parts of minutes todo change to seconds
         this.expiration_timer = this.expiration_timer.toFixed(2) // todo change to seconds
       }

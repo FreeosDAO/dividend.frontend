@@ -1,5 +1,5 @@
 <template>
-  <div class="fullscreen text-white text-center q-pa-md flex flex-center">
+  <div class="text-white text-left q-pa-md flex flex-center">
     <div>
       <div>Current Configuration .env <br>
         <table left>
@@ -15,14 +15,16 @@
         </table>
       </div>
       <div>
-        {{this.v_string}} - v.0.96 - removed button 'Info' from proposal page as it duplicate info 'No Active/Active Proposal/Timer' above the separator. Also displaying by 'Info' information on content of expired proposal may have no usability (CONSIDER) for the proposer.
-        - removed "Select Policy" text from the top of proposal page.
-        - Added error message "You are not the proposer" for the submit button.
-        - On Analytics Page: Changed 'Data Update' to 'Update Data'
-        - On all PVA (Proposal, Vote, Analytics) pages changed DAO to FreeDAO
-        v0.95 - removed '2nd voter solver' solution, acknowledge functionality of all pages.<br>
-        v0.94 - '2nd voter solver' and shading of Submit button in Vote.vue for new events.<br>
-        v0.93 - the last working version before adding '2nd voter solver'. <br>
+        {{this.v_string}} - Changes on proposal page. Page behavior for active and no active proposal. Backend read speed. Lock screen if proposal active to prevent
+        false backend messages.
+        <br>- v.0.96 - removed button 'Info' from proposal page as it duplicate info 'No Active/Active Proposal/Timer' above the separator. Also displaying by 'Info' information on content of expired proposal may have no usability (CONSIDER) for the proposer.
+        - removed "Select Policy" text from the top of proposal page.<br>
+        - Added error message "You are not the proposer" for the proposal submit button.<br>
+        - On Analytics Page: Changed 'Data Update' to 'Update Data'<br>
+        - On all PVA (Proposal, Vote, Analytics) pages changed DAO to FreeDAO<br>
+        <br>v0.95 - removed '2nd voter solver' solution, acknowledge functionality of all pages.<br>
+        <br>v0.94 - '2nd voter solver' and shading of Submit button in Vote.vue for new events.<br>
+        <br>v0.93 - the last working version before adding '2nd voter solver'. <br>
       </div>
       <div class="text-h2" style="opacity:.4">
       </div>
