@@ -85,11 +85,13 @@ export async function connectProton (state, name) {
 
 export const logout = async function ({ commit }) {
   commit('clearAccount', null)
+  // TODO Need to be cleared more. Especoally menulist. Enforce reload.
   // this.$router.push('/')
+  this.$router.go(1) // Enforce page reload.
   await ProtonSDK.logout()
 }
 
-export function getInfo (state) {
+export function getInfo (state) { // todo why is this used? rationale?
   state.dispatch('getActionProposal')
 }
 
@@ -117,7 +119,7 @@ export const setpath = function ({ commit }, pathe) {
   // this.$router.push('/')
 }
 
-// run action query from the blockchain TODO replace whole function
+// run action query from the blockchain
 export async function getVersionQuery ({ state }, accountName) {
   const actions = [{
     account: process.env.APP_NAME,
@@ -160,57 +162,9 @@ export async function getwhitelistTable (state) {
     // key: accountName,
     value: result.rows
   }
-  state.commit('setwhitelistTableAttrVal', val)
+  state.commit('setwhitelistTableAttrVal', val) // Ref. line 49 mutations.js
+  this.value = val
 }
-
-// Used by '2nd vote solver' - no longer needed
-// === Ref: Called by push2Vote line 345 in proposal.vue
-//
-// Used by '2nd vote solver' - no longer needed
-// === Ref: Called by push2Vote line 345 in proposal.vue
-// export async function reqVoterAct ({ state }, data) {
-//  const { currentAccountName, secondVoterName } = data
-//  console.log(' ----- request 2nd voter action ----- ', data)
-//  try {
-//    const actions = [{
-//      account: 'divpropdel', // lprocess.env.DIVPROPDEL_APP, // 'divpropdel',
-//      name: 'dropmessage',
-//      authorization: [{
-//        actor: currentAccountName,
-//        permission: 'active'
-//      }],
-//      data: {
-//        proposer: currentAccountName,
-//        second_voter: secondVoterName
-//      }
-//    }]
-//    const result = await ProtonSDK.sendTransaction(actions)
-//    return result
-//  } catch (e) {
-//    console.log(e)
-//  }
-// }
-
-// readPostBox() for 2nd voter solver - no longer needed
-// read the table from backend contract divpropdel. If name of current
-// voter is equal to the name in the table, the pop-up box with the message will be opened.
-// === g e t S y s t e m T a b l e ===
-// Where called: MainLayout.vue
-// export async function readPostBox (state) {
-//  const result = await connect({
-//    json: true,
-//    code: 'divpropdel',
-//    scope: 'divpropdel',
-//    table: 'postboxs',
-//    limit: 1
-//  })
-//  const val = {
-//    key: 'postBoxData',
-//    value: result.rows
-//  }
-//  console.log('postBoxData', JSON.stringify(val))
-//  state.commit('setPostBoxDataVal', val)
-// }
 
 //
 // retrieve whitelist to find it was voted (for screen functions)

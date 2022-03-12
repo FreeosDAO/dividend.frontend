@@ -1,21 +1,21 @@
 export default () => ({
-  isVoted: false,
-  // isSecondVoter: false, // '2nd voter solver'
-  // secondVoterName: null, // todo is it used anymore.
+  isVoted: false, // todo ??
   isProposalVoted: false, // Proposal was already voted by one voter ...
-  alreadyVoted: '', // ... this is name who already voted.
-  //
-  Whitelist: { // todo take care is it used anymore ?
+  alreadyVoted: '', // ... this is a name who already voted.
+  // used for initial recognition of the user (proposer, voter, other?). The drawer menu is based on these data
+  Whitelist: {
     whitelistInfo: [
       { idno: 1, user: '', vote: 0 },
       { idno: 1, user: '', vote: 0 },
       { idno: 1, user: '', vote: 0 }
     ]
   },
+  voterName1: '',
+  voterName2: '',
+  // ===
+  accountName: null, // used by Wallet
   //
-  accountName: null,
-  //
-  autoLogout: false, // Automatic logout at the end of each page not used yet
+  // autoLogout: false, // Automatic logout at the end of each page - not used yet todo remove
   connecting: false,
   userType: 0, // 1- proposer, 2,3 - voters, 4 - other
   path: '/',

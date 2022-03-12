@@ -30,7 +30,7 @@
       <q-scroll-area class="fit">
         <q-list class="uxdrawer">
           <template v-for="(menuItem, index) in menuList">
-            <q-item
+            <q-item v-if="menuItem.show"
                 :key="index" clickable :active="selectedItemLabel === menuItem.label" active-class="uxdraweract"
                 v-ripple @click="onSelectMenu(menuItem)">
                 <q-item-section avatar>
@@ -52,43 +52,49 @@
 </template>
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
-// import { isAuthenticated } from 'src/store/account/getters'
+//
 const menuList = [
   {
     image: [require('../assets/Home.png')],
     label: 'Home',
     separator: true,
-    route: '/'
+    route: '/',
+    show: true
   },
   {
     image: [require('../assets/Proposal.png')],
     label: 'Proposal',
     separator: true,
-    route: '/proposal'
+    route: '/proposal',
+    show: true
   },
   {
     image: [require('../assets/Vote1.png')],
     label: 'Vote',
     separator: true,
-    route: '/vote'
+    route: '/vote',
+    show: true
   },
   {
     image: [require('../assets/Customer.png')],
     label: 'Customer',
     separator: true,
-    route: '/customer'
+    route: '/customer',
+    show: true
   },
   {
     image: [require('../assets/Analytics.png')],
     label: 'Analytics',
     separator: true,
-    route: '/analytics'
+    route: '/analytics',
+    show: true
   },
   {
     image: [require('../assets/Analytics.png')],
     label: 'Test',
     separator: true,
-    route: '/test'
+    route: '/test',
+    show: true
   }
 ]
 export default {
@@ -108,6 +114,9 @@ export default {
       menuList
     }
   },
+  // mounted () {
+  //  this.getVIPs() // Should be only used once after login. Ref: line 151 on actions.js
+  // },
   created () {
     this.getEwsTable()
     this.getByUserTotal()
@@ -153,7 +162,6 @@ export default {
     }, 30000) // call each 30 sec after the tests
     // document.addEventListener('beforeunload', this.handler)
     this.checkIfLoggedIn()
-    this.getwhitelistTable()
     this.version = process.env.V_STRING
   },
   beforeDestroy () {
@@ -164,7 +172,7 @@ export default {
       accountName: state => state.account.accountName,
       value: state => state.analytics.circInfo // value is read from Vuex
     }),
-    ...mapGetters('account', ['isAuthenticated', 'connecting'])
+    ...mapGetters('account', ['isAuthenticated', 'connecting', 'proposer', 'voterName1', 'voterName2'])
   },
   methods: {
     ...mapActions('account', ['checkIfLoggedIn', 'connectWallet', 'logout', 'getActionProposal']),
@@ -179,6 +187,49 @@ export default {
         this.drawer = true
         this.onSelectMenu(menuList[0])
       }
+    },
+    async getVIPs () {
+      try { // happy path
+        const result = await this.getwhitelistTable()
+        console.log('result', result) // Only used to cancel 'not used' error for result. Keep.
+        const voterName1 = this.$store.state.account.voterName1
+        const voterName2 = this.$store.state.account.voterName2
+        const proposer = this.$store.state.account.proposer
+        const current = this.$store.state.account.accountName
+        console.log(('whitelist data', proposer, voterName1, voterName2))
+        console.log('whitelist * * *', voterName1, this.$store.state.account.voterName1)
+        console.log('whitelist * * *', voterName2, this.$store.state.account.voterName2)
+        console.log('whitelist * * *', proposer, this.$store.state.account.proposer)
+        console.log('whitelist * * *', current, this.accountName) // todo works when watched
+        for (let i = 0; i < 6; i++) {
+          this.menuList[i].show = true
+          this.menuList[i].separator = true
+        }
+        if (current === proposer) {
+          this.menuList[2].show = false
+          this.menuList[2].separator = false
+          console.log('menuList 2')
+        } else if (current === voterName1) {
+          this.menuList[1].show = false
+          this.menuList[1].separator = false
+          console.log('menuList 1 a')
+        } else if (current === voterName2) {
+          this.menuList[1].show = false
+          this.menuList[1].separator = false
+          console.log('menuList 1 b')
+        } else { // other user
+          this.menuList[1].show = false // disable voter option on drawer
+          this.menuList[1].separator = false
+          this.menuList[2].show = false // disable proposer option on drawer
+          this.menuList[2].separator = false
+          this.menuList[5].show = false // disable test option on drawer
+          this.menuList[5].separator = false
+        }
+      } catch (ex) {
+        console.error('getVIPs error (whitelist ex)', ex)
+      } /* finally { // run always
+        console.log('whitelist Success')
+      } */
     },
     initiateValues () {
       this.getEwsTable()
@@ -196,25 +247,17 @@ export default {
     isAuthenticated: {
       immediate: true,
       handler: function (val) {
-        // if (val && this.accountName) {
-        // this.getAccountInfo()
+        if (val && this.accountName) {
+          this.getVIPs()
+          // this.getAccountInfo()
         // this.getActionProposal()
-        // }
+        }
         if (val && this.$route.query.returnUrl) {
           this.$router.push({ path: this.$route.query.returnUrl })
         }
       }
     }
-  } // ,
-  // created () {
-  // this.checkIfLoggedIn()
-  // // this.initiateValues() // TODO commented
-  // this.getwhitelistTable()
-  // this.version = process.env.V_STRING // TODO
-  // }
-  // // mounted () {
-  // // this.getwhitelistTable(this.accountName)
-  // // }
+  }
 }
 </script>
 

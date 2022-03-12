@@ -15,16 +15,22 @@
         </table>
       </div>
       <div>
-        {{this.v_string}} - Changes on proposal page. Page behavior for active and no active proposal. Backend read speed. Lock screen if proposal active to prevent
-        false backend messages.
-        <br>- v.0.96 - removed button 'Info' from proposal page as it duplicate info 'No Active/Active Proposal/Timer' above the separator. Also displaying by 'Info' information on content of expired proposal may have no usability (CONSIDER) for the proposer.
+        <h6>{{this.v_string}} current</h6> - <u>This version start new branch</u> &nbsp; <b style="color:#4fa9e9">'io-changes'</b> &nbsp; reflecting input/output changes to remove display update delays
+        and flickering. <br>Primary change: Type (VIP or other) of logged in account is verified at the very beginning.
+        Pages inappropriate for the current user doesn't appear on the screen (E.g. proposal page is not displayed
+        for voter, etc.)<br>
+        Changes on proposal page. Separating page behavior for active and non-active proposal. Lock screen if there is already
+        active proposal. So it is possible only waiting for voting, expiration, or cancellation by the proposer. These events bring page
+        back to the edit mode where new proposal may be entered. This mechanism prevents situations where backend is enforced
+        by the frontend to display unnecessary error messages.
+        <h6>v0.96</h6> - removed button 'Info' from proposal page as it duplicate info 'No Active/Active Proposal/Timer' above the separator.
         - removed "Select Policy" text from the top of proposal page.<br>
         - Added error message "You are not the proposer" for the proposal submit button.<br>
         - On Analytics Page: Changed 'Data Update' to 'Update Data'<br>
-        - On all PVA (Proposal, Vote, Analytics) pages changed DAO to FreeDAO<br>
-        <br>v0.95 - removed '2nd voter solver' solution, acknowledge functionality of all pages.<br>
-        <br>v0.94 - '2nd voter solver' and shading of Submit button in Vote.vue for new events.<br>
-        <br>v0.93 - the last working version before adding '2nd voter solver'. <br>
+        - On all PVA (Proposal, Vote, Analytics) pages changed DAO to FreeDAO
+        <h6>v0.95</h6> - removed '2nd voter solver' solution, acknowledge functionality of all pages.
+        <h6>v0.94</h6> - '2nd voter solver' and shading of Submit button in Vote.vue for new events.
+        <h6>v0.93</h6> - the last working version before adding '2nd voter solver'.
       </div>
       <div class="text-h2" style="opacity:.4">
       </div>

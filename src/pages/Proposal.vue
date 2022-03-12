@@ -186,7 +186,6 @@
                            class="q-ma-sm text-subtitle2"
                 >
                   <div id="app">
-                    <h6 v-if="!this.isProposerActive">you are not the proposer</h6>
                     <h6 v-if="activeProposal"> Proposal is Active. Before changes consider to
                       remove the current proposal.</h6>
                   </div>
@@ -321,7 +320,7 @@ export default {
     this.isProActive()
     this.setIntervalId = setInterval(() => {
       // this.getActionProposal() // call in layout is enough
-      this.isProActive()
+      // this.isProActive() // todo this is temporarily locked - remove comment after tests
       console.log('in Proposal')
     }, 30000) // call each 30 sec after the tests
     document.addEventListener('beforeunload', this.handler)
@@ -333,7 +332,7 @@ export default {
   computed: {
     ...mapState({
       accountName: state => state.account.accountName,
-      propaccount: state => state.account.proposalInfo.proposalInfo.eosaccount, // 'in proposal' account
+      propaccount: state => state.account.proposalInfo.proposalInfo.eosaccount, // account 'inside proposal'
       value: state => state.analytics.circInfo,
       progress1: state => state.analytics.progress1,
       progress2: state => state.analytics.progress2,
@@ -345,8 +344,7 @@ export default {
       expires_at: state => state.account.proposalInfo.proposalInfo.expires_at,
       threshold: state => state.account.proposalInfo.proposalInfo.threshold,
       rates_left: state => state.account.proposalInfo.proposalInfo.rates_left,
-      accrued: state => state.account.proposalInfo.proposalInfo.accrued,
-      proposer: state => state.account.proposer
+      accrued: state => state.account.proposalInfo.proposalInfo.accrued
     }),
     isFormFilled () {
       let a = false
@@ -370,8 +368,8 @@ export default {
       this.submitData.cap = this.roi_target_cap // Necessary for passive screen display when in non-edit mode.
     },
     conditions () {
-      // (current user not proposer) or (exists active proposal on backend)
-      const result = ((!this.isProposerActive) || (this.activeProposal))
+      // exists active proposal on backend
+      const result = this.activeProposal
       console.log('conditions results=', result)
       console.log('conditions isProposerActive=', this.isProposerActive)
       return result
@@ -419,14 +417,6 @@ export default {
       //  this.expiration_timer = 0.0
       //  console.log('isProActive this.propaccount', this.propaccount)
       // }
-    },
-    isProposer () {
-      if (this.accountName === this.proposer) {
-        this.isProposerActive = true
-      } else {
-        this.isProposerActive = false
-        console.log(' conditions isProposer() --- ', this.accountName, this.proposer, this.isProposerActive)
-      }
     },
     breset () { // safely removes active proposal from backend
       this.submitData.currentAccountName = this.accountName

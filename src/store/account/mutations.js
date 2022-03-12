@@ -43,9 +43,9 @@ export const setProposalAttrVal = function (state, payload) {
 }
 
 // Identify the account name of the proposer and store it
-// Compare proposer account with current account - store the result
-// Note: This is used for other purposes than "second voter problem"
-// Do not touch anyway.
+// Identify names of the voters and store it
+// Note: This is necessary as records in whitelist table may be in any order
+// Ref: line 163 action.js
 export const setwhitelistTableAttrVal = function (state, payload) {
   // const attr = payload.key
   const val = payload.value
@@ -53,6 +53,15 @@ export const setwhitelistTableAttrVal = function (state, payload) {
   if (val[1].idno === 1) { state.proposer = val[1].user }
   if (val[2].idno === 1) { state.proposer = val[2].user }
   console.log('*whitelist proposer*', state.proposer)
+  // Identify names of two voters and store it
+  if (val[0].idno === 2) { state.voterName1 = val[0].user }
+  if (val[1].idno === 2) { state.voterName1 = val[1].user }
+  if (val[2].idno === 2) { state.voterName1 = val[2].user }
+  console.log('*whitelist voterName1*', state.voterName1)
+  if (val[0].idno === 3) { state.voterName2 = val[0].user }
+  if (val[1].idno === 3) { state.voterName2 = val[1].user }
+  if (val[2].idno === 3) { state.voterName2 = val[2].user }
+  console.log('*whitelist voterName2*', state.voterName2)
 }
 
 // Serves to close proposer message pop-up dialog for '2nd voter solver'.
