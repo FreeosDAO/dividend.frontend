@@ -69,22 +69,6 @@ export const showModal = function (state) {
   state.isMessage = true
 }
 
-// 2nd voter solver - not used anymore
-// This should be called from action which clean up message trigger in divpropdel
-// export const hideModal = function (state) { // used by '2nd vote solver'
-//  state.isSecondVoter = false
-// }
-//
-// export const setPostBoxDataVal = function (state, payload) { // '2nd voter solver' only. Set-up postbox.
-//  const val = payload.value
-//  console.log('postBox', val[0].eosaccount) // test
-//  const extaccount = val[0].eosaccount
-//  if (extaccount === state.accountName) {
-//    state.isSecondVoter = true // this is only set-up if current voter should receive message,
-//  } else { state.isSecondVoter = false }// ... current voter is this who not voted yet.
-//
-// }
-
 // Finding who voted yet for proposal. Used for block voting if user already voted.
 export const WhitelistAttr = function (state, payload) {
   // const attr = payload.key
@@ -99,3 +83,22 @@ export const WhitelistAttr = function (state, payload) {
   }
   console.log('after for', state.isVoted, 'already voted', state.alreadyVoted)
 } // keep
+
+// Verification is proposal active, on a basis of the backend proposal data.
+export const verifyProposalStatus = function (state, payload) {
+  const attr = payload.key
+  const val = payload.value
+  // console.log('proposal', val) // test
+  state.proposalInfo[attr] = val
+  // Compare with current time to know the proposal status.
+  // If it is in valid time frame that means is active.
+  const expires = (val.expires_at * 1000) // normalize UTC formats
+  const timestamp = Date.now()
+  if (timestamp > expires) {
+    state.isProposalActive = false // no active proposal
+    // console.log('isProActive expired_at', this.expires_at)
+  } else {
+    state.isProposalActive = true // active proposal
+  }
+} // isProposalActive must be caught at the beginning in Proposal and Vue
+// pages to determine initial way of processing. Use getter.

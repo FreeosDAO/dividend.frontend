@@ -283,7 +283,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-
+// let activeProposal
 export default {
   name: 'Proposal',
   data () {
@@ -292,7 +292,7 @@ export default {
       dialog: false,
       dialogreset: false,
       dialoginfo: false, // todo  remove
-      activeProposal: false, // if false - no active proposal
+      activeProposal: this.isProposalActive, // if false - no active proposal
       expiration_timer: 0.0, // clock
       isProposerActive: false, // is set up by local function (not Vuex)
       submitData: {
@@ -344,8 +344,10 @@ export default {
       expires_at: state => state.account.proposalInfo.proposalInfo.expires_at,
       threshold: state => state.account.proposalInfo.proposalInfo.threshold,
       rates_left: state => state.account.proposalInfo.proposalInfo.rates_left,
-      accrued: state => state.account.proposalInfo.proposalInfo.accrued
+      accrued: state => state.account.proposalInfo.proposalInfo.accrued,
+      isProposalActive: state => state.account.isProposalActive
     }),
+    // ...mapGetters('account', ['isProposalActive']),
     isFormFilled () {
       let a = false
       if (this.submitData.cap === 1) a = ((this.submitData.percentage > 0) && (this.submitData.ratesleft > 0))
@@ -353,6 +355,9 @@ export default {
       return a
     }
   },
+  // mounted: {
+  // activeProposal = this.isProposalActive
+  // },
   methods: {
     ...mapActions('proposal', ['proposalNew', 'proposalRemove', 'actionUnlockNFT']),
     ...mapActions('account', ['getActionProposal']),
@@ -371,7 +376,6 @@ export default {
       // exists active proposal on backend
       const result = this.activeProposal
       console.log('conditions results=', result)
-      console.log('conditions isProposerActive=', this.isProposerActive)
       return result
       // if return = false - submit button visible
     },
@@ -384,7 +388,7 @@ export default {
     },
     isProActive () {
       // Note: Only expiration is enough to be tested. 'erase' or 'empty' conditions are always reflected by expiration.
-      this.expires = (this.expires_at * 1000) // normalize UTC formats todo expires at make faster
+      this.expires = (this.expires_at * 1000) // normalize UTC formats
       // http://jsfiddle.net/JamesFM/bxEJd/
       const timestamp = Date.now()
       if (timestamp > this.expires) {
@@ -397,26 +401,6 @@ export default {
         this.expiration_timer = (this.expires - timestamp) / 60000 // display in minutes and parts of minutes todo change to seconds
         this.expiration_timer = this.expiration_timer.toFixed(2) // todo change to seconds
       }
-      // if ((this.propaccount !== 'empty') && (this.propaccount !== 'erased')) { // important to be that way todo verify in vote!
-      //  console.log('isProActive this.propaccount', this.propaccount)
-      //  this.expires = (this.expires_at * 1000) // normalize UTC formats
-      //  // http://jsfiddle.net/JamesFM/bxEJd/
-      //  const timestamp = Date.now()
-      //  if (timestamp > this.expires) {
-      //    this.activeProposal = false // no active proposal
-      //    this.expiration_timer = 0.0
-      //    console.log('isProActive expired_at')
-      //  } else {
-      //    this.activeProposal = true // active proposal
-      //    this.expiration_timer = (this.expires - timestamp) / 60000 // display in minutes
-      //    this.expiration_timer = this.expiration_timer.toFixed(2)
-      //  }
-      //  console.log('timestamp:', this.expires, timestamp)
-      // } else { // proposal 'empty' or 'erased'
-      //  this.activeProposal = false // no active proposal
-      //  this.expiration_timer = 0.0
-      //  console.log('isProActive this.propaccount', this.propaccount)
-      // }
     },
     breset () { // safely removes active proposal from backend
       this.submitData.currentAccountName = this.accountName
@@ -435,7 +419,22 @@ export default {
         locked: false
       }
     }
-  } // methods
+  }, // methods
+  watch: { // TODO CHANGE
+    isAuthenticated: {
+      immediate: true,
+      handler: function (val) {
+        if (val && this.accountName) {
+          // this.getVIPs()
+          // this.getAccountInfo()
+          // this.getActionProposal()
+        }
+        if (val && this.$route.query.returnUrl) {
+          this.$router.push({ path: this.$route.query.returnUrl })
+        }
+      }
+    }
+  }
 }
 </script >
 

@@ -65,14 +65,14 @@ const menuList = [
     image: [require('../assets/Proposal.png')],
     label: 'Proposal',
     separator: true,
-    route: '/proposal',
+    route: '/propintermed', // go first to intermediate page which will recognize proposal status before going to Proposal.vue page
     show: true
   },
   {
     image: [require('../assets/Vote1.png')],
     label: 'Vote',
     separator: true,
-    route: '/vote',
+    route: '/voteintermed', // go first to intermediate page which will recognize proposal status before going to Vote.vue page
     show: true
   },
   {
@@ -188,7 +188,7 @@ export default {
         this.onSelectMenu(menuList[0])
       }
     },
-    async getVIPs () {
+    async getVIPs () { // this is called only once after new login to recognize account type logged in.
       try { // happy path
         const result = await this.getwhitelistTable()
         console.log('result', result) // Only used to cancel 'not used' error for result. Keep.

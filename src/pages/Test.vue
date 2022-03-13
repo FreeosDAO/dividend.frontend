@@ -15,7 +15,9 @@
         </table>
       </div>
       <div>
-        <h6>{{this.v_string}} current</h6> - <u>This version start new branch</u> &nbsp; <b style="color:#4fa9e9">'io-changes'</b> &nbsp; reflecting input/output changes to remove display update delays
+        <h6>{{this.v_string}} current</h6> - Added intermediate (prefetching) pages propintermed and voteintermed to verify
+        proposal status.
+        <h6>v0.97</h6><u>This version start new branch</u> &nbsp; <b style="color:#4fa9e9">'io-changes'</b> &nbsp; reflecting input/output changes to remove display update delays
         and flickering. <br>Primary change: Type (VIP or other) of logged in account is verified at the very beginning.
         Pages inappropriate for the current user doesn't appear on the screen (E.g. proposal page is not displayed
         for voter, etc.)<br>

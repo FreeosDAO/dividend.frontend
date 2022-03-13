@@ -1,7 +1,7 @@
-export default () => ({
-  isVoted: false, // todo ??
-  isProposalVoted: false, // Proposal was already voted by one voter ...
-  alreadyVoted: '', // ... this is a name who already voted.
+export default () => ({ // Data Dictionary
+  isVoted: false, // todo ?? remove?
+  isProposalActive: '', // Indicator of Active Proposal resides in backend. Used by Proposal and Vote pages as
+  // primary indicator controlling a whole page. Note: 'proposalActiveHere' is used locally for both pages.
   // used for initial recognition of the user (proposer, voter, other?). The drawer menu is based on these data
   Whitelist: {
     whitelistInfo: [
@@ -10,12 +10,14 @@ export default () => ({
       { idno: 1, user: '', vote: 0 }
     ]
   },
-  voterName1: '',
-  voterName2: '',
+  // In: Vote.vue
+  alreadyVoted: '', // Name who already voted. todo refactor to whoAlreadyVoted
+  isProposalVoted: false, // Proposal was already voted by one voter.
+  voterName1: '', // Voter names taken from the whitelist table.
+  voterName2: '', // ...
   // ===
   accountName: null, // used by Wallet
   //
-  // autoLogout: false, // Automatic logout at the end of each page - not used yet todo remove
   connecting: false,
   userType: 0, // 1- proposer, 2,3 - voters, 4 - other
   path: '/',
@@ -30,7 +32,7 @@ export default () => ({
   proposalInfo: {
     proposalInfo: {
       key: '',
-      eosaccount: 'empty', // TODO verify text or just null!!!
+      eosaccount: 'empty', // TODO verify text or just null!!! Should be ''.
       roi_target_cap: '',
       proposal_percentage: '',
       locked: '',

@@ -182,3 +182,22 @@ export async function refreshWhitelist (state) {
   }
   state.commit('WhitelistAttr', val) // (Ref. see mutations line 117)
 }
+
+// verify is proposal active or not, give back result in isProposalActive
+// used by the Proposal.vue and Vote.vue for initial assessment when
+// initial entry to any of these pages.
+export async function verifyProposalActive (state) {
+  const result = await connect({
+    json: true,
+    code: process.env.APP_NAME,
+    scope: process.env.APP_NAME,
+    table: 'proposals',
+    limit: -1
+  })
+  const val = {
+    key: 'proposalInfo',
+    value: result.rows[0]
+  }
+  state.commit('verifyProposalStatus', val)
+  console.log('verifyProposalStatus inside actions.js')
+}
