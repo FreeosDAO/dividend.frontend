@@ -85,6 +85,7 @@ export const WhitelistAttr = function (state, payload) {
 } // keep
 
 // Verification is proposal active, on a basis of the backend proposal data.
+// This run with interval setup by MainLayout.
 export const verifyProposalStatus = function (state, payload) {
   const attr = payload.key
   const val = payload.value
@@ -94,11 +95,13 @@ export const verifyProposalStatus = function (state, payload) {
   // If it is in valid time frame that means is active.
   const expires = (val.expires_at * 1000) // normalize UTC formats
   const timestamp = Date.now()
-  if (timestamp > expires) {
-    state.isProposalActive = false // no active proposal
+  if (timestamp < expires) {
+    state.isProposalActive = true // active proposal exists
+    // todo timer should be displayed
+    //
     // console.log('isProActive expired_at', this.expires_at)
-  } else {
-    state.isProposalActive = true // active proposal
+  } else { // timestamp >= expires
+    state.isProposalActive = false // NO active proposal
   }
 } // isProposalActive must be caught at the beginning in Proposal and Vue
 // pages to determine initial way of processing. Use getter.
