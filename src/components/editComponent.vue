@@ -112,13 +112,13 @@
         <!-- todo remove <q-btn outline class="q-ma-lg uxblue" no-caps @click="submit()" label="Submit" :disable="!isFormFilled"/> todo -->
         <!-- Submit Button Service -->
         <q-btn outline class="q-ma-lg uxblue" no-caps @click="submit()" label="Submit" :disable="!isFormFilled" />
-          <q-tooltip
+          <q-tooltip  v-if="!isFormFilled"
             transition-show="scale"
             transition-hide="scale"
             content-class="uxdialog"
             class="q-ma-sm text-subtitle2"
           >
-            <div>text</div>
+            <div> Form is not filled up.</div>
           </q-tooltip>
         </div>
         <!-- end of Submit Button service -->
@@ -130,7 +130,6 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
-
 export default {
   name: 'editComponent',
   data () {
@@ -153,13 +152,20 @@ export default {
       console.log('TOKEN: ', `${parseFloat(this.submitData.threshold).toFixed(process.env.TOKEN_PRECISION)} ${process.env.TOKEN_NAME}`)
       this.submitData.currentAccountName = this.accountName
       console.log('PROPOSAL DATA=', this.submitData)
-      this.proposalNew(this.submitData)
-      // this.getActionProposal() // updates info on proposal
-      this.resetForm()
-      // this.activeProposal = true // temporary update activeProposal before be updated by backend reading each 30s.
-      // this.submitData.cap = this.roi_target_cap // Necessary for passive screen display when in non-edit mode.
+      // this.proposalNew(this.submitData) // TODO (this is async!!!)
       // this.$router.push('/propintermed')
-    }
+      console.log('propintermed submit end')
+      this.proposalNew(this.submitData)
+        .then(() => {
+          // callback function after success call to the server
+          console.log('propintermed in then !!!')
+          this.$router.push('/propintermed')
+        })
+        .catch(() => {
+          // error callback function
+          console.log('propintermed callback error !!!')
+        })
+    } // closes submit
   }, // closes methods
   computed: {
     ...mapState({
@@ -171,6 +177,10 @@ export default {
       else a = ((this.submitData.percentage > 0) && (this.submitData.threshold > 0))
       return a
     },
+    // changeRoute (route) { // TODO
+    // // `route` is either a string or object
+    // return this.$router.push(route)
+    // },
     conditions () {
       // exists active proposal on backend
       const result = this.activeProposal

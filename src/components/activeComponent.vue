@@ -62,7 +62,7 @@
           </div>
         </div>
         <!-- Threshold conditional section -->
-        <div v-if="submitData.cap!==1"> cap &nbsp;{{submitData.cap}}
+        <div v-if="roi_target_cap!==1"> cap &nbsp;{{roi_target_cap}}
           <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
             <div class="col-xs-5 col-sm-4 text-left">
               Threshold Point
@@ -73,7 +73,7 @@
           </div>
         </div>
         <!-- rates_left conditional section -->
-        <div v-if="submitData.cap===1">cap &nbsp;{{submitData.cap}}
+        <div v-if="roi_target_cap===1">cap &nbsp;{{roi_target_cap}}
           <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
             <div class="col-xs-5 col-sm-4 text-left">
               Iterations to pay
@@ -84,7 +84,7 @@
           </div>
         </div>
         <!-- locked conditional section -->
-        <div v-if="submitData.cap===3">
+        <div v-if="roi_target_cap===3">
           <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
             <div class="col-xs-5 col-sm-4 text-left">
               Locked
@@ -104,15 +104,59 @@
       <!-- === END OF DATA DISPLAY PART PART === -->
       <div class="flex justify-center">
         <!-- todo 'proposal cancel' button here -->
+        <q-btn outline no-caps label="Cancel Proposal" class="uxblue" @click="dialogreset = true"></q-btn>
       </div>
     </q-card-section>
-    <div class="q-ma-lg"> Active Proposal expire in: &nbsp; &nbsp; {{expiration_timer}}</div>
+    <div class="q-ma-lg"> Active Proposal expire in: &nbsp; &nbsp; {{expiration_timer}}</div> <!-- todo expiration -->
   </q-card>
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex'
+
 export default {
-  name: 'activeComponent'
+  name: 'activeComponent',
+  data () {
+    return {
+      dialogreset: false,
+      expiration_timer: 0
+      // for display only
+      // currentAccountName: '',
+      // eosaccount: null,
+      // cap: 1,
+      // percentage: 0.0,
+      // threshold: 0,
+      // ratesleft: 0,
+      // locked: false
+    } // closes return
+  }, // closes data
+  computed: {
+    ...mapState({ // these values are displayed on the screen as active proposal
+      accountName: state => state.account.accountName,
+      propaccount: state => state.account.proposalInfo.proposalInfo.eosaccount, // account 'inside proposal'
+      // value: state => state.analytics.circInfo, // todo remove
+      // progress1: state => state.analytics.progress1,
+      // progress2: state => state.analytics.progress2,
+      // progressLabel1: state => state.analytics.progressLabel1,
+      // progressLabel2: state => state.analytics.progressLabel2,
+      roi_target_cap: state => state.account.proposalInfo.proposalInfo.roi_target_cap,
+      proposal_percentage: state => state.account.proposalInfo.proposalInfo.proposal_percentage,
+      locked: state => state.account.proposalInfo.proposalInfo.locked,
+      expires_at: state => state.account.proposalInfo.proposalInfo.expires_at, // prefetched by page
+      threshold: state => state.account.proposalInfo.proposalInfo.threshold,
+      rates_left: state => state.account.proposalInfo.proposalInfo.rates_left,
+      // Delivered by the VerifyProposalActive in actions.js line 189, called in propintermed.vue line 25/
+      isProposalActive: state => state.account.isProposalActive // prefetched once by propintermed page
+    })
+  },
+  methods: {
+    ...mapActions('proposal', ['proposalRemove']),
+    breset () { // safely removes active proposal from backend
+      this.proposalRemove(this.accountName)
+      this.dialogreset = false
+      this.$router.push('/propintermed') // start from prefetch-proposal page todo does it work??
+    }
+  }
 }
 </script>
 

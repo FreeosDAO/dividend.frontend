@@ -24,8 +24,19 @@ import { mapActions } from 'vuex'
 export default {
   name: 'propintermed',
   created () {
+    // this.verifyProposalActive() // todo it should be also reading current proposal data at the same time
     this.verifyProposalActive()
-    this.$router.push('/proposal')
+      .then(() => {
+        // callback function after success call to the server
+        console.log('propintermed in verifyProposalActive !!!')
+        this.$router.push('/proposal')
+      })
+      .catch(() => {
+        // error callback function
+        console.log('propintermed callback error !!!')
+      })
+    // this.$router.push('/proposal')
+    console.log('-propintermed-')
   },
   methods: {
     ...mapActions('account', ['verifyProposalActive'])

@@ -36,7 +36,7 @@
           <q-separator color="blue"></q-separator>
           <!--  unlock dialog  -->
           <div class="row items-center q-gutter-sm">
-            <q-btn outline no-caps label="Cancel Proposal" class="uxblue" @click="dialogreset = true"></q-btn>
+
             <q-btn outline no-caps label="Unlock NFT" class="uxblue" @click="dialog = true"></q-btn>
             <q-btn outline no-caps label="NFT List" class="uxblue" @click="$router.push('/customer')"></q-btn>
             <q-btn outline no-caps label="Analytics" class="uxblue" @click="$router.push('/analytics')"></q-btn>
@@ -104,7 +104,6 @@ export default {
       activeProposal: this.isProposalActive, // Setup by 'VerifyProposalActive' in 'action.js' line 189. This is main
       // indicator of active proposal on this page. If false - no proposal active.
       expiration_timer: 0.0, // clock
-      isProposerActive: false, // is set up by local function (not Vuex) // todo verify is required
       submitData1: {
         NFTAccountName: '',
         nftKey: null
@@ -125,7 +124,6 @@ export default {
       console.log('in Proposal')
     }, 30000) // call each 30 sec after the tests
     document.addEventListener('beforeunload', this.handler)
-    this.isProposer()
   },
   beforeDestroy () {
     clearInterval(this.setIntervalId)
@@ -134,22 +132,21 @@ export default {
     ...mapState({
       accountName: state => state.account.accountName,
       propaccount: state => state.account.proposalInfo.proposalInfo.eosaccount, // account 'inside proposal'
-      value: state => state.analytics.circInfo,
+      value: state => state.analytics.circInfo, // todo ??
       progress1: state => state.analytics.progress1,
       progress2: state => state.analytics.progress2,
       progressLabel1: state => state.analytics.progressLabel1,
       progressLabel2: state => state.analytics.progressLabel2,
-      roi_target_cap: state => state.account.proposalInfo.proposalInfo.roi_target_cap,
-      proposal_percentage: state => state.account.proposalInfo.proposalInfo.proposal_percentage,
-      locked: state => state.account.proposalInfo.proposalInfo.locked,
-      expires_at: state => state.account.proposalInfo.proposalInfo.expires_at, // prefetched by page
-      threshold: state => state.account.proposalInfo.proposalInfo.threshold,
-      rates_left: state => state.account.proposalInfo.proposalInfo.rates_left,
-      accrued: state => state.account.proposalInfo.proposalInfo.accrued,
+      // roi_target_cap: state => state.account.proposalInfo.proposalInfo.roi_target_cap, // todo remove start
+      // proposal_percentage: state => state.account.proposalInfo.proposalInfo.proposal_percentage,
+      // locked: state => state.account.proposalInfo.proposalInfo.locked,
+      // expires_at: state => state.account.proposalInfo.proposalInfo.expires_at, // prefetched by page
+      // threshold: state => state.account.proposalInfo.proposalInfo.threshold,
+      // rates_left: state => state.account.proposalInfo.proposalInfo.rates_left, // todo remove end
       // Delivered by the VerifyProposalActive in actions.js line 189, called in propintermed.vue line 25/
       isProposalActive: state => state.account.isProposalActive // prefetched once by propintermed page
     }),
-    comp () {
+    comp () { // Components switching
       console.log('comp is.ProposalActive', this.isProposalActive)
       if (this.isProposalActive) {
         return activeComponent
@@ -160,7 +157,7 @@ export default {
     // ...mapGetters('account', ['isProposalActive']),
   },
   methods: {
-    ...mapActions('proposal', ['proposalNew', 'proposalRemove', 'actionUnlockNFT']),
+    ...mapActions('proposal', ['proposalNew', 'actionUnlockNFT']),
     ...mapActions('account', ['getActionProposal']),
     submit1 () {
       this.submitData1.NFTAccountName = this.accountName
@@ -180,18 +177,10 @@ export default {
         console.log('isProActive expired_at', this.expires_at, 'no active proposal') // todo it is misguiding
       } else { // timestamp <= this.expires current time below expiration time
         this.activeProposal = true // active proposal exists on backend
-        this.submitData.cap = this.roi_target_cap // Necessary for passive screen display when in non-edit mode.
+        // this.submitData.cap = this.roi_target_cap // Necessary for passive screen display when in non-edit mode.
         this.expiration_timer = (this.expires - timestamp) / 60000 // display in minutes and parts of minutes todo change to seconds
         this.expiration_timer = this.expiration_timer.toFixed(2) // todo change to seconds
       }
-    },
-    breset () { // safely removes active proposal from backend
-      this.submitData.currentAccountName = this.accountName
-      this.proposalRemove(this.accountName)
-      // this.getActionProposal() // todo verify
-      // this.activeProposal = false // temporary update activeProposal before be updated from backend each 30s.
-      this.dialogreset = false // todo not clear usage
-      this.$router.push('/propintermed')
     },
     resetForm () {
       this.submitData = {
