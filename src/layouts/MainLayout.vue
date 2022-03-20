@@ -142,7 +142,9 @@ export default {
       this.getEwsTable()
       this.getByUserTotal()
       this.checkIfLoggedIn()
-      this.getActionProposal()
+      this.getActionProposal() // required also for sense finished voting condition (proposal finished by ...
+      // ... nft creation. // read it when needed in proposal and vote but also periodically here. Required ...
+      // ... by the Proposal and Vote pages to sense complete voting.
       this.refreshWhitelist() // refresh isProposalVoted status.
       // Count current bar values
       this.progress1 = this.value

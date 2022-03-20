@@ -34,7 +34,9 @@ export async function proposalNew ({ state }, data) {
       message: responseMessage,
       color: 'positive'
     })
-    return result
+    console.log('await action insert proposal')
+    await this.$router.push('/propintermed') // re-routing - switch proposal page to active mode.
+    return result // not used
   } catch (e) {
     console.log(e)
     return e
@@ -59,13 +61,12 @@ export async function proposalRemove ({ state }, currentAccountName) {
     let responseMessage = result.processed.action_traces[0].console
     if (!responseMessage) {
       responseMessage = 'Proposal removed successfully'
-      this.setProposalAct('false')
+      // this.setProposalAct('false') todo remove
     }
-    Notify.create({
-      message: responseMessage,
-      color: 'positive'
-    })
-    return result
+    console.log('await action remove proposal')
+    Notify.create({ message: responseMessage, color: 'positive' })
+    await this.$router.push('/propintermed') //
+    return result // not used
   } catch (e) {
     console.log(e)
     return e
@@ -156,7 +157,7 @@ export async function actionUnlockNFT ({ state }, data) {
 }
 
 // export function setProposalActive ({ commit }, active) { // TODO purpose?
-//  commit('setProposalAct', active)
+//  commit('setProposalAct', active) // todo remove
 // }
 
 // // cleanup postbox trigger in 'divpropdel'. Used by '2nd voter solver' only.

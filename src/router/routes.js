@@ -8,6 +8,7 @@ const routes = [
       // { path: '/propinter', component: () => import('propintermed.vue') },
       { path: '/voteintermed', component: () => import('pages/voteintermed.vue') },
       { path: '/proposal', component: () => import('pages/Proposal.vue') },
+      { path: '/vote', component: () => import('pages/Vote.vue') },
       { path: '/customer', component: () => import('pages/Customer.vue') },
       { path: '/analytics', component: () => import('pages/Analytics.vue') },
       { path: '/test', component: () => import('pages/Test.vue') }

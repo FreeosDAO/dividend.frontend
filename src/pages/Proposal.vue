@@ -83,8 +83,6 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-// import editComponent from '../components/editComponent.vue'
-// import activeComponent from '../components/activeComponent.vue'
 const activeComponent = () => import('../components/activeComponent.vue')
 const editComponent = () => import('../components/editComponent.vue')
 // let activeProposal
@@ -100,7 +98,7 @@ export default {
       // comp: '',
       dialog: false,
       dialogreset: false,
-      dialoginfo: false, // todo remove
+      // dialoginfo: false, // todo remove
       activeProposal: this.isProposalActive, // Setup by 'VerifyProposalActive' in 'action.js' line 189. This is main
       // indicator of active proposal on this page. If false - no proposal active.
       expiration_timer: 0.0, // clock
@@ -116,23 +114,23 @@ export default {
       isShowFailedDialog: false
     }
   },
-  created () {
-    this.isProActive() // todo remove??
-    this.setIntervalId = setInterval(() => { // todo interval not needed remove??
-      // this.getActionProposal() // call in layout is enough - reads active proposal data
-      // this.isProActive() // todo this is temporarily locked - remove??
-      console.log('in Proposal')
-    }, 30000) // call each 30 sec after the tests
-    document.addEventListener('beforeunload', this.handler)
-  },
-  beforeDestroy () {
-    clearInterval(this.setIntervalId)
-  },
+  // created () {
+  // this.isProActive() // todo remove??
+  // this.setIntervalId = setInterval(() => { // todo interval not needed remove??
+  // // this.getActionProposal() // call in layout is enough - reads active proposal data
+  // // this.isProActive() // todo this is temporarily locked - remove??
+  // console.log('in Proposal')
+  // }, 30000) // call each 30 sec after the tests
+  // document.addEventListener('beforeunload', this.handler)
+  // },
+  // beforeDestroy () {
+  // clearInterval(this.setIntervalId)
+  // },
   computed: {
     ...mapState({
       accountName: state => state.account.accountName,
       propaccount: state => state.account.proposalInfo.proposalInfo.eosaccount, // account 'inside proposal'
-      value: state => state.analytics.circInfo, // todo ??
+      // value: state => state.analytics.circInfo, // todo ??
       progress1: state => state.analytics.progress1,
       progress2: state => state.analytics.progress2,
       progressLabel1: state => state.analytics.progressLabel1,
@@ -144,9 +142,9 @@ export default {
       // threshold: state => state.account.proposalInfo.proposalInfo.threshold,
       // rates_left: state => state.account.proposalInfo.proposalInfo.rates_left, // todo remove end
       // Delivered by the VerifyProposalActive in actions.js line 189, called in propintermed.vue line 25/
-      isProposalActive: state => state.account.isProposalActive // prefetched once by propintermed page
+      isProposalActive: state => state.account.isProposalActive //
     }),
-    comp () { // Components switching
+    comp () { // Components switching - nothing else seems to be not needed todo note this :)
       console.log('comp is.ProposalActive', this.isProposalActive)
       if (this.isProposalActive) {
         return activeComponent

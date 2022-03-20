@@ -24,8 +24,9 @@ import { mapActions } from 'vuex'
 export default {
   name: 'propintermed',
   created () {
-    // this.verifyProposalActive() // todo it should be also reading current proposal data at the same time
-    this.verifyProposalActive()
+    // todo it should be also reading current proposal data at the same time
+    // this.verifyProposalActive() // Note: It is replaced by:
+    this.getActionProposal() // Ref: account/actions.js line 174
       .then(() => {
         // callback function after success call to the server
         console.log('propintermed in verifyProposalActive !!!')
@@ -39,7 +40,7 @@ export default {
     console.log('-propintermed-')
   },
   methods: {
-    ...mapActions('account', ['verifyProposalActive'])
+    ...mapActions('account', ['getActionProposal'])
   }
 }
 </script>

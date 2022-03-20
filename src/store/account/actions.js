@@ -95,23 +95,6 @@ export function getInfo (state) { // todo why is this used? rationale?
   state.dispatch('getActionProposal')
 }
 
-// retrieve current proposal info from the backend
-export async function getActionProposal (state) {
-  const result = await connect({
-    json: true,
-    code: process.env.APP_NAME,
-    scope: process.env.APP_NAME,
-    table: 'proposals',
-    limit: -1
-  })
-  const val = {
-    key: 'proposalInfo',
-    value: result.rows[0]
-  }
-  state.commit('setProposalAttrVal', val)
-  console.log('getActionProposal inside actions.js')
-}
-
 export const setpath = function ({ commit }, pathe) {
   console.log(this.$route.fullPath)
   console.log('whatever', pathe)
@@ -180,13 +163,15 @@ export async function refreshWhitelist (state) {
     // key: accountName,
     value: result.rows
   }
-  state.commit('WhitelistAttr', val) // (Ref. see mutations line 117)
+  state.commit('WhitelistAttr', val) // (Ref. see mutations line 60)
 }
 
+// retrieve current proposal info from the backend
+// (covers former verifyProposalStatus)
 // verify is proposal active or not, give back result in isProposalActive
 // used by the Proposal.vue and Vote.vue for initial assessment when
 // initial entry to any of these pages.
-export async function verifyProposalActive (state) {
+export async function getActionProposal (state) {
   const result = await connect({
     json: true,
     code: process.env.APP_NAME,
@@ -198,6 +183,6 @@ export async function verifyProposalActive (state) {
     key: 'proposalInfo',
     value: result.rows[0]
   }
-  state.commit('verifyProposalStatus', val)
-  console.log('verifyProposalStatus inside actions.js')
+  state.commit('setProposalAttrVal', val) // Ref: mutations.js line:
+  console.log('getActionProposal - inside actions.js')
 }

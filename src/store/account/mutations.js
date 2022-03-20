@@ -29,19 +29,6 @@ export const setPath = function (state, pathe) {
   state.path = pathe
 }
 
-// Places active proposal data from backend to state.
-export const setProposalAttrVal = function (state, payload) {
-  const attr = payload.key
-  const val = payload.value
-  // console.log('proposal', val) // test
-  state.proposalInfo[attr] = val
-  const formattedPercentage = val.proposal_percentage
-  let percentage = parseFloat(formattedPercentage)
-  percentage = percentage.toFixed(2)
-  state.proposalInfo.proposalInfo.proposal_percentage = percentage // Vuex store keeps formatted percentage value.
-  // console.log('proposal percentage %%', percentage) // test
-}
-
 // Identify the account name of the proposer and store it
 // Identify names of the voters and store it
 // Note: This is necessary as records in whitelist table may be in any order
@@ -69,7 +56,8 @@ export const showModal = function (state) {
   state.isMessage = true
 }
 
-// Finding who voted yet for proposal. Used for block voting if user already voted.
+// Finding who voted yet for proposal. Used for component switching.
+// Ref: account/actions.js line 166.
 export const WhitelistAttr = function (state, payload) {
   // const attr = payload.key
   const val = payload.value
@@ -77,8 +65,8 @@ export const WhitelistAttr = function (state, payload) {
   state.isProposalVoted = false
   for (let i = 0; i < 3; i++) {
     if (val[i].vote !== 0) { // This should happen only once in a whole loop.
-      state.isProposalVoted = true
-      state.alreadyVoted = val[i].user // Find who voted for proposal
+      state.isProposalVoted = true // Fact that proposal was voted by someone.
+      state.alreadyVoted = val[i].user // Who voted for the proposal.
     }
   }
   console.log('after for', state.isVoted, 'already voted', state.alreadyVoted)
@@ -86,22 +74,36 @@ export const WhitelistAttr = function (state, payload) {
 
 // Verification is proposal active, on a basis of the backend proposal data.
 // This run with interval setup by MainLayout.
-export const verifyProposalStatus = function (state, payload) {
+// export const verifyProposalStatus = function (state, payload) { TODO remove ??
+// } TODO remove ??
+// isProposalActive must be caught at the beginning in Proposal and Vue
+// pages to determine initial way of processing. Use getter.
+
+// Places active proposal data from backend to state.
+export const setProposalAttrVal = function (state, payload) {
   const attr = payload.key
   const val = payload.value
   // console.log('proposal', val) // test
   state.proposalInfo[attr] = val
+  const formattedPercentage = val.proposal_percentage
+  let percentage = parseFloat(formattedPercentage)
+  percentage = percentage.toFixed(2)
+  state.proposalInfo.proposalInfo.proposal_percentage = percentage // Vuex store keeps formatted percentage value.
+  // console.log('proposal percentage %%', percentage) // test
   // Compare with current time to know the proposal status.
-  // If it is in valid time frame that means is active.
+  // If it is in valid time frame means active.
   const expires = (val.expires_at * 1000) // normalize UTC formats
   const timestamp = Date.now()
+  console.log('timer', timestamp, expires, 'difference', (expires - timestamp))
   if (timestamp < expires) {
     state.isProposalActive = true // active proposal exists
-    // todo timer should be displayed
-    //
-    // console.log('isProActive expired_at', this.expires_at)
+    // TODO count minutes and seconds
+    // state.timer = ((expires - timestamp) / 60000).toFixed(2)
+    const minutes = Math.floor((expires - timestamp) / 60000)
+    state.timer = minutes
+    console.log('timer in mutations', minutes)
   } else { // timestamp >= expires
     state.isProposalActive = false // NO active proposal
+    state.timer = 0
   }
-} // isProposalActive must be caught at the beginning in Proposal and Vue
-// pages to determine initial way of processing. Use getter.
+}

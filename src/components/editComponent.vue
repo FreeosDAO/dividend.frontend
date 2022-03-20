@@ -152,19 +152,16 @@ export default {
       console.log('TOKEN: ', `${parseFloat(this.submitData.threshold).toFixed(process.env.TOKEN_PRECISION)} ${process.env.TOKEN_NAME}`)
       this.submitData.currentAccountName = this.accountName
       console.log('PROPOSAL DATA=', this.submitData)
-      // this.proposalNew(this.submitData) // TODO (this is async!!!)
-      // this.$router.push('/propintermed')
       console.log('propintermed submit end')
-      this.proposalNew(this.submitData)
-        .then(() => {
-          // callback function after success call to the server
-          console.log('propintermed in then !!!')
-          this.$router.push('/propintermed')
-        })
-        .catch(() => {
-          // error callback function
-          console.log('propintermed callback error !!!')
-        })
+      this.proposalNew(this.submitData) // Note: This re-route at the end to the propintermed.
+      // .then(() => { // TODO - not required - remove ???
+      // console.log('propintermed in then !!!')
+      // this.$router.push('/propintermed')
+      // })
+      // .catch(() => {
+      // // error callback function
+      // console.log('propintermed callback error !!!')
+      // }) // todo end of removal
     } // closes submit
   }, // closes methods
   computed: {
