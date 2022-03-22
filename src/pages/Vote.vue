@@ -85,7 +85,8 @@ export default {
       progressLabel2: state => state.analytics.progressLabel2,
       // Does anybody already voted?
       alreadyVotedName: state => state.account.alreadyVoted, // name who already voted Ref: mutations.js line 69.
-      isProposalVoted: state => state.account.isProposalVoted // if true proposal was voted one voter with name above
+      isProposalVoted: state => state.account.isProposalVoted, // if true proposal was voted one voter with name above
+      isProposalActive: state => state.account.isProposalActive //
     }),
     // - Components Control -
     voteComponent () { // Components switching - nothing else needed todo note this :)
@@ -93,11 +94,14 @@ export default {
       console.log('comp alreadyVotedName', this.alreadyVotedName)
       if (this.isProposalActive) {
         if ((this.isProposalVoted) && (this.alreadyVotedName === this.accountName)) { // (2) you already voted
+          console.log('--- vote_waitOthers ---')
           return waitOthers
         } else { // (1) you can vote, proposal is active
+          console.log('--- vote_Open ---')
           return voteOpen
         }
       } else { // (3) no proposal
+        console.log('--- vote_NoProp ---')
         return voteNoProp
       }
     } // end of function

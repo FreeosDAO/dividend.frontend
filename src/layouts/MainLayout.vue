@@ -164,6 +164,7 @@ export default {
     }, 30000) // call each 30 sec after the tests
     // document.addEventListener('beforeunload', this.handler)
     this.checkIfLoggedIn()
+    this.getwhitelistTable() // Do not touch. Required for percentage displays on each page.
     this.version = process.env.V_STRING
   },
   beforeDestroy () {

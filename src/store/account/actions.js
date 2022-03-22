@@ -151,6 +151,7 @@ export async function getwhitelistTable (state) {
 
 //
 // retrieve whitelist to find it was voted (for screen functions)
+// TODO Note: Where is call for it? Line 148 in MainLayout.
 export async function refreshWhitelist (state) {
   const result = await connect({
     json: true,

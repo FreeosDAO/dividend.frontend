@@ -1,6 +1,7 @@
 
 <template>
   <!--  View with no proposal -->
+  <!-- TODO What is going on if there is a proposal when this component is active? -->
   <div>
   <div class="q-pa-md">
     <div class="q-gutter-y-md q-mx-auto" style="max-width: 600px">
@@ -35,46 +36,27 @@ export default {
   data () {
     return {
       // Screen Controlling Variables:
-      isProposalExpired: false, // if true the proposal is expired or canceled - (Setup by local function)
+      // todo What should be removed?
+      // isProposalExpired: false, // if true the proposal is expired or canceled - (Setup by local function) todo
       // end
-      value: 1,
-      meVoted: false,
-      timestamp: '',
-      displayed_percentage: 0.0,
-      expires: '', // normalised (UTC) expiration time for proposal
-      tab: 'send',
-      expiration_timer: '',
-      submitData: {
-        currentAccountName: '', // used to submit current voter name
-        toVote: 0 // current vote 1 - accepted 2 -refused.
-      },
-      voteresult: false,
-      isShowApprovedDialog: false,
-      isShowFailedDialog: false
+      // value: 1,
+      // meVoted: false, todo
+      // timestamp: '',
+      // displayed_percentage: 0.0
+      // expires: '', // normalised (UTC) expiration time for proposal
+      // tab: 'send',
+      // expiration_timer: '', todo
+      // submitData: {
+      // currentAccountName: '', // used to submit current voter name // todo
+      // toVote: 0 // current vote 1 - accepted 2 -refused. // todo
+      // },
+      // voteresult: false,
+      // isShowApprovedDialog: false,
+      // isShowFailedDialog: false
     }
   },
-  created () {
-    /* TODO Two functions must be active 'isCurrentProposalActive with reading primary data of active
-         proposal. and Monitoring whitelist table. REWRITE BELOW.
-         First line is already read when enter from voteintermed.
-     */
-    // this.getActionProposal() // retrieve current proposal info from the backend - actions.js line 96
-    this.isProposalActive() // local call in methods
-    // this.refreshWhitelist() // refresh isProposalVoted status.
-    this.setIntervalId = setInterval(() => {
-      // this.getActionProposal() // this set up 'activeProposal' and 'expiration_timer' values
-      // this.refreshWhitelist() // refresh isProposalVoted.
-      // this.isProposalActive() // todo commented for blink testing - remove comment after tests
-    }, 30000) // call each 30 seconds then
-    document.addEventListener('beforeunload', this.handler)
-    this.update()
-  },
-  beforeDestroy () {
-    clearInterval(this.setIntervalId)
-  },
-  // mounted () {
-  // this.update()
-  // },
+  // TODO NOTE: this.getActionProposal() is called in MainLayout.vue ...
+  // todo ... isProposalActive is observed by the parent vote.vue.
   computed: {
     ...mapState({
       accountName: state => state.account.accountName, // this is logged in account of the current voter
@@ -85,13 +67,7 @@ export default {
   methods: {
     ...mapActions('proposal', ['actionProposalVote']),
     ...mapActions('account', ['getActionProposal', 'refreshWhitelist']), // todo refresh whitelist may be not required
-    ...mapActions('analytics', ['getByUserTotal', 'getEwsTable']),
-    // ...mapMutations('account', ['hideModal']), // todo what hideModal is doing?
-    update () {
-      this.getEwsTable()
-      this.getByUserTotal()
-      // this.displayed_percentage = this.proposal_percentage.toFixed(2)
-    }
+    ...mapActions('analytics', ['getByUserTotal', 'getEwsTable'])
   }
 }
 </script>

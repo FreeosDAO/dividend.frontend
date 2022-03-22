@@ -7,137 +7,117 @@
   then 'You can submit your vote'.
   -->
   <div>
-  <div class="q-pa-md">
-    <div class="q-gutter-y-md q-mx-auto" style="max-width: 600px">
-      <q-card flat class="uxblue"
-    >
-      <div class="flex justify-center">
-      <q-card-section>
-        <div class="text-h5 text-center">
-          <span>Vote NFT Proposal</span></div>
-        <div class="q-ma-lg uxblue" v-if="true"> Proposal expire in:&nbsp;{{expiration_timer}} min.</div>
-            <div>
-              <!--  -->
-              <div style="align-items: center;" class="row justify-left q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
-                <div class="col-xs-5 col-sm-4 text-left">
-                  <!-- Policy cap -->
-                </div>
-                <div class="col-xs-1 col-sm-2"></div>
-                <div class="col-xs-7 col-sm-7">
-                  <q-btn-toggle no-caps flat
-                    toggle-color="white"
-                    v-model="roi_target_cap"
-                    :options="[
+    <div class="q-pa-md">
+      <div class="q-gutter-y-md q-mx-auto" style="max-width: 600px">
+        <q-card flat class="uxblue"
+        >
+          <div class="flex justify-center">
+            <q-card-section>
+              <div class="text-h5 text-center">
+                <span>Vote NFT Proposal</span></div>
+              <div class="q-ma-lg uxblue"> Proposal expire in:&nbsp;{{expiration_timer}} min.</div>
+              <div>
+                <!--  -->
+                <div style="align-items: center;" class="row justify-left q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
+                  <div class="col-xs-5 col-sm-4 text-left">
+                    <!-- Policy cap -->
+                  </div>
+                  <div class="col-xs-1 col-sm-2"></div>
+                  <div class="col-xs-7 col-sm-7">
+                    <q-btn-toggle no-caps flat
+                                  toggle-color="white"
+                                  v-model="roi_target_cap"
+                                  :options="[
                       {label: 'WayFinder', value: 1},
                       {label: 'WayFarer', value: 2},
                       {label: 'WayFounder', value: 3}
                     ]"
-                  ></q-btn-toggle>
+                    ></q-btn-toggle>
+                  </div>
                 </div>
-              </div>
-              <!-- eosaccount section -->
-              <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
-                <div class="col-xs-5 col-sm-4 text-left">
-                  Account (Name)
-                </div>
-                <div class="col-xs-1 col-sm-2"></div>
-                <div class="col-xs-6 col-sm-6 uxblue">
-                    <div v-if = "!this.isProposalExpired">{{eosaccount}}</div>
-                    <div v-else> N/A </div>
-                </div>
-              </div>
-
-              <!-- Percentage Section -->
-              <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
-                <div class="col-xs-5 col-sm-4 text-left">
-                  % for the Account
-                </div>
-                <div class="col-xs-1 col-sm-2"></div>
-                <div class="col-xs-6 col-sm-6 uxblue">
-                  <div v-if = "!this.isProposalExpired">{{proposal_percentage}}</div>
-                  <div v-else> N/A </div>
-                </div>
-              </div>
-              <!-- Threshold conditional section -->
-              <div v-if="roi_target_cap!==1">
+                <!-- eosaccount section -->
                 <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
                   <div class="col-xs-5 col-sm-4 text-left">
-                  Threshold
+                    Account (Name)
+                  </div>
+                  <div class="col-xs-1 col-sm-2"></div>
+                  <div class="col-xs-6 col-sm-6 uxblue">
+                    <div>{{eosaccount}}</div>
+                  </div>
                 </div>
-                <div class="col-xs-1 col-sm-2"></div>
-                <div class="col-xs-6 col-sm-6 uxblue">
-                  <div v-if = "!this.isProposalExpired">{{threshold}}</div>
-                  <div v-else> N/A </div>
+
+                <!-- Percentage Section -->
+                <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
+                  <div class="col-xs-5 col-sm-4 text-left">
+                    % for the Account
+                  </div>
+                  <div class="col-xs-1 col-sm-2"></div>
+                  <div class="col-xs-6 col-sm-6 uxblue">
+                    <div>{{proposal_percentage}}</div>
+                  </div>
+                </div>
+                <!-- Threshold conditional section -->
+                <div v-if="roi_target_cap!==1">
+                  <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
+                    <div class="col-xs-5 col-sm-4 text-left">
+                      Threshold
+                    </div>
+                    <div class="col-xs-1 col-sm-2"></div>
+                    <div class="col-xs-6 col-sm-6 uxblue">
+                      <div>{{threshold}}</div>
+                    </div>
+                  </div>
+                </div>
+                <!-- rates_left conditional section -->
+                <div v-if="roi_target_cap===1">
+                  <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
+                    <div class="col-xs-5 col-sm-4 text-left">
+                      Rates to pay
+                    </div>
+                    <div class="col-xs-1 col-sm-2"></div>
+                    <div class="col-xs-6 col-sm-6 uxblue">
+                      <div>{{rates_left}}</div>
+                    </div>
+                  </div>
+                </div>
+                <!-- locked conditional section -->
+                <div v-if="roi_target_cap===3">
+                  <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
+                    <div class="col-xs-5 col-sm-4 text-left">
+                      Locked
+                    </div>
+                    <div class="col-xs-1 col-sm-2"></div>
+                    <div class="col-xs-6 col-sm-6">
+                      <q-toggle
+                        v-model="locked"
+                        color="red"
+                        disable
+                      ></q-toggle>
+                    </div>
+                  </div>
                 </div>
               </div>
-              </div>
-              <!-- rates_left conditional section -->
-              <div v-if="roi_target_cap===1">
-              <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
-                <div class="col-xs-5 col-sm-4 text-left">
-                  Rates to pay
-                </div>
-                <div class="col-xs-1 col-sm-2"></div>
-                <div class="col-xs-6 col-sm-6 uxblue">
-                  <div v-if = "!this.isProposalExpired">{{rates_left}}</div>
-                  <div v-else> N/A </div>
-                </div>
-              </div>
-              </div>
-              <!-- locked conditional section -->
-              <div v-if="roi_target_cap===3">
-              <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
-                <div class="col-xs-5 col-sm-4 text-left">
-                  Locked
-                </div>
-                <div class="col-xs-1 col-sm-2"></div>
-                <div class="col-xs-6 col-sm-6">
-                <q-toggle
-                  v-model="locked"
-                  color="red"
-                  disable
+              <div class="flex justify-center">
+                <q-toggle size="xl"
+                          v-model="voteresult"
+                          checked-icon="check"
+                          color="green"
+                          unchecked-icon="clear"
                 ></q-toggle>
+                <!-- white or red text above screen switch -->
+                <div v-if="voteresult" style="color :white;">ACCEPT</div>
+                <div v-else style="color :red;"><b>REJECT</b></div>
+                <!-- -->
+                <div>
+                  <q-btn outline class="q-ma-lg uxblue" no-caps @click="submit()" label="Submit Vote" />
                 </div>
               </div>
-              </div>
-            </div>
-            <div class="flex justify-center">
-               <q-toggle size="xl"
-                 v-model="voteresult"
-                 checked-icon="check"
-                 color="green"
-                 unchecked-icon="clear"
-               ></q-toggle>
-               <!-- white or red text above screen switch -->
-               <div v-if="voteresult" style="color :white;">ACCEPT</div>
-               <div v-else style="color :red;"><b>REJECT</b></div>
-               <!-- greyed submit button under certain conditions -->
-               <div v-if="!this.conditions()">
-                    <q-btn outline class="q-ma-lg uxblue" no-caps @click="submit()" label="Submit Vote" />
-                    conditions:{{this.conditions()}}
-               </div>
-               <div v-else>
-                  <q-btn class="q-ma-lg uxblue" outline disable no-caps label="Submit Vote" />
-                  <q-tooltip transition-show="scale"
-                             transition-hide="scale"
-                             content-class="uxdialog"
-                             class="q-ma-lg text-h7"
-                  >
-                      <div id="app">
-                        <h6 v-if="this.isProposalExpired">proposal expired</h6>
-                        <!-- <h6 v-else-if=></h6> -->
-                        <h6 v-else-if="this.meVoted">you already voted</h6>
-                      </div>
-                    {{this.isProposalExpired}}/{{this.meVoted}}
-                  </q-tooltip>
-               </div>
-            </div>
-      </q-card-section>
-      </div>
-    </q-card> <!-- end of component -->
+            </q-card-section>
+          </div>
+        </q-card> <!-- end of component -->
         <!--  -->
+      </div>
     </div>
-  </div>
   </div>
 </template>
 
@@ -166,28 +146,6 @@ export default {
       isShowFailedDialog: false
     }
   },
-  created () {
-    /* TODO Two functions must be active 'isCurrentProposalActive with reading primary data of active
-         proposal. and Monitoring whitelist table. REWRITE BELOW.
-         First line is already read when enter from voteintermed.
-     */
-    // this.getActionProposal() // retrieve current proposal info from the backend - actions.js line 96
-    this.isProposalActive() // local call in methods
-    // this.refreshWhitelist() // refresh isProposalVoted status.
-    this.setIntervalId = setInterval(() => {
-      // this.getActionProposal() // this set up 'activeProposal' and 'expiration_timer' values
-      // this.refreshWhitelist() // refresh isProposalVoted.
-      // this.isProposalActive() // todo commented for blink testing - remove comment after tests
-    }, 30000) // call each 30 seconds then
-    document.addEventListener('beforeunload', this.handler)
-    this.update()
-  },
-  beforeDestroy () {
-    clearInterval(this.setIntervalId)
-  },
-  // mounted () {
-  // this.update()
-  // },
   computed: {
     ...mapState({
       accountName: state => state.account.accountName, // this is logged in account of the current voter
