@@ -15,7 +15,8 @@
         </table>
       </div>
       <div>
-        <h6>{{this.v_string}} current</h6> - Used dynamic components in proposal.
+        <h6>{{this.v_string}} current</h6> - Improved and reviewed details of version 0.99. Official QA - release.
+        <h6> v0.99</h6>Used dynamic components in proposal and vote pages. Pre-QA.
         <h6>v0.98</h6>Added intermediate (prefetching) pages propintermed and voteintermed to verify
         proposal status.
         <h6>v0.97</h6><u>This version start new branch</u> &nbsp; <b style="color:#4fa9e9">'io-changes'</b> &nbsp; reflecting input/output changes to remove display update delays

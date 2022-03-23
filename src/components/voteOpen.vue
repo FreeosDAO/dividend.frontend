@@ -5,6 +5,7 @@
   1. Proposal active
   2. You are not voted yet
   then 'You can submit your vote'.
+  TODO Timer not ready.
   -->
   <div>
     <div class="q-pa-md">
