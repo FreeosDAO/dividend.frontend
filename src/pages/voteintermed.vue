@@ -32,7 +32,6 @@ export default {
   created () {
     //
     this.getActionProposal()
-      // votingActive() todo ???
       .then(() => {
         // callback function after success call to the server
         console.log('voteintermed in verifyProposalActive !!!')
@@ -46,7 +45,8 @@ export default {
     console.log('-voteintermed-')
   },
   methods: {
-    ...mapActions('account', ['getActionProposal'])
+    ...mapActions('account', ['getActionProposal']),
+    ...mapActions('analytics', ['getEwsTable'])
   }
 }
 </script>

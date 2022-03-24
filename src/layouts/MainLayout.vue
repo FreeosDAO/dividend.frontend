@@ -152,7 +152,7 @@ export default {
       this.working = this.value * 100
       this.progressLabel1 = String(this.working.toFixed(2)) + '%'
       // this.progressLabel1 = String(this.value * 100) + '% - to Investors'
-      this.progressLabel2 = String(100 - this.working) + '%'
+      this.progressLabel2 = String(100 - this.working.toFixed(2)) + '%'
       // this.progressLabel2 = String(100 - (this.value * 100)) + '% - to DAO'
       console.log('values on loop =', this.progress1, this.progress2)
       // Store counted bar values to Vuex:
@@ -161,7 +161,7 @@ export default {
       this.dataload.progressLabel1 = this.progressLabel1
       this.dataload.progressLabel2 = this.progressLabel2
       this.updateLoading(this.dataload)
-    }, 30000) // call each 30 sec after the tests
+    }, 20000) // call each 30 sec after the tests
     // document.addEventListener('beforeunload', this.handler)
     this.checkIfLoggedIn()
     this.getwhitelistTable() // Do not touch. Required for percentage displays on each page.
@@ -175,7 +175,8 @@ export default {
       accountName: state => state.account.accountName,
       value: state => state.analytics.circInfo // value is read from Vuex
     }),
-    ...mapGetters('account', ['isAuthenticated', 'connecting', 'proposer', 'voterName1', 'voterName2'])
+    ...mapGetters('account', ['isAuthenticated', 'connecting', 'proposer', 'voterName1', 'voterName2']),
+    ...mapGetters('analytics', ['circInfo'])
   },
   methods: {
     ...mapActions('account', ['checkIfLoggedIn', 'connectWallet', 'logout', 'getActionProposal']),

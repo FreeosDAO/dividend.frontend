@@ -40,7 +40,7 @@
             <q-btn outline no-caps label="Unlock NFT" class="uxblue" @click="dialog = true"></q-btn>
             <q-btn outline no-caps label="NFT List" class="uxblue" @click="$router.push('/customer')"></q-btn>
             <q-btn outline no-caps label="Analytics" class="uxblue" @click="$router.push('/analytics')"></q-btn>
-              <q-dialog rounded v-model="dialog" style="uxdialog">
+              <q-dialog rounded v-model="dialog" class="uxdialog">
               <q-card style="max-width: 350px" class="uxdialog">
                           <q-toolbar>
             <q-toolbar-title>Unlock Given NFT</q-toolbar-title>

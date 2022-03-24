@@ -122,7 +122,6 @@ export default {
       displayed_percentage: 0.0,
       expires: '', // normalised (UTC) expiration time for proposal
       tab: 'send',
-      expiration_timer: '',
       submitData: {
         currentAccountName: '', // used to submit current voter name
         toVote: 0 // current vote 1 - accepted 2 -refused.
@@ -140,7 +139,7 @@ export default {
       roi_target_cap: state => state.account.proposalInfo.proposalInfo.roi_target_cap,
       proposal_percentage: state => state.account.proposalInfo.proposalInfo.proposal_percentage,
       locked: state => state.account.proposalInfo.proposalInfo.locked,
-      expires_at: state => state.account.proposalInfo.proposalInfo.expires_at,
+      // expires_at: state => state.account.proposalInfo.proposalInfo.expires_at,
       threshold: state => state.account.proposalInfo.proposalInfo.threshold,
       rates_left: state => state.account.proposalInfo.proposalInfo.rates_left,
       accrued: state => state.account.proposalInfo.proposalInfo.accrued,
@@ -151,7 +150,8 @@ export default {
       progressLabel2: state => state.analytics.progressLabel2,
       // Does anybody already voted?
       alreadyVotedName: state => state.account.alreadyVoted, // name who already voted
-      isProposalVoted: state => state.account.isProposalVoted // if true proposal was voted one voter with name above
+      isProposalVoted: state => state.account.isProposalVoted, // if true proposal was voted one voter with name above
+      expiration_timer: state => state.account.timer
     })
   },
   methods: {

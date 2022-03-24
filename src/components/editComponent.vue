@@ -56,7 +56,7 @@
           </div>
         </div>
         <!-- Threshold conditional section -->
-        <div v-if="submitData.cap!==1"> cap &nbsp;{{submitData.cap}}
+        <div v-if="submitData.cap!==1">
           <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
             <div class="col-xs-5 col-sm-4 text-left">
               Threshold Point
@@ -71,7 +71,7 @@
           </div>
         </div>
         <!-- rates_left conditional section -->
-        <div v-if="submitData.cap===1">cap &nbsp;{{submitData.cap}}
+        <div v-if="submitData.cap===1">
           <div style="align-items: center;" class="row justify-center q-mb-md q-pl-md q-pr-md q-ml-md q-mr-md q-pb-xs">
             <div class="col-xs-5 col-sm-4 text-left">
               Iterations to pay

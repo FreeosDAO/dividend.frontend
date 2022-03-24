@@ -116,7 +116,7 @@
         <q-btn outline no-caps label="Cancel Proposal" class="uxblue" @click="dialogreset = true"></q-btn>
       </div>
     </q-card-section>
-    <div class="q-ma-lg"> Active Proposal expire in: &nbsp; &nbsp; {{this.screenTimer}}</div> <!-- todo expiration -->
+    <div class="q-ma-lg"> Active Proposal expire in: &nbsp; &nbsp; {{this.expiration_timer}}</div>
   </q-card>
 </template>
 
@@ -129,8 +129,8 @@ export default {
   name: 'activeComponent',
   data () {
     return {
-      dialogreset: false,
-      expiration_timer: 0
+      dialogreset: false
+      // expiration_timer: 0
       // for display only
       // currentAccountName: '',
       // eosaccount: null,
@@ -148,10 +148,10 @@ export default {
       roi_target_cap: state => state.account.proposalInfo.proposalInfo.roi_target_cap,
       proposal_percentage: state => state.account.proposalInfo.proposalInfo.proposal_percentage,
       locked: state => state.account.proposalInfo.proposalInfo.locked,
-      expires_at: state => state.account.proposalInfo.proposalInfo.expires_at, // prefetched by page
+      // expires_at: state => state.account.proposalInfo.proposalInfo.expires_at, // prefetched by page
       threshold: state => state.account.proposalInfo.proposalInfo.threshold,
       rates_left: state => state.account.proposalInfo.proposalInfo.rates_left,
-      screenTimer: state => state.account.timer,
+      expiration_timer: state => state.account.timer,
       // Delivered by the VerifyProposalActive in actions.js line 189, called in propintermed.vue line 25/
       isProposalActive: state => state.account.isProposalActive // prefetched once by propintermed page
     })

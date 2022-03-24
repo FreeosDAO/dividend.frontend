@@ -51,7 +51,7 @@ export const setwhitelistTableAttrVal = function (state, payload) {
   console.log('*whitelist voterName2*', state.voterName2)
 }
 
-// Serves to close proposer message pop-up dialog for '2nd voter solver'.
+// Serves to close proposer message pop-up dialog for '2nd voter solver'. // todo remove
 export const showModal = function (state) {
   state.isMessage = true
 }
@@ -71,13 +71,6 @@ export const WhitelistAttr = function (state, payload) {
   }
   console.log('after for', state.isVoted, 'already voted', state.alreadyVoted)
 } // keep
-
-// Verification is proposal active, on a basis of the backend proposal data.
-// This run with interval setup by MainLayout.
-// export const verifyProposalStatus = function (state, payload) { TODO remove ??
-// } TODO remove ??
-// isProposalActive must be caught at the beginning in Proposal and Vue
-// pages to determine initial way of processing. Use getter.
 
 // Places active proposal data from backend to state.
 export const setProposalAttrVal = function (state, payload) {

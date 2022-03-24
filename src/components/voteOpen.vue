@@ -137,7 +137,7 @@ export default {
       displayed_percentage: 0.0,
       expires: '', // normalised (UTC) expiration time for proposal
       tab: 'send',
-      expiration_timer: '',
+      // expiration_timer: '',
       submitData: {
         currentAccountName: '', // used to submit current voter name
         toVote: 0 // current vote 1 - accepted 2 -refused.
@@ -155,7 +155,8 @@ export default {
       roi_target_cap: state => state.account.proposalInfo.proposalInfo.roi_target_cap,
       proposal_percentage: state => state.account.proposalInfo.proposalInfo.proposal_percentage,
       locked: state => state.account.proposalInfo.proposalInfo.locked,
-      expires_at: state => state.account.proposalInfo.proposalInfo.expires_at,
+      // expires_at: state => state.account.proposalInfo.proposalInfo.expires_at,
+      expiration_timer: state => state.account.timer,
       threshold: state => state.account.proposalInfo.proposalInfo.threshold,
       rates_left: state => state.account.proposalInfo.proposalInfo.rates_left,
       accrued: state => state.account.proposalInfo.proposalInfo.accrued,

@@ -1,7 +1,7 @@
 export default () => ({
   accountName: null,
   connecting: false,
-  // circInfo: 0.0, // todo remove??
+  circInfo: 0.0, // keep for linear progress!
   progress1: 0.0,
   progress2: 0.0,
   progressLabel1: '%',
